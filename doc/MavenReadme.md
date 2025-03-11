@@ -67,3 +67,9 @@ Die `pom.xml` Datei enthält Metadaten über das Projekt sowie die Abhängigkeit
 
 ## Fazit
 Maven vereinfacht die Verwaltung von Java-Projekten erheblich, indem es Abhängigkeiten handhabt, den Build-Prozess steuert und Standardstrukturen bereitstellt. Es ist ein unverzichtbares Werkzeug für moderne Java-Entwicklung.
+
+## Live-Demo
+- Erstellen eines Projekts mit simplen Maven-Projekts (Archtype)
+- Arbeiten mit Maven, Github und IntelliJ
+
+## Diese Readme wurde mit Hilfe von KI erstellt
