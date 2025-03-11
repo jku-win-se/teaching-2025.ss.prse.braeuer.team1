@@ -63,3 +63,9 @@ jobs:
 
 ## Fazit
 GitHub Actions ist ein mächtiges Werkzeug zur Automatisierung von Entwicklungsprozessen. Es ermöglicht eine nahtlose CI/CD-Integration direkt in GitHub.
+
+##Live-Demo
+-Erstellen eines Workflows aus einer Vorlage
+-Commit mit Auslösen des Continuous Integration Workflows mit Fehler (z.B. aus IntelliJ heraus)
+
+#Diese Readme wurde mit Hilfe von KI erstellt
