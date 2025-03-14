@@ -1,3 +1,2 @@
 # Ignore target folder containing build artifacts
 /target/
-/.idea/
