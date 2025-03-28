@@ -1,0 +1,30 @@
+/* style.css */
+
+.scene {
+    color: #a0e1c3;
+    text-align: left;
+    alignment-baseline: center;
+
+}
+.root {
+    -fx-background-color: #f0f0f0;
+}
+
+.label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333333;
+}
+
+.button {
+    -fx-background-color: #a0e1c3;
+    -fx-text-fill: white;
+}
+
+.menu {
+    -fx-background-color: #a0e1c3;
+    -fx-text-fill: black;
+}
+
+.pane {
+    -fx-backgrouund-color: #a0e1c3;
+}
