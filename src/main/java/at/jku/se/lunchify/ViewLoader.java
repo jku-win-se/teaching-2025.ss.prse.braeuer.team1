@@ -12,7 +12,7 @@ public class ViewLoader {
     public Pane getPage(String fileName) {
 
         try {
-            URL fileUrl = HelloApplication.class.getResource(fileName+".fxml");
+            URL fileUrl = getClass().getResource(fileName+".fxml");
             if(fileUrl == null){
                 throw new java.io.FileNotFoundException("FXML file can't be found!");
             }
