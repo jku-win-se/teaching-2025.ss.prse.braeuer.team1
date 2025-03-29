@@ -1,19 +1,13 @@
 package at.jku.se.lunchify;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 public class HelloController {
-    @FXML
-    private Label label;
+
     @FXML
     private BorderPane mainPane;
-    @FXML
-    private Pane loginView;
 
     @FXML
     protected void onLoginButtonClick() {
@@ -26,20 +20,8 @@ public class HelloController {
     @FXML
     private void initialize() {
         ViewLoader object = new ViewLoader();
-        Pane loginView = object.getPage("newView");
-        mainPane.setCenter(loginView);
-        System.out.println("Hello World");
+        Pane view = object.getPage("login-view");
+        mainPane.setCenter(view);
     }
-    /*
-    private void loadView(String fxmlFile) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent view = loader.load();
-            mainPane.setCenter(view);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-    }
-    */
 }
