@@ -7,10 +7,11 @@ import javafx.scene.layout.Pane;
 public class StartController {
 
     @FXML
-    private BorderPane mainPane;
+    protected BorderPane mainPane;
 
     @FXML
     private void initialize() {
+        System.out.println("neu geladen");
         ViewLoader object = new ViewLoader();
         Pane view = object.getPage("login-view");
         mainPane.setCenter(view);
