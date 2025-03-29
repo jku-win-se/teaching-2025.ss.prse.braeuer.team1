@@ -16,7 +16,7 @@ public class ViewLoader {
             if(fileUrl == null){
                 throw new java.io.FileNotFoundException("FXML file can't be found!");
             }
-            view = new FXMLLoader().load(fileUrl);
+            view = new FXMLLoader(fileUrl).load();
         } catch (Exception e) {
             System.out.println("No page "+fileName+" found!");
         }
