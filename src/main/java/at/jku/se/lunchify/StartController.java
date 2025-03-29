@@ -9,12 +9,12 @@ public class StartController {
     @FXML
     protected BorderPane mainPane;
 
-    @FXML
+   /* @FXML
     private void initialize() {
         System.out.println("neu geladen");
         ViewLoader object = new ViewLoader();
         Pane view = object.getPage("login-view");
         mainPane.setCenter(view);
-    }
+    }*/
 
 }
