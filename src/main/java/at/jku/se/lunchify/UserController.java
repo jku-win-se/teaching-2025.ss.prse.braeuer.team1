@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
-public class HelloController {
+public class UserController {
 
     @FXML
     private BorderPane mainPane;
@@ -14,14 +14,6 @@ public class HelloController {
         ViewLoader object = new ViewLoader();
         Pane view = object.getPage("user-menu-view");
         mainPane.setTop(view);
-    }
-
-
-    @FXML
-    private void initialize() {
-        ViewLoader object = new ViewLoader();
-        Pane view = object.getPage("login-view");
-        mainPane.setCenter(view);
     }
 
 }

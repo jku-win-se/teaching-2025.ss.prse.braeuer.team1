@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox fx:id="MenuBar" style="-fx-background-color: #a0e1c3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.HelloController">
+<HBox fx:id="MenuBar" style="-fx-background-color: #a0e1c3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MenuBar prefHeight="37.0" prefWidth="639.0" styleClass="menu" stylesheets="@lunchify-style.css">
         <menus>
