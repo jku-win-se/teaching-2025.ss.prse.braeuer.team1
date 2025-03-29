@@ -63,7 +63,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>at.jku.se.lunchify/at.jku.se.lunchify.HelloApplication</mainClass>
+                            <mainClass>at.jku.se.lunchify/at.jku.se.lunchify.LunchifyApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
