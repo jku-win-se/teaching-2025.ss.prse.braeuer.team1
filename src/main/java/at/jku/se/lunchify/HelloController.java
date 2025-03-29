@@ -26,7 +26,7 @@ public class HelloController {
     @FXML
     private void initialize() {
         ViewLoader object = new ViewLoader();
-        Pane loginView = object.getPage("loginView");
+        Pane loginView = object.getPage("newView");
         mainPane.setCenter(loginView);
         System.out.println("Hello World");
     }
