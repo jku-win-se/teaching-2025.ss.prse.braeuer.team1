@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.HelloController">
+<Pane fx:id="loginView" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.HelloController">
    <children>
       <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="214.0" prefWidth="215.0" spacing="10.0">
          <children>
@@ -12,7 +13,7 @@
             <TextField promptText="Email" />
             <Label layoutX="22.0" layoutY="45.0" prefHeight="18.0" prefWidth="192.0" text="Passwort" />
             <PasswordField promptText="Password" />
-            <Button fx:id="loginButton" mnemonicParsing="false" text="Login" />
+            <Button mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
