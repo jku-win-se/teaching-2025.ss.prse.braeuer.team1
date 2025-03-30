@@ -2,7 +2,6 @@ package at.jku.se.lunchify;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -20,7 +19,7 @@ public class LunchifyApplication extends Application {
         stage.setScene(scene);
         stage.show();
 
-        // Controller setzen, damit er von dem LoginController, UserMenuController etc. erreichbar ist
+        // Controller setzen, damit er von dem LoginController, MenuController etc. erreichbar ist
         BaseController baseController = loader.getController();
         root.setUserData(baseController);
     }

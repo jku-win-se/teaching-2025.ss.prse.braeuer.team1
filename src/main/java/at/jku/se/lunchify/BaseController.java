@@ -22,12 +22,8 @@ public class BaseController {
             basePane.setCenter(loadView(fxml));
     }
 
-    public void showMenu(Boolean isAdmin) throws IOException {
-            if(isAdmin) {
-                basePane.setTop(loadView("admin-menu-view.fxml"));
-            } else {
-                basePane.setTop(loadView("user-menu-view.fxml"));
-            }
+    public void showMenu(String fxml) throws IOException {
+                basePane.setTop(loadView(fxml));
     }
 
 

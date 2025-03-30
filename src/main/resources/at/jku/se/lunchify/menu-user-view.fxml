@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="77.0" style="-fx-background-color: #a0e1c3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserMenuController">
+<BorderPane prefHeight="77.0" style="-fx-background-color: #a0e1c3;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.MenuController">
    <right>
       <Button fx:id="logout" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onLogoutButtonClick" text="Logout" BorderPane.alignment="CENTER" />
    </right>
@@ -15,8 +15,8 @@
    <left>
       <HBox spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#onUploadButtonClick" text="Upload" />
-            <Button fx:id="historyButton" mnemonicParsing="false" onAction="#onHistoryButtonClick" text="history" />
+            <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#onUploadButtonClick" text="Rechnung hochladen" />
+            <Button fx:id="historyButton" mnemonicParsing="false" onAction="#onHistoryButtonClick" text="Alle Rechnungen" />
          </children>
          <BorderPane.margin>
             <Insets />
