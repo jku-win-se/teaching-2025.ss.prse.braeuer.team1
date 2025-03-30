@@ -1,43 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserController">
-   <top>
-      <Pane prefHeight="77.0" style="-fx-background-color: #a0e1c3;" BorderPane.alignment="CENTER" />
-   </top>
-   <center>
-      <VBox fx:id="loginScreen" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="215.0" prefWidth="215.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
-         <children>
-            <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
-            <TextField fx:id="email" promptText="Email" />
-            <Label layoutX="22.0" layoutY="45.0" prefHeight="18.0" prefWidth="192.0" text="Passwort" />
-            <PasswordField fx:id="password" promptText="Password" />
-            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
-         </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
-   </center>
-   <bottom>
-      <BorderPane prefHeight="57.0" style="-fx-background-color: #a0e1c3;" styleClass="pane" BorderPane.alignment="CENTER">
-         <right>
-            <ImageView fitHeight="42.0" fitWidth="107.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
-               <image>
-                  <Image url="@Logo-Lunchify.jpeg" />
-               </image>
-               <BorderPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </BorderPane.margin>
-            </ImageView>
-         </right>
-      </BorderPane>
-   </bottom>
-</BorderPane>
+
+<VBox fx:id="loginPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="215.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.LoginController">
+   <children>
+      <Label fx:id="loginPaneText" />
+      <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
+      <TextField fx:id="email" promptText="Email" />
+      <Label layoutX="22.0" layoutY="45.0" prefHeight="18.0" prefWidth="192.0" text="Passwort" />
+      <PasswordField fx:id="password" promptText="Password" />
+      <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

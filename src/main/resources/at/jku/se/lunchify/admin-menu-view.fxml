@@ -19,7 +19,7 @@
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" />
+            <Menu mnemonicParsing="false" text="i Bims Admin" />
         </menus>
          <BorderPane.margin>
             <Insets />
