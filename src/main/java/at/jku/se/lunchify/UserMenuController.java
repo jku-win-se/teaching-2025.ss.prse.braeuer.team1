@@ -2,8 +2,11 @@ package at.jku.se.lunchify;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -15,6 +18,10 @@ public class UserMenuController {
 
     @FXML
     private Button logout;
+    @FXML
+    private Button uploadButton;
+    @FXML
+    private Button historyButton;
 
     public void onLogoutButtonClick() throws IOException {
         // Aktuelle Stage holen
@@ -33,5 +40,16 @@ public class UserMenuController {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void onUploadButtonClick() throws IOException {
+        BaseController baseController = (BaseController) uploadButton.getScene().getRoot().getUserData();
+        baseController.showCenterView("rechnung-hochladen-view.fxml");
+    }
+
+    public void onHistoryButtonClick() throws IOException {
+        BaseController baseController = (BaseController) historyButton.getScene().getRoot().getUserData();
+        baseController.showCenterView("rechnung-hochladen-view.fxml");
+    }
+
 
 }
