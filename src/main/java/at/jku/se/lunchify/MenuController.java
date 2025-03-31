@@ -1,5 +1,6 @@
 package at.jku.se.lunchify;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,6 +20,10 @@ public class MenuController {
     private Button uploadButton;
     @FXML
     private Button historyButton;
+    @FXML
+    private Button userManagementButton;
+    @FXML
+    private Button invoiceSettingButton;
 
 
     public void onLogoutButtonClick() throws IOException {
@@ -41,7 +46,7 @@ public class MenuController {
 
     public void onUploadButtonClick() throws IOException {
         BaseController baseController = (BaseController) uploadButton.getScene().getRoot().getUserData();
-        baseController.showCenterView("rechnung-hochladen-view.fxml");
+        baseController.showCenterView("upload-view.fxml");
     }
 
     public void onHistoryButtonClick() throws IOException {
@@ -50,4 +55,17 @@ public class MenuController {
     }
 
 
+    public void onUserManagementButtonClick() throws IOException {
+            BaseController baseController = (BaseController) userManagementButton.getScene().getRoot().getUserData();
+            baseController.showCenterView("user-management-view.fxml");
+    }
+
+    public void onInvoiceSettingButtonClick() throws IOException {
+        BaseController baseController = (BaseController) invoiceSettingButton.getScene().getRoot().getUserData();
+        baseController.showCenterView("invoice-setting-view.fxml");
+    }
+
+    public void onReportButtonClick() throws IOException {
+        //ReportView offen
+    };
 }
