@@ -26,5 +26,28 @@
 }
 
 .pane {
-    -fx-backgrouund-color: #a0e1c3;
+    -fx-background-color: #a0e1c3;
+}
+
+.table-view {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #d3d3d3;
+    -fx-border-width: 1px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #183748;
+    -fx-font-weight: bold;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #ffffff;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #ffffff;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #f9f9f9;
 }

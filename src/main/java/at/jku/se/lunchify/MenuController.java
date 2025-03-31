@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -18,6 +19,7 @@ public class MenuController {
     private Button uploadButton;
     @FXML
     private Button historyButton;
+
 
     public void onLogoutButtonClick() throws IOException {
         // Aktuelle Stage holen
@@ -44,7 +46,7 @@ public class MenuController {
 
     public void onHistoryButtonClick() throws IOException {
         BaseController baseController = (BaseController) historyButton.getScene().getRoot().getUserData();
-        baseController.showCenterView("rechnung-hochladen-view.fxml");
+        baseController.showCenterView("history-view.fxml");
     }
 
 
