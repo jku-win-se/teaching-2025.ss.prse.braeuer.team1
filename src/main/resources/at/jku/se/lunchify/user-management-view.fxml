@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="681.0" prefWidth="649.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserManagementController">
+   <children>
+      <BorderPane prefHeight="593.0" prefWidth="635.0">
+         <center>
+            <TableView maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="540.0" prefWidth="626.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+               <columns>
+                  <TableColumn prefWidth="152.0" resizable="false" text="Vorname" />
+                  <TableColumn minWidth="0.0" prefWidth="141.0" resizable="false" text="Nachname" />
+                  <TableColumn minWidth="0.0" prefWidth="199.0" resizable="false" text="Mail-Adresse" />
+                  <TableColumn minWidth="0.0" prefWidth="134.0" resizable="false" text="Status" />
+               </columns>
+            </TableView>
+         </center>
+         <top>
+            <Button fx:id="newUserButton" mnemonicParsing="false" onAction="#onNewUserButtonClick" prefHeight="69.0" prefWidth="155.0" text="Neuen User anlegen" BorderPane.alignment="CENTER" />
+         </top>
+      </BorderPane>
+   </children>
+</VBox>
