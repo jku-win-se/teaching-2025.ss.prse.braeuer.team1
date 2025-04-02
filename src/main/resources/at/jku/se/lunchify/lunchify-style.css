@@ -43,6 +43,6 @@
     -fx-background-color: #ffffff;
 }
 
-.table-view .table-row-cell:odd {
+.table-view .table-row-cell.odd {
     -fx-background-color: #f9f9f9;
 }
