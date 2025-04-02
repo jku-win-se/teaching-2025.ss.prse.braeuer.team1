@@ -13,8 +13,7 @@ public class UserManagementController {
     protected Button newUserButton;
 
     public void onNewUserButtonClick() throws IOException {
-        BaseController baseController = (BaseController) newUserButton.getScene().getRoot().getUserData();
-        baseController.showCenterView("user-creation-view.fxml");
+        LunchifyApplication.baseController.showCenterView("user-creation-view.fxml");
     }
 
     //Klick auf Spalte soll Änderungs-View aufrufen

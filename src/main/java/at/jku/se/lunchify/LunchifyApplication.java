@@ -10,6 +10,8 @@ import java.io.IOException;
 
 public class LunchifyApplication extends Application {
 
+    public static BaseController baseController;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("base-view.fxml"));
@@ -20,8 +22,7 @@ public class LunchifyApplication extends Application {
         stage.show();
 
         // Controller setzen, damit er von dem LoginController, MenuController etc. erreichbar ist
-        BaseController baseController = loader.getController();
-        root.setUserData(baseController);
+        LunchifyApplication.baseController = loader.getController();
     }
 
     public static void main(String[] args) {

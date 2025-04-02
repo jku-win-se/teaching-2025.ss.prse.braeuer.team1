@@ -21,20 +21,16 @@ public class LoginController {
 
 
     public void onLoginButtonClick() throws IOException {
-        if (email.getText().equals("") || password.getText().equals("")) {
+        if (email.getText().isEmpty() || password.getText().isEmpty()) {
             warningText.setText("Login-Daten eingeben!");
         } else {
-            // Base-Controller abrufen
-            BaseController baseController = (BaseController) loginButton.getScene().getRoot().getUserData();
-
-            //Ist Benutzer Admin? // Menüleiste anzeigen
             if (email.getText().equals("admin") && password.getText().equals("admin")) {
-                baseController.showMenu("menu-admin-view.fxml"); //Admin-Menu setzen
+                LunchifyApplication.baseController.showMenu("menu-admin-view.fxml"); //Admin-Menu setzen
             } else {
-                baseController.showMenu("menu-user-view.fxml"); //User-Menu setzen
+                LunchifyApplication.baseController.showMenu("menu-user-view.fxml"); //User-Menu setzen
             }
             // Ersten View ins Base-Center setzen
-            baseController.showCenterView("upload-view.fxml");
+            LunchifyApplication.baseController.showCenterView("upload-view.fxml");
         }
     }
 

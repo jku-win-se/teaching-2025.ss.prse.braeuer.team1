@@ -22,11 +22,14 @@ public class UploadController {
     @FXML
     protected Label fileName;
     @FXML
-    protected Button invoiceChooseButton;
+    protected Button invoiceAttachmentButton;
+
     double invoiceValueDouble;
+    File selectedFile;
 
     public void onInvoiceUploadButtonClick() throws IOException  {
-        if (invoiceValue.getText().equals("") || invoiceType.getValue().equals("")|| invoiceDate.getValue().equals("")) {
+        if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue().equals("")
+                || selectedFile == null) {
             warningText.setText("Alle Felder ausfüllen!");
         }
         else {
@@ -36,18 +39,17 @@ public class UploadController {
                     warningText.setText("Rechnungsbetrag muss positiv sein!");
                 } else {
                     warningText.setText("");
-                    BaseController baseController = (BaseController) invoiceUploadButton.getScene().getRoot().getUserData();
-                    baseController.showCenterView("upload-view.fxml");
+                    LunchifyApplication.baseController.showCenterView("upload-view.fxml");
                 }
             } catch (NumberFormatException e) {
                 warningText.setText("Rechnungsbetrag muss eine Zahl sein!");
             }
         }
     }
-    public void onInvoiceChooseButtonClick() throws IOException  {
+    public void onInvoiceAttachmentButtonClick() throws IOException  {
         //AI generated
         // Zugriff auf die Stage, die mit dem Button verbunden ist
-        Stage stage = (Stage) invoiceChooseButton.getScene().getWindow();
+        Stage stage = (Stage) invoiceAttachmentButton.getScene().getWindow();
 
         // FileChooser erstellen
         FileChooser fileChooser = new FileChooser();
@@ -60,12 +62,13 @@ public class UploadController {
         fileChooser.getExtensionFilters().addAll(pdfFilter, jpegFilter);
 
         // Zeige den FileChooser und hole die ausgewählte Datei
-        File selectedFile = fileChooser.showOpenDialog(stage);
+        this.selectedFile = fileChooser.showOpenDialog(stage);
 
         // Überprüfen, ob eine Datei ausgewählt wurde
         if (selectedFile != null) {
             // Hier kannst du mit der ausgewählten Datei weiterarbeiten
             fileName.setText(selectedFile.getAbsoluteFile().toString());
+
 
         } else {
             // Der Benutzer hat den Dialog abgebrochen oder keine Datei ausgewählt

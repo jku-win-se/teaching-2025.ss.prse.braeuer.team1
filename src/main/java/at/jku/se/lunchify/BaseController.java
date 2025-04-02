@@ -14,8 +14,7 @@ public class BaseController {
 
     public Parent loadView(String fxml) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-        Parent view = loader.load();
-        return view;
+        return loader.load();
     }
 
     public void showCenterView(String fxml) throws IOException {
