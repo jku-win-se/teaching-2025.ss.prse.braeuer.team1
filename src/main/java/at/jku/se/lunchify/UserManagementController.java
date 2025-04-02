@@ -1,5 +1,6 @@
 package at.jku.se.lunchify;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -14,6 +15,9 @@ public class UserManagementController {
 
     public void onNewUserButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("user-creation-view.fxml");
+    }
+
+    public void onEditUserButtonClick() {
     }
 
     //Klick auf Spalte soll Änderungs-View aufrufen
