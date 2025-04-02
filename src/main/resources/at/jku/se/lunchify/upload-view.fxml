@@ -35,7 +35,7 @@
                </VBox.margin>
             </TextField>
             <Label prefHeight="21.0" prefWidth="192.0" text="Rechnung (PDF, JPEG)" />
-            <Button fx:id="invoiceAttachmentButton" mnemonicParsing="false" onAction="#onInvoiceAttachmentButtonClick" prefHeight="31.0" prefWidth="189.0" style="-fx-background-color: white; -fx-text-fill: black; -fx-border-color: grey; -fx-border-radius: 3;" text="Rechnung anhängen" />
+            <Button fx:id="invoiceChooseButton" mnemonicParsing="false" onAction="#onInvoiceChooseButtonClick" prefHeight="31.0" prefWidth="189.0" style="-fx-background-color: #ECECEC; -fx-text-fill: black; -fx-border-color: #BEBEBE; -fx-border-radius: 3;" text="Rechnung anhängen" />
             <Label fx:id="fileName" prefHeight="21.0" prefWidth="192.0">
                <font>
                   <Font size="8.0" />
