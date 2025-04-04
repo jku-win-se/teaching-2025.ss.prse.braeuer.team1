@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.*;
 
 
+
 public class UploadController {
     @FXML
     protected Button invoiceUploadButton;
@@ -77,7 +78,7 @@ public class UploadController {
             Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
 
             PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, type, status, isanomalous, file) values(?,?,?,?,?,?,?,?);");
-            ps.setInt(1, 2);
+            ps.setInt(1, LoginController.getCurrentUserId());
             ps.setInt(2, 1);
             ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
             ps.setDouble(4, invoiceValueDouble);
