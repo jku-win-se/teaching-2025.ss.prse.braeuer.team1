@@ -24,7 +24,7 @@ public class LoginController {
     protected Label warningText;
 
 
-    /*
+
     public void onLoginButtonClick() throws IOException {
         if (email.getText().isEmpty() || password.getText().isEmpty()) {
             warningText.setText("Login-Daten eingeben!");
@@ -38,8 +38,8 @@ public class LoginController {
             LunchifyApplication.baseController.showCenterView("upload-view.fxml");
         }
     }
-*/
 
+/*
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
     String DBpassword = "CaMaKe25!";
@@ -59,4 +59,6 @@ public class LoginController {
         }
 
     }
+
+ */
 }
