@@ -4,9 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.*;
+
 
 public class UploadController {
     @FXML
@@ -46,7 +49,11 @@ public class UploadController {
             }
         }
     }
-    public void onInvoiceAttachmentButtonClick() throws IOException  {
+    public void onInvoiceAttachmentButtonClick() throws IOException, SQLException {
+        String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
+        String username = "postgres.yxshntkgvmksefegyfhz";
+        String DBpassword = "CaMaKe25!";
+
         //AI generated
         // Zugriff auf die Stage, die mit dem Button verbunden ist
         Stage stage = (Stage) invoiceAttachmentButton.getScene().getWindow();
@@ -67,7 +74,20 @@ public class UploadController {
         // Überprüfen, ob eine Datei ausgewählt wurde
         if (selectedFile != null) {
             // Hier kannst du mit der ausgewählten Datei weiterarbeiten
-            fileName.setText(selectedFile.getAbsoluteFile().toString());
+            Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+
+            PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, type, status, isanomalous, file) values(?,?,?,?,?,?,?,?);");
+            ps.setInt(1, 2);
+            ps.setInt(2, 1);
+            ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
+            ps.setDouble(4, invoiceValueDouble);
+            ps.setString(5, invoiceType.getValue());
+            ps.setString(6, "eingereicht");
+            ps.setBoolean(7, false);
+            ps.setBytes(8,FileUtils.readFileToByteArray(selectedFile));
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
 
 
         } else {

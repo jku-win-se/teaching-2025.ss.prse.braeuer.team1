@@ -24,7 +24,6 @@ public class LoginController {
     protected Label warningText;
 
 
-    /*
     public void onLoginButtonClick() throws IOException {
         if (email.getText().isEmpty() || password.getText().isEmpty()) {
             warningText.setText("Login-Daten eingeben!");
@@ -38,25 +37,24 @@ public class LoginController {
             LunchifyApplication.baseController.showCenterView("upload-view.fxml");
         }
     }
-*/
 
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
     String DBpassword = "CaMaKe25!";
 
 
-    @FXML
-    protected void onLoginButtonClick() throws SQLException {
-        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from \"User\" where userid = 1;");
-        while (resultSet.next())
-        {
-            String columnValue = resultSet.getString("email");
-            warningText.setText(columnValue);
-            connection.close();
-        }
-
-    }
+//    @FXML
+//    protected void onLoginButtonClick() throws SQLException {
+//        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+//
+//        Statement statement = connection.createStatement();
+//        ResultSet resultSet = statement.executeQuery("select * from \"User\" where userid = 1;");
+//        while (resultSet.next())
+//        {
+//            String columnValue = resultSet.getString("email");
+//            warningText.setText(columnValue);
+//            connection.close();
+//        }
+//
+//    }
 }
