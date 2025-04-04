@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="loginPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="215.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.LoginController">
-   <children>
-      <Label fx:id="warningText" style="-fx-text-fill: red;" />
-      <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
-      <TextField fx:id="email" onAction="#onLoginButtonClick" promptText="Email" />
-      <Label layoutX="22.0" layoutY="45.0" prefHeight="18.0" prefWidth="192.0" text="Passwort" />
-      <PasswordField fx:id="password" onAction="#onLoginButtonClick" promptText="Password" />
-      <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
-   </children>
+<VBox fx:id="loginPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="332.0" prefWidth="215.0" spacing="10.0" stylesheets="@lunchify-style.css"
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="at.jku.se.lunchify.LoginController">
    <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
    </padding>
+   <Label fx:id="warningText" style="-fx-text-fill: red;"/>
+   <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail"/>
+   <TextField fx:id="email" onAction="#onLoginButtonClick" promptText="Email"/>
+   <Label layoutX="22.0" layoutY="45.0" prefHeight="18.0" prefWidth="192.0" text="Passwort"/>
+   <PasswordField fx:id="password" onAction="#onLoginButtonClick" promptText="Password"/>
+   <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login"/>
 </VBox>

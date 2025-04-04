@@ -30,7 +30,7 @@ public class LoginController {
 
 
     //AI-Assisted
-    public void onLoginButtonClick() throws IOException {
+    public void onLoginButtonClick() {
         String userEmail = email.getText().trim();
         String userPassword = password.getText().trim();
 
