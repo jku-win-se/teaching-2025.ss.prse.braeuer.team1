@@ -16,7 +16,7 @@
       <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
       <TextField fx:id="email" promptText="Email" />
       <Label prefHeight="21.0" prefWidth="192.0" text="Passwort" />
-      <TextField fx:id="password" promptText="Passwort" />
+      <PasswordField fx:id="password" promptText="Passwort" />
       <Label prefHeight="21.0" prefWidth="192.0" text="Vorname" />
       <TextField fx:id="firstname" promptText="Vorname" />
       <Label prefHeight="21.0" prefWidth="192.0" text="Nachname" />

@@ -1,11 +1,9 @@
 package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.User;
+import at.jku.se.lunchify.security.PasswordService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.sql.*;
 
@@ -18,7 +16,7 @@ public class UserCreationController {
     @FXML
     protected TextField surname;
     @FXML
-    protected TextField password;
+    protected PasswordField password;
     @FXML
     protected ChoiceBox<String> userType;
     @FXML
@@ -28,6 +26,7 @@ public class UserCreationController {
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
     String DBpassword = "CaMaKe25!";
+    PasswordService passwordService = new PasswordService();
 
 
     public void onUserCreationButtonClick() throws SQLException {
@@ -56,7 +55,7 @@ public class UserCreationController {
         ps.setString(3, surname.getText());
         ps.setString(4, userType.getValue());
         ps.setBoolean(5, !(inactiveCheck.isSelected()));
-        ps.setString(6, password.getText());
+        ps.setString(6, passwordService.hashPassword(password.getText().trim()));
         ps.executeUpdate();
         ps.close();
         connection.close();

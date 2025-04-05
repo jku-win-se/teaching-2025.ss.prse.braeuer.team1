@@ -1,5 +1,6 @@
 package at.jku.se.lunchify;
 
+import at.jku.se.lunchify.security.PasswordService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,6 +27,7 @@ public class LoginController {
     @FXML
     protected Label warningText;
 
+    PasswordService passwordService = new PasswordService();
 
     //AI-Assisted
     public void onLoginButtonClick() {
@@ -59,7 +61,7 @@ public class LoginController {
                         }
 
                         // Passwort prüfen
-                        if (!userPassword.equals(dbPassword)) {
+                        if (!passwordService.verifyPassword(userPassword,dbPassword)/*!userPassword.equals(dbPassword)*/) {
                             warningText.setText("Falsches Passwort!");
                             return;
                         }
