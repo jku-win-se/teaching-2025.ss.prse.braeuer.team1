@@ -61,7 +61,7 @@ public class UserEditingController {
         return users;
     }
 
-    public void onSelectUserButtonClick() throws SQLException {
+    public void onSelectUserButtonClick() throws Exception {
         String selectedUserEmail = allUsers.getSelectionModel().getSelectedItem();
         ResultSet resultSet = null;
         if (selectedUserEmail != null) {
@@ -74,24 +74,40 @@ public class UserEditingController {
             }
 
             while (resultSet.next()) {
-                email.setText(resultSet.getString("email"));
-                firstname.setText(resultSet.getString("firstname"));
-                surname.setText(resultSet.getString("surname"));
-                password.setText(resultSet.getString("password"));
-                userType.setValue(resultSet.getString("type"));
+                int userid = resultSet.getInt("userid");
+                String emailToEdit = resultSet.getString("email");
+                String firstNameToEdit = resultSet.getString("firstname");
+                String surnameToEdit = resultSet.getString("surname");
+                String passwordToEdit = resultSet.getString("password");
+                String typeToEdit = resultSet.getString("type");
+                Boolean isActive = resultSet.getBoolean("isactive");
+                Boolean isAnomalous = resultSet.getBoolean("isanomalous");
+
+                email.setText(emailToEdit);
+                firstname.setText(firstNameToEdit);
+                surname.setText(surnameToEdit);
+                password.setText(passwordToEdit);
+                userType.setValue(typeToEdit);
+
+                userToEdit = new User(userid, emailToEdit, firstNameToEdit, surnameToEdit, "Admin", isActive, isAnomalous, passwordToEdit);
+
             }
+            System.out.println("userToEdit: " + userToEdit);
         }
+
     }
 
     public void onSafeChangesButtonClick() throws SQLException {
         Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-        PreparedStatement ps = connection.prepareStatement("update into \"User\" (email, firstname, surname, type, isactive, isanomalous, password) values(?,?,?,?,?,?,?) where \"userid = userToEdit.getUserid()\";");
-        ps.setString(1, userToEdit.getFirstname());
-        ps.setString(2, userToEdit.getSurname());
-        ps.setString(3, userToEdit.getType());
-        ps.setBoolean(4, userToEdit.isIsactive());
-        ps.setBoolean(5, userToEdit.isIsanomalous());
-        ps.setString(6, userToEdit.getPassword());
+        PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, isanomalous = ?, password = ? where \"userid = userToEdit.getUserid()\";");
+
+        ps.setString(1, userToEdit.getEmail());
+        ps.setString(2, userToEdit.getFirstname());
+        ps.setString(3, userToEdit.getSurname());
+        ps.setString(4, userToEdit.getType());
+        ps.setBoolean(5, userToEdit.isIsactive());
+        ps.setBoolean(6, userToEdit.isIsanomalous());
+        ps.setString(7, userToEdit.getPassword());
         ps.executeUpdate();
         ps.close();
         connection.close();

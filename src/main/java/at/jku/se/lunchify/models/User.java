@@ -19,13 +19,7 @@ public class User {
         this.email = email;
         this.firstname = firstname;
         this.surname = surname;
-        if (Arrays.stream(User.usertype.values()).findAny().equals(type))
-        {
-            this.type = type;
-        }
-        else{
-            throw new Exception("Benutzertyp nicht erlaubt!");
-        }
+        this.type = type;
         this.isactive = isactive;
         this.isanomalous = isanomalous;
         this.password = password;
