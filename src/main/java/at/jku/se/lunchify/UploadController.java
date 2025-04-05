@@ -57,7 +57,6 @@ public class UploadController {
                         if (rs.next()) {
                             // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
                                 warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
-                                return;
 
                         } else {
                             try {
@@ -68,9 +67,8 @@ public class UploadController {
                                     warningText.setText("");
                                     LunchifyApplication.baseController.showCenterView("upload-view.fxml");
                                 }
-                                invoiceNumberInt = Integer.parseInt(invoiceNumber.getText());
                             } catch (NumberFormatException e) {
-                                warningText.setText("Rechnungsbetrag/Rechnungsnummer muss eine Zahl sein!");
+                                warningText.setText("Rechnungsbetrag muss eine Zahl sein!");
                             }
                             try {
                                 invoiceNumberInt = Integer.parseInt(invoiceNumber.getText());
