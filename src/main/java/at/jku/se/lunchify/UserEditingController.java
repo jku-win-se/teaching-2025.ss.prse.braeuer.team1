@@ -27,6 +27,9 @@ public class UserEditingController {
     protected TextField password;
     @FXML
     protected ChoiceBox<String> userType;
+    @FXML
+
+    private User userToEdit;
 
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
@@ -61,7 +64,6 @@ public class UserEditingController {
     public void onSelectUserButtonClick() throws SQLException {
         String selectedUserEmail = allUsers.getSelectionModel().getSelectedItem();
         ResultSet resultSet = null;
-        User selectedUser = null;
         if (selectedUserEmail != null) {
             try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
                 String sql = "SELECT * FROM \"User\" WHERE email = '" + selectedUserEmail + "'";
@@ -79,5 +81,19 @@ public class UserEditingController {
                 userType.setValue(resultSet.getString("type"));
             }
         }
+    }
+
+    public void onSafeChangesButtonClick() throws SQLException {
+        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        PreparedStatement ps = connection.prepareStatement("update into \"User\" (email, firstname, surname, type, isactive, isanomalous, password) values(?,?,?,?,?,?,?) where \"userid = userToEdit.getUserid()\";");
+        ps.setString(1, userToEdit.getFirstname());
+        ps.setString(2, userToEdit.getSurname());
+        ps.setString(3, userToEdit.getType());
+        ps.setBoolean(4, userToEdit.isIsactive());
+        ps.setBoolean(5, userToEdit.isIsanomalous());
+        ps.setString(6, userToEdit.getPassword());
+        ps.executeUpdate();
+        ps.close();
+        connection.close();
     }
 }

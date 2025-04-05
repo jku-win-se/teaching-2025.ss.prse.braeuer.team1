@@ -31,7 +31,7 @@
          </items>
       </ChoiceBox>
       <CheckBox fx:id="inactiveCheck" mnemonicParsing="false" prefHeight="21.0" prefWidth="192.0" text="inaktiv setzen" />
-      <Button fx:id="userEditingButton" maxWidth="192.0" mnemonicParsing="false" text="Änderungen speichern">
+      <Button fx:id="safeChangesButton" maxWidth="192.0" mnemonicParsing="false" onAction="#onSafeChangesButtonClick" text="Änderungen speichern">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin></Button>
