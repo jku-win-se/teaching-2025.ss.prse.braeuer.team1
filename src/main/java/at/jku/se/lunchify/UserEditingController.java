@@ -4,9 +4,7 @@ import at.jku.se.lunchify.models.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.sql.*;
@@ -28,7 +26,7 @@ public class UserEditingController {
     @FXML
     protected ChoiceBox<String> userType;
     @FXML
-
+    protected CheckBox inactiveCheck;
     private User userToEdit;
 
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
@@ -88,8 +86,10 @@ public class UserEditingController {
                 surname.setText(surnameToEdit);
                 password.setText(passwordToEdit);
                 userType.setValue(typeToEdit);
+                inactiveCheck.selectedProperty().setValue(!(isActive));
+                //inactiveCheck.setSelected(isActive);
 
-                userToEdit = new User(userid, emailToEdit, firstNameToEdit, surnameToEdit, "Admin", isActive, isAnomalous, passwordToEdit);
+                userToEdit = new User(userid, emailToEdit, firstNameToEdit, surnameToEdit, typeToEdit, isActive, isAnomalous, passwordToEdit);
 
             }
             System.out.println("userToEdit: " + userToEdit);
@@ -99,15 +99,31 @@ public class UserEditingController {
 
     public void onSafeChangesButtonClick() throws SQLException {
         Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-        PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, isanomalous = ?, password = ? where \"userid = userToEdit.getUserid()\";");
+        try {
+            PreparedStatement checkps = connection.prepareStatement("SELECT userid FROM \"User\" where email = ?");
+            checkps.setString(1, email.getText());
+            ResultSet rs = checkps.executeQuery();
+            while (rs.next()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Benutzernlage");
+                alert.setHeaderText("Benutzer schon vorhanden"); // oder null
+                alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
+                alert.showAndWait();
+                return;
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;");
 
-        ps.setString(1, userToEdit.getEmail());
-        ps.setString(2, userToEdit.getFirstname());
-        ps.setString(3, userToEdit.getSurname());
-        ps.setString(4, userToEdit.getType());
-        ps.setBoolean(5, userToEdit.isIsactive());
-        ps.setBoolean(6, userToEdit.isIsanomalous());
-        ps.setString(7, userToEdit.getPassword());
+        ps.setString(1, email.getText());
+        ps.setString(2, firstname.getText());
+        ps.setString(3, surname.getText());
+        ps.setString(4, userType.getValue());
+        ps.setBoolean(5, !(inactiveCheck.isSelected()));
+        ps.setString(6, password.getText());
+        ps.setInt(7,userToEdit.getUserid());
         ps.executeUpdate();
         ps.close();
         connection.close();

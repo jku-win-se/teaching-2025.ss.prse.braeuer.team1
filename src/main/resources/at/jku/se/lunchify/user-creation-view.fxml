@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.collections.FXCollections?>
-<VBox fx:id="userCreationPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="215.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserManagementController">
+<VBox fx:id="userCreationPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="215.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserCreationController">
    <children>
       <Label fx:id="userPaneText" />
       <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
@@ -21,13 +21,13 @@
       <ChoiceBox fx:id="userType" prefHeight="21.0" prefWidth="192.0">
          <items>
             <FXCollections fx:factory="observableArrayList">
-               <String fx:value="Benutzer" />
+               <String fx:value="User" />
                <String fx:value="Admin" />
             </FXCollections>
          </items>
       </ChoiceBox>
       <CheckBox fx:id="inactiveCheck" mnemonicParsing="false" prefHeight="21.0" prefWidth="192.0" text="inaktiv setzen" />
-      <Button fx:id="userCreationButton" maxWidth="192.0" mnemonicParsing="false" text="Benutzer anlegen">
+      <Button fx:id="userCreationButton" maxWidth="192.0" mnemonicParsing="false" onAction="#onUserCreationButtonClick" text="Benutzer anlegen">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin></Button>
