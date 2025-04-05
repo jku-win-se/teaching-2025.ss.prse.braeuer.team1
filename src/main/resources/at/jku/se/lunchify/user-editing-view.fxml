@@ -7,11 +7,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.FXCollections?>
 
-<VBox fx:id="userEditingPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="217.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserManagementController">
+<VBox fx:id="userEditingPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="217.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserEditingController">
    <children>
       <Label fx:id="userPaneText" />
       <Label prefHeight="21.0" prefWidth="192.0" text="Benutzer auswählen" />
-      <ChoiceBox prefHeight="21.0" prefWidth="192.0" />
+      <ComboBox fx:id="allUsers" prefWidth="192.0" />
+      <Button fx:id="selectUserButton" mnemonicParsing="false" onAction="#onSelectUserButtonClick" prefWidth="192.0" text="Benutzer auswählen" />
       <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
       <TextField fx:id="email" promptText="Email" />
       <Label prefHeight="21.0" prefWidth="192.0" text="Passwort" />
