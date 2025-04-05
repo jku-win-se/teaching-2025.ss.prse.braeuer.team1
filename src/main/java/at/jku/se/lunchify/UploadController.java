@@ -9,7 +9,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 
 public class UploadController {
@@ -78,29 +79,40 @@ public class UploadController {
                             } catch (NumberFormatException e) {
                                 warningText.setText("Rechnungsnummer muss eine Zahl sein!");
                             }
-                            String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-                            String username = "postgres.yxshntkgvmksefegyfhz";
-                            String DBpassword = "CaMaKe25!";
+                            if (invoiceDate.getValue().isBefore(LocalDate.now())) {
+                                String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
+                                String username = "postgres.yxshntkgvmksefegyfhz";
+                                String DBpassword = "CaMaKe25!";
 
-                            Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+                                Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
 
-                            PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, type, status, isanomalous, file) values(?,?,?,?,?,?,?,?);");
-                            ps.setInt(1, LoginController.getCurrentUserId());
-                            ps.setInt(2, invoiceNumberInt);
-                            ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
-                            ps.setDouble(4, invoiceValueDouble);
-                            ps.setString(5, invoiceType.getValue());
-                            ps.setString(6, "eingereicht");
-                            ps.setBoolean(7, false);
-                            ps.setBytes(8,FileUtils.readFileToByteArray(selectedFile));
-                            ps.executeUpdate();
-                            ps.close();
-                            connection.close();
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Rechnung hochgeladen");
-                            alert.setHeaderText("Rechnung erfolgreich hochgeladen!"); // oder null
-                            alert.setContentText("Ihre Rechnung wurde erfolgreich hochgeladen! Sie dürfen gleich eine weitere Rechnung hochladen!");
-                            alert.showAndWait();
+                                PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, type, status, isanomalous, file) values(?,?,?,?,?,?,?,?);");
+                                ps.setInt(1, LoginController.getCurrentUserId());
+                                ps.setInt(2, invoiceNumberInt);
+                                ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
+                                ps.setDouble(4, invoiceValueDouble);
+                                ps.setString(5, invoiceType.getValue());
+                                ps.setString(6, "eingereicht");
+                                ps.setBoolean(7, false);
+                                ps.setBytes(8, FileUtils.readFileToByteArray(selectedFile));
+                                ps.executeUpdate();
+                                ps.close();
+                                connection.close();
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Rechnung hochgeladen");
+                                alert.setHeaderText("Rechnung erfolgreich hochgeladen!"); // oder null
+                                alert.setContentText("Ihre Rechnung wurde erfolgreich hochgeladen! Sie dürfen gleich eine weitere Rechnung hochladen!");
+                                alert.showAndWait();
+                            }
+                            else{
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Fehler bei der Datumsangabe");
+                                alert.setHeaderText("Datum liegt in der Zukunft!"); // oder null
+                                alert.setContentText("Das Datum kann nicht in der Zukunft liegen - das wäre ja Betrug!");
+                                alert.showAndWait();
+                                warningText.setText("Datum liegt in der Zukunft! Es können nur Rechnungen aus der Vergangenheit eingereicht werden!");
+                            }
+
                         }
                     }
                 }
