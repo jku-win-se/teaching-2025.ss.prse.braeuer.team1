@@ -9,10 +9,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.*;
 
-import java.io.IOException;
-
 
 public class LoginController {
+
+    // Datenbank-Zugangsdaten
+    private static final String JDBC_URL = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
+    private static final String DB_USER = "postgres.yxshntkgvmksefegyfhz";
+    private static final String DB_PASSWORD = "CaMaKe25!";
 
     @FXML
     protected Button loginButton;
@@ -24,41 +27,62 @@ public class LoginController {
     protected Label warningText;
 
 
+    //AI-Assisted
+    public void onLoginButtonClick() {
+        String userEmail = email.getText().trim();
+        String userPassword = password.getText().trim();
 
-    public void onLoginButtonClick() throws IOException {
-        if (email.getText().isEmpty() || password.getText().isEmpty()) {
+        // Falls die Felder leer sind, eine Warnung anzeigen
+        if (userEmail.isEmpty() || userPassword.isEmpty()) {
             warningText.setText("Login-Daten eingeben!");
-        } else {
-            if (email.getText().equals("admin") && password.getText().equals("admin")) {
-                LunchifyApplication.baseController.showMenu("menu-admin-view.fxml"); //Admin-Menu setzen
-            } else {
-                LunchifyApplication.baseController.showMenu("menu-user-view.fxml"); //User-Menu setzen
+            return;
+        }
+
+        // Verbindung zur Datenbank herstellen und Benutzer prüfen
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "SELECT type, isactive, password FROM public.\"User\" WHERE email = ?";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, userEmail);
+                try (ResultSet rs = pstmt.executeQuery()) {
+
+                    if (rs.next()) {
+                        // Werte aus der Datenbank abrufen
+                        String userType = rs.getString("type");
+                        boolean isActive = rs.getBoolean("isactive");
+                        String dbPassword = rs.getString("password"); // ⚠ Später Hashing verwenden!
+
+                        // Prüfen, ob der User aktiv ist
+                        if (!isActive) {
+                            warningText.setText("User inaktiv!");
+                            return;
+                        }
+
+                        // Passwort prüfen
+                        if (!userPassword.equals(dbPassword)) {
+                            warningText.setText("Falsches Passwort!");
+                            return;
+                        }
+
+                        // Menü je nach Benutzerrolle setzen
+                        if ("Admin".equals(userType)) {
+                            LunchifyApplication.baseController.showMenu("menu-admin-view.fxml");
+                        } else {
+                            LunchifyApplication.baseController.showMenu("menu-user-view.fxml");
+                        }
+
+                        // Erste View nach dem Login ins Base-Center setzen
+                        LunchifyApplication.baseController.showCenterView("upload-view.fxml");
+
+                    } else {
+                        warningText.setText("Kein gültiger User!");
+                    }
+                }
             }
-            // Ersten View ins Base-Center setzen
-            LunchifyApplication.baseController.showCenterView("upload-view.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+            warningText.setText("Fehler bei der Anmeldung!");
         }
     }
 
-/*
-    String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-    String username = "postgres.yxshntkgvmksefegyfhz";
-    String DBpassword = "CaMaKe25!";
-
-
-    @FXML
-    protected void onLoginButtonClick() throws SQLException {
-        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from \"User\" where userid = 1;");
-        while (resultSet.next())
-        {
-            String columnValue = resultSet.getString("email");
-            warningText.setText(columnValue);
-            connection.close();
-        }
-
-    }
-
- */
 }
