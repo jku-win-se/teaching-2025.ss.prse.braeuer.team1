@@ -38,7 +38,7 @@ public class UserCreationController {
             ResultSet rs = checkps.executeQuery();
             while (rs.next()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Benutzernlage");
+                alert.setTitle("Benutzeranlage");
                 alert.setHeaderText("Benutzer schon vorhanden"); // oder null
                 alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
                 alert.showAndWait();
@@ -59,5 +59,11 @@ public class UserCreationController {
         ps.executeUpdate();
         ps.close();
         connection.close();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Benutzeranlage");
+        alert.setHeaderText("Benutzer angelegt"); // oder null
+        alert.setContentText("Benutzer wurde erfolgreich angelegt!");
+        alert.showAndWait();
     }
 }

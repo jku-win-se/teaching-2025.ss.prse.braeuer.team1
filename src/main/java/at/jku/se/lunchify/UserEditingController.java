@@ -131,5 +131,13 @@ public class UserEditingController {
         ps.executeUpdate();
         ps.close();
         connection.close();
+
+        //besser vorher noch Check, ob erfolgreich upgedatet wurde
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Benutzeränderung");
+        alert.setHeaderText("Benutzer geändert"); // oder null
+        alert.setContentText("Benutzer wurde erfolgreich geändert!");
+        alert.showAndWait();
+        return;
     }
 }
