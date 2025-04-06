@@ -51,7 +51,7 @@ public class UploadController {
                 String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
 
                 try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                    pstmt.setInt(1, LoginController.getCurrentUserId());
+                    pstmt.setInt(1, LoginController.currentUserId);
                     pstmt.setDate(2, Date.valueOf(invoiceDate.getValue()));
                     try (ResultSet rs = pstmt.executeQuery()) {
                         if (rs.next()) {
@@ -85,7 +85,7 @@ public class UploadController {
                                 Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
 
                                 PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, type, status, isanomalous, file) values(?,?,?,?,?,?,?,?);");
-                                ps.setInt(1, LoginController.getCurrentUserId());
+                                ps.setInt(1, LoginController.currentUserId);
                                 ps.setInt(2, invoiceNumberInt);
                                 ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
                                 ps.setDouble(4, invoiceValueDouble);

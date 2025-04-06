@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.*;
 
-
 public class LoginController {
 
     // Datenbank-Zugangsdaten
@@ -27,6 +26,8 @@ public class LoginController {
     @FXML
     protected Label warningText;
 
+    public static int currentUserId;
+
     PasswordService passwordService = new PasswordService();
 
     //AI-Assisted
@@ -42,7 +43,7 @@ public class LoginController {
 
         // Verbindung zur Datenbank herstellen und Benutzer prüfen
         try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT type, isactive, password FROM public.\"User\" WHERE email = ?";
+            String sql = "SELECT userid, type, isactive, password FROM public.\"User\" WHERE email = ?";
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, userEmail);
@@ -75,6 +76,7 @@ public class LoginController {
 
                         // Erste View nach dem Login ins Base-Center setzen
                         LunchifyApplication.baseController.showCenterView("upload-view.fxml");
+                        currentUserId = rs.getInt("userid");
 
                     } else {
                         warningText.setText("Kein gültiger User!");
