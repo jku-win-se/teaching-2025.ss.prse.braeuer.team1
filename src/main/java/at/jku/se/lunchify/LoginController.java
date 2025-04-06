@@ -1,5 +1,6 @@
 package at.jku.se.lunchify;
 
+import at.jku.se.lunchify.security.PasswordService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,8 +27,7 @@ public class LoginController {
     @FXML
     protected Label warningText;
 
-    public static int currentUserId;
-
+    PasswordService passwordService = new PasswordService();
 
     //AI-Assisted
     public void onLoginButtonClick() {
@@ -42,7 +42,7 @@ public class LoginController {
 
         // Verbindung zur Datenbank herstellen und Benutzer prüfen
         try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT userid, type, isactive, password FROM public.\"User\" WHERE email = ?";
+            String sql = "SELECT type, isactive, password FROM public.\"User\" WHERE email = ?";
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, userEmail);
@@ -61,7 +61,7 @@ public class LoginController {
                         }
 
                         // Passwort prüfen
-                        if (!userPassword.equals(dbPassword)) {
+                        if (!passwordService.verifyPassword(userPassword,dbPassword)/*!userPassword.equals(dbPassword)*/) {
                             warningText.setText("Falsches Passwort!");
                             return;
                         }
@@ -75,7 +75,6 @@ public class LoginController {
 
                         // Erste View nach dem Login ins Base-Center setzen
                         LunchifyApplication.baseController.showCenterView("upload-view.fxml");
-                        currentUserId = rs.getInt("userid");
 
                     } else {
                         warningText.setText("Kein gültiger User!");
@@ -86,9 +85,6 @@ public class LoginController {
             e.printStackTrace();
             warningText.setText("Fehler bei der Anmeldung!");
         }
-    }
-    public static int getCurrentUserId(){
-        return currentUserId;
     }
 
 }
