@@ -43,7 +43,7 @@ public class UploadController {
     File selectedFile;
 
     public void onInvoiceUploadButtonClick() throws IOException, SQLException {
-        if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue().equals("")
+        if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
                 || invoiceNumber.getText().isEmpty() || selectedFile == null) {
             warningText.setText("Alle Felder ausfüllen!");
             return;
