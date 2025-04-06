@@ -6,14 +6,14 @@
 
 <BorderPane prefHeight="612.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.ReportController">
    <center>
-      <TableView maxWidth="900.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+      <TableView maxWidth="900.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER" fx:id="invoiceTable">
          <columns>
-            <TableColumn prefWidth="114.0" resizable="false" text="Benutzer" />
-            <TableColumn prefWidth="174.0" resizable="false" text="Rechnungsdatum" />
-            <TableColumn minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" />
-            <TableColumn minWidth="0.0" prefWidth="173.0" resizable="false" text="Rückzahlungsbetrag" />
-            <TableColumn minWidth="0.0" prefWidth="121.0" resizable="false" text="Typ" />
-            <TableColumn minWidth="0.0" prefWidth="134.0" resizable="false" text="Status" />
+            <TableColumn prefWidth="114.0" resizable="false" text="Benutzer" fx:id="userEmail" />
+            <TableColumn prefWidth="174.0" resizable="false" text="Rechnungsdatum" fx:id="invoiceDate" />
+            <TableColumn minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" fx:id="invoiceAmount"/>
+            <TableColumn minWidth="0.0" prefWidth="173.0" resizable="false" text="Rückzahlungsbetrag" fx:id="reimbursementAmount"/>
+            <TableColumn minWidth="0.0" prefWidth="121.0" resizable="false" text="Typ" fx:id="invType"/>
+            <TableColumn minWidth="0.0" prefWidth="134.0" resizable="false" text="Status" fx:id="invoiceStatus"/>
          </columns>
       </TableView>
    </center>

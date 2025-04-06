@@ -1,22 +1,18 @@
 package at.jku.se.lunchify;
 
-import at.jku.se.lunchify.models.User;
-import at.jku.se.lunchify.security.PasswordService;
+import at.jku.se.lunchify.models.Invoice;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ReportController {
     @FXML
@@ -31,6 +27,20 @@ public class ReportController {
     protected DatePicker dateTo;
     @FXML
     protected Label filterInfo;
+    @FXML
+    protected TableView<Invoice> invoiceTable;
+    @FXML
+    protected TableColumn<Invoice, String> userEmail;
+    @FXML
+    protected TableColumn<Invoice, Date> invoiceDate;
+    @FXML
+    protected TableColumn<Invoice, Double> invoiceAmount;
+    @FXML
+    protected TableColumn<Invoice, Double> reimbursementAmount;
+    @FXML
+    protected TableColumn<Invoice, String> invType;
+    @FXML
+    protected TableColumn<Invoice, String> invoiceStatus;
 
     protected String selectedUser;
     protected LocalDate selectedDateFrom;
@@ -109,6 +119,17 @@ public class ReportController {
             ReportController controller = loader.getController();
             controller.filterInfo.setText("Rechnungen ("+selectedInvoiceType+") von "+selectedUser+" (Zeitraum: "+selectedDateFrom.toString()+" bis "+selectedDateTo.toString()+")");
             LunchifyApplication.baseController.basePane.setCenter(root);
+            ObservableList<Invoice> invoiceList = FXCollections.observableArrayList();
+            try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+                String sql = "select \"Invoice\".date, \"Invoice\".amount, 2.5, \"Invoice\".type, \"Invoice\".status, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = "+selectedUser+" AND \"Invoice\".date BETWEEN "+dateFrom+" AND "+dateTo+" AND \"Invoice\".type = "+selectedInvoiceType+";";
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+
+                while (resultSet.next()) {
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
