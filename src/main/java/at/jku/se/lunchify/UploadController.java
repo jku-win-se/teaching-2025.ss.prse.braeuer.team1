@@ -48,7 +48,7 @@ public class UploadController {
             warningText.setText("Alle Felder ausfüllen!");
             return;
         }
-        if (invoiceDate.getValue().isBefore(LocalDate.now())) {
+        if (invoiceDate.getValue().isAfter(LocalDate.now())) {
             warningText.setText("Rechnungsdatum liegt in der Zukunft!");
             return;
         }
