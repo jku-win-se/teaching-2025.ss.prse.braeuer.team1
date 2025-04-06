@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,13 +80,13 @@ public class UserEditingController {
                 String surnameToEdit = resultSet.getString("surname");
                 String passwordToEdit = resultSet.getString("password");
                 String typeToEdit = resultSet.getString("type");
-                Boolean isActive = resultSet.getBoolean("isactive");
-                Boolean isAnomalous = resultSet.getBoolean("isanomalous");
+                boolean isActive = resultSet.getBoolean("isactive");
+                boolean isAnomalous = resultSet.getBoolean("isanomalous");
 
                 email.setText(emailToEdit);
                 firstname.setText(firstNameToEdit);
                 surname.setText(surnameToEdit);
-                //password.setText(passwordToEdit);
+                //password.setText(passwordToEdit); //Löschen, wenn Feld gesetzt, wird PW mit HashCode überschrieben!
                 userType.setValue(typeToEdit);
                 inactiveCheck.selectedProperty().setValue(!(isActive));
 
@@ -100,44 +99,60 @@ public class UserEditingController {
     }
 
     public void onSafeChangesButtonClick() throws SQLException {
-        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-        try {
-            if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
-                PreparedStatement checkps = connection.prepareStatement("SELECT userid FROM \"User\" where email = ?");
-                checkps.setString(1, email.getText());
-                ResultSet rs = checkps.executeQuery();
-                while (rs.next()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Benutzernlage");
-                    alert.setHeaderText("Benutzer schon vorhanden"); // oder null
-                    alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
-                    alert.showAndWait();
-                    return;
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+            if (!Objects.equals(email.getText(), userToEdit.getEmail())) {
+                try (PreparedStatement checkps = connection.prepareStatement("SELECT userid FROM \"User\" where email = ?")) {
+                    checkps.setString(1, email.getText());
+                    try (ResultSet rs = checkps.executeQuery()) {
+                        if (rs.next()) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Benutzernlage");
+                            alert.setHeaderText("Benutzer schon vorhanden"); // oder null
+                            alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
+                            alert.showAndWait();
+                            System.out.println("schon vorhanden");
+                            return;
+                        }
+                    }
                 }
             }
+            if(password.getText().isEmpty()) {
+                try(PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ? where userid = ?;")) {
+
+                    ps.setString(1, email.getText());
+                    ps.setString(2, firstname.getText());
+                    ps.setString(3, surname.getText());
+                    ps.setString(4, userType.getValue());
+                    ps.setBoolean(5, !(inactiveCheck.isSelected()));
+                    ps.setInt(6, userToEdit.getUserid());
+                    ps.executeUpdate();
+                    System.out.println("kein pw change");
+                }
+            } else try(PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;")) {
+
+                ps.setString(1, email.getText());
+                ps.setString(2, firstname.getText());
+                ps.setString(3, surname.getText());
+                ps.setString(4, userType.getValue());
+                ps.setBoolean(5, !(inactiveCheck.isSelected()));
+                ps.setString(6, passwordService.hashPassword(password.getText().trim()));
+                ps.setInt(7,userToEdit.getUserid());
+                ps.executeUpdate();
+                System.out.println("pw change");
+            }
+
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;");
 
-        ps.setString(1, email.getText());
-        ps.setString(2, firstname.getText());
-        ps.setString(3, surname.getText());
-        ps.setString(4, userType.getValue());
-        ps.setBoolean(5, !(inactiveCheck.isSelected()));
-        ps.setString(6, passwordService.hashPassword(password.getText().trim()));
-        ps.setInt(7,userToEdit.getUserid());
-        ps.executeUpdate();
-        ps.close();
-        connection.close();
-
+        System.out.println("alles ok");
         //besser vorher noch Check, ob erfolgreich upgedatet wurde
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Benutzeränderung");
         alert.setHeaderText("Benutzer geändert"); // oder null
         alert.setContentText("Benutzer wurde erfolgreich geändert!");
         alert.showAndWait();
-        return;
     }
 }
