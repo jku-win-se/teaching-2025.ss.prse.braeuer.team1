@@ -81,22 +81,20 @@ public class UserEditingController {
                 String surnameToEdit = resultSet.getString("surname");
                 String passwordToEdit = resultSet.getString("password");
                 String typeToEdit = resultSet.getString("type");
-                Boolean isActive = resultSet.getBoolean("isactive");
-                Boolean isAnomalous = resultSet.getBoolean("isanomalous");
+                boolean isActive = resultSet.getBoolean("isactive");
+                boolean isAnomalous = resultSet.getBoolean("isanomalous");
 
                 email.setText(emailToEdit);
                 firstname.setText(firstNameToEdit);
                 surname.setText(surnameToEdit);
-                //password.setText(passwordToEdit);
+                password.setText(passwordToEdit);
                 userType.setValue(typeToEdit);
                 inactiveCheck.selectedProperty().setValue(!(isActive));
 
                 userToEdit = new User(userid, emailToEdit, firstNameToEdit, surnameToEdit, typeToEdit, isActive, isAnomalous, passwordToEdit);
-
             }
             System.out.println("userToEdit: " + userToEdit);
         }
-
     }
 
     public void onSafeChangesButtonClick() throws SQLException {

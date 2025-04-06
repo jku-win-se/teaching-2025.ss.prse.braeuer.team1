@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="5.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.ReportController">
+   <children>
+      <Label fx:id="warningText" style="-fx-text-fill: red;" />
+      <Label prefHeight="34.0" prefWidth="192.0" style="-fx-font-weight: bold;" text="Mögliche Filter:" />
+      <Label prefWidth="192.0" text="Benutzer wählen:" />
+      <ComboBox fx:id="allUsers" onShowing="#showAllUsers" prefWidth="192.0" />
+      <Label prefWidth="192.0" text="Zeitraum wählen:" />
+      <HBox alignment="CENTER_LEFT" maxWidth="192.0" prefHeight="39.0" prefWidth="192.0" spacing="5.0">
+         <children>
+            <Label prefWidth="28.0" text="von:" />
+            <DatePicker fx:id="dateFrom" prefHeight="31.0" prefWidth="158.0" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" maxWidth="192.0" prefHeight="39.0" prefWidth="192.0" spacing="5.0">
+         <children>
+            <Label prefHeight="21.0" prefWidth="28.0" text="bis:" />
+            <DatePicker fx:id="dateTo" prefHeight="31.0" prefWidth="158.0" />
+         </children>
+      </HBox>
+      <Label prefWidth="192.0" text="Rechnungstyp wählen:" />
+      <ChoiceBox fx:id="invoiceType" prefWidth="192.0">
+           <items>
+               <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="alle Rechnungstypen" />
+                  <String fx:value="Supermarkt" />
+                  <String fx:value="Restaurant" />
+               </FXCollections>
+           </items>
+      </ChoiceBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <Button fx:id="invoiceIndicatorsButton" mnemonicParsing="false" onAction="#onInvoiceIndicatorsButtonClick" prefHeight="50.0" prefWidth="100.0" text="Kennzahlen" />
+            <Button fx:id="invoiceStatisticsButton" mnemonicParsing="false" onAction="#onInvoiceStatisticsButtonClick" prefHeight="50.0" prefWidth="100.0" text="Rechnungs-&#10;statistik" textAlignment="CENTER" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
