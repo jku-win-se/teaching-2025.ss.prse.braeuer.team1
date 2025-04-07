@@ -41,27 +41,26 @@ public class InvoiceDAO {
         return invoices;
     }
 
-    public ObservableList<Invoice> getSelectedInvoices(User user, Date dateFrom, Date dateTo, String selectedInvoiceType) {
+    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String selectedInvoiceType) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "select \"Invoice\".date, \"Invoice\".amount, 2.5, \"Invoice\".type, \"Invoice\".status, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = "+user+" AND \"Invoice\".date BETWEEN "+dateFrom+" AND "+dateTo+" AND \"Invoice\".type = "+selectedInvoiceType+";";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-             PreparedStatement sps = connection.prepareStatement(sql);
-             ResultSet resultSet = sps.executeQuery()) {
-
-                while (resultSet.next()) {
+        String sql = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, 2.5, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword))
+             {
+                 PreparedStatement sps = connection.prepareStatement(sql);
+                 ResultSet resultSet = sps.executeQuery();
+                 while (resultSet.next()) {
                     int selectedInvoicenumber = resultSet.getInt("invoicenumber");
                     Date selectedDate = resultSet.getDate("date");
                     double selectedAmount = resultSet.getDouble("amount");
                     String selectedType = resultSet.getString("type");
                     String selectedStatus = resultSet.getString("status");
                     boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
-                    byte[] selectedFile = resultSet.getBytes("selectedFile");
+                    int selectedUserid = resultSet.getInt("userid");
 
-                    Invoice nextInvoice = new Invoice(selectedInvoicenumber, user.getUserid(), selectedInvoicenumber, selectedDate, selectedAmount, selectedType, selectedIsAnomalous, selectedFile);
+                    Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedType, selectedIsAnomalous, null);
                     nextInvoice.setStatus(selectedStatus);
                     invoices.add(nextInvoice);
-                    connection.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

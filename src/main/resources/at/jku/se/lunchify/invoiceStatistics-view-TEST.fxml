@@ -11,6 +11,8 @@
          <columns>
             <TableColumn fx:id="invoiceDate" prefWidth="174.0" resizable="false" text="Rechnungsdatum" />
             <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" />
+            <TableColumn minWidth="0.0" prefWidth="121.0" resizable="false" text="Typ" fx:id="invType"/>
+            <TableColumn minWidth="0.0" prefWidth="134.0" resizable="false" text="Status" fx:id="invoiceStatus"/>
          </columns>
       </TableView>
    </center>

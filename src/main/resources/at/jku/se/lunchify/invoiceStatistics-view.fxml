@@ -8,7 +8,6 @@
    <center>
       <TableView maxWidth="900.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER" fx:id="invoiceTable">
          <columns>
-            <TableColumn prefWidth="114.0" resizable="false" text="Benutzer" fx:id="userEmail" />
             <TableColumn prefWidth="174.0" resizable="false" text="Rechnungsdatum" fx:id="invoiceDate" />
             <TableColumn minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" fx:id="invoiceAmount"/>
             <TableColumn minWidth="0.0" prefWidth="173.0" resizable="false" text="Rückzahlungsbetrag" fx:id="reimbursementAmount"/>

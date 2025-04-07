@@ -115,9 +115,11 @@ public class ReportController {
             //controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
             controller.invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
             controller.invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+            controller.invType.setCellValueFactory(new PropertyValueFactory<>("type"));
+            controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
             //ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoices(selectedUser);
-            ObservableList<Invoice> invoiceList = invoiceDAO.getAllInvoices();
+            ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoices(selectedMail,selectedDateFrom,selectedDateTo,selectedInvoiceType);
             //System.out.println(invoiceList);
             controller.invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
 
