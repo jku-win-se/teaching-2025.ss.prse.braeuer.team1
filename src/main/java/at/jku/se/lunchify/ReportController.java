@@ -1,18 +1,21 @@
 package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
-import javafx.collections.FXCollections;
+import at.jku.se.lunchify.models.InvoiceDAO;
+import at.jku.se.lunchify.models.User;
+import at.jku.se.lunchify.models.UserDAO;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
+import static java.sql.Date.valueOf;
 
 public class ReportController {
     @FXML
@@ -42,62 +45,51 @@ public class ReportController {
     @FXML
     protected TableColumn<Invoice, String> invoiceStatus;
 
-    protected String selectedUser;
-    protected LocalDate selectedDateFrom;
-    protected LocalDate selectedDateTo;
+    protected String selectedMail;
+    protected User selectedUser;
+    protected Date selectedDateFrom;
+    protected Date selectedDateTo;
     protected String selectedInvoiceType;
     protected boolean inputCorrect = false;
+
+    private InvoiceDAO invoiceDAO;
+    private UserDAO userDAO;
 
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
     String DBpassword = "CaMaKe25!";
 
+    public void initialize() {
+        invoiceDAO = new InvoiceDAO();
+        userDAO = new UserDAO();
+    }
+
     public void showAllUsers() {
-        List<String> users = getAllUsers();
-        ObservableList<String> userList = FXCollections.observableList(users);
-        allUsers.setItems(userList);
-    }
-
-    public List<String> getAllUsers() {
-        List<String> users = new ArrayList<>();
-        users.add("alle Benutzer");
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
-            String sql = "SELECT email FROM \"User\"";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                String userEmail = resultSet.getString("email");
-                users.add(userEmail);
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return users;
-    }
+        allUsers.setItems(userDAO.getAllUserMails());
+}
 
     private void setSelectedData () {
-        selectedUser = allUsers.getSelectionModel().getSelectedItem();
-        selectedDateFrom = dateFrom.getValue();
-        selectedDateTo = dateTo.getValue();
+        selectedMail = allUsers.getSelectionModel().getSelectedItem();
+        selectedUser = userDAO.getUserByEmail(selectedMail);
+        System.out.println(selectedMail + ": " + selectedUser.getUserid()); // Test mail und user-id wird zurückgegeben
+        selectedDateFrom = valueOf(dateFrom.getValue());
+        selectedDateTo = valueOf(dateTo.getValue());
         selectedInvoiceType = invoiceType.getValue();
     }
 
     private void checkSelectedData () {
-        if (selectedUser==null || selectedDateFrom==null || selectedDateTo==null || selectedInvoiceType==null) {
+        if (selectedMail ==null || selectedDateFrom==null || selectedDateTo==null || selectedInvoiceType==null) {
             warningText.setText("Alle Filter setzen!");
         }
-        else if(selectedDateTo.isBefore(selectedDateFrom)) {
+        else if(selectedDateTo.before(selectedDateFrom)) {
             warningText.setText("Bis-Datum darf nicht vor dem Von-Datum liegen!");
         }
-        else if(selectedDateTo.isAfter(LocalDate.now())) {
+        else if(selectedDateTo.after(new Date(2025,4,7))) {  //gehört noch korrekt implementiert -> heute
             warningText.setText("Bis-Datum darf nicht in der Zukunft liegen!");
         }
-        else if(selectedDateTo.getYear()<(LocalDate.now().getYear()-2)) {       //gehört noch korrekt implementiert - genau 12 Monate!
-            warningText.setText("Auswertung für max. 12 Monate zurück!");
-        }
+        //else if(selectedDateTo.getYear()<(LocalDate.now().getYear()-2)) {       //gehört noch korrekt implementiert - genau 12 Monate!
+        //    warningText.setText("Auswertung für max. 12 Monate zurück!");
+        //}
         else {
             inputCorrect=true;
         }
@@ -106,7 +98,7 @@ public class ReportController {
     public void onInvoiceIndicatorsButtonClick() {
         setSelectedData();
         checkSelectedData();
-    //Implementierung offen
+        //Implementierung offen
         LunchifyApplication.baseController.basePane.setRight(null);
     }
 
@@ -114,22 +106,31 @@ public class ReportController {
         setSelectedData();
         checkSelectedData();
         if (inputCorrect) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceStatistics-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceStatistics-view-TEST.fxml"));
             Parent root = loader.load();
             ReportController controller = loader.getController();
-            controller.filterInfo.setText("Rechnungen ("+selectedInvoiceType+") von "+selectedUser+" (Zeitraum: "+selectedDateFrom.toString()+" bis "+selectedDateTo.toString()+")");
+            controller.filterInfo.setText("Rechnungen ("+selectedInvoiceType+") von "+ selectedMail +" (Zeitraum: "+selectedDateFrom.toString()+" bis "+selectedDateTo.toString()+")");
             LunchifyApplication.baseController.basePane.setCenter(root);
-            ObservableList<Invoice> invoiceList = FXCollections.observableArrayList();
-            try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
-                String sql = "select \"Invoice\".date, \"Invoice\".amount, 2.5, \"Invoice\".type, \"Invoice\".status, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = "+selectedUser+" AND \"Invoice\".date BETWEEN "+dateFrom+" AND "+dateTo+" AND \"Invoice\".type = "+selectedInvoiceType+";";
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
 
-                while (resultSet.next()) {
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            //controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+            controller.invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            controller.invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+
+            //ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoices(selectedUser);
+            ObservableList<Invoice> invoiceList = invoiceDAO.getAllInvoices();
+            //System.out.println(invoiceList);
+            controller.invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
+
+        /*
+            // Tabelle konfigurieren (PropertyValueFactory bindet die Columns an die entsprechenden Eigenschaften im Invoice-Objekt)
+            controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+            controller.invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            controller.invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+            //controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
+            controller.invType.setCellValueFactory(new PropertyValueFactory<>("invType"));
+            controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+         */
         }
     }
+
 }
