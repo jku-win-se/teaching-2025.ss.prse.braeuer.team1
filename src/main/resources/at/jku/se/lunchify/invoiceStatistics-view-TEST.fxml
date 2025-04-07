@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="612.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.ReportController">
+   <center>
+      <TableView fx:id="invoiceTable" maxWidth="900.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+         <columns>
+            <TableColumn fx:id="invoiceDate" prefWidth="174.0" resizable="false" text="Rechnungsdatum" />
+            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" />
+            <TableColumn minWidth="0.0" prefWidth="121.0" resizable="false" text="Typ" fx:id="invType"/>
+            <TableColumn minWidth="0.0" prefWidth="134.0" resizable="false" text="Status" fx:id="invoiceStatus"/>
+         </columns>
+      </TableView>
+   </center>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <top>
+      <Label fx:id="filterInfo" BorderPane.alignment="CENTER_LEFT" />
+   </top>
+</BorderPane>

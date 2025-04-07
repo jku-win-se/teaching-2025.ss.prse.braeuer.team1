@@ -41,7 +41,6 @@ public class MenuController {
         LunchifyApplication.baseController.showCenterView("history-view.fxml");
     }
 
-
     public void onUserManagementButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("user-management-view.fxml");
     }
@@ -51,6 +50,6 @@ public class MenuController {
     }
 
     public void onReportButtonClick() throws IOException {
-        //ReportView offen
+        LunchifyApplication.baseController.showCenterView("report-view.fxml");
     };
 }

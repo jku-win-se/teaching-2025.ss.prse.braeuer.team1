@@ -23,16 +23,16 @@ public class Invoice {
         this.invoicenumber = invoicenumber;
         this.date = date;
         this.amount = amount;
-        if (Arrays.stream(invoicetype.values()).findAny().equals(type))
-        {
-            this.type = type;
-        }
-        else{
-            throw new Exception("Rechnungstyp nicht erlaubt!");
-        }
+        this.type = type;
         this.status = String.valueOf(invoicestatus.eingereicht);
         this.isanomalous = isanomalous;
         this.file = file;
+    }
+
+    public Invoice(int userid, Date date, double amount) throws Exception {
+        this.userid = userid;
+        this.date = date;
+        this.amount = amount;
     }
 
     public int getInvoiceid() {
@@ -79,28 +79,16 @@ public class Invoice {
         return type;
     }
 
-    public void setType(String type) throws Exception {
-        if (Arrays.stream(invoicetype.values()).findAny().equals(type))
-        {
+    public void setType(String type) {
             this.type = type;
-        }
-        else{
-            throw new Exception("Rechnungstyp nicht erlaubt!");
-        }
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) throws Exception {
-        if (Arrays.stream(invoicetype.values()).findAny().equals(status))
-        {
-            this.status = status;
-        }
-        else{
-            throw new Exception("Rechnungsstatus nicht erlaubt!");
-        }
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public boolean isIsanomalous() {
