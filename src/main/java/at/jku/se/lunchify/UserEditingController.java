@@ -81,8 +81,8 @@ public class UserEditingController {
                 String surnameToEdit = resultSet.getString("surname");
                 String passwordToEdit = resultSet.getString("password");
                 String typeToEdit = resultSet.getString("type");
-                Boolean isActive = resultSet.getBoolean("isactive");
-                Boolean isAnomalous = resultSet.getBoolean("isanomalous");
+                boolean isActive = resultSet.getBoolean("isactive");
+                boolean isAnomalous = resultSet.getBoolean("isanomalous");
 
                 email.setText(emailToEdit);
                 firstname.setText(firstNameToEdit);
@@ -96,10 +96,9 @@ public class UserEditingController {
             }
             System.out.println("userToEdit: " + userToEdit);
         }
-
     }
 
-    public void onSafeChangesButtonClick() throws SQLException {
+    public void onSaveChangesButtonClick() throws SQLException {
         Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
         try {
             if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
@@ -108,7 +107,7 @@ public class UserEditingController {
                 ResultSet rs = checkps.executeQuery();
                 while (rs.next()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Benutzernlage");
+                    alert.setTitle("Benutzeranlage");
                     alert.setHeaderText("Benutzer schon vorhanden"); // oder null
                     alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
                     alert.showAndWait();
