@@ -50,7 +50,9 @@ public class UserEditingController {
         }
     }
 
-    public void onSaveChangesButtonClick() throws SQLException {
+    public void onSaveChangesButtonClick() throws Exception {
+        User editedUser = new User(1, email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), false, passwordService.hashPassword(password.getText().trim()));
+
         if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
             boolean emailAlreadyExists = userDAO.getUserByEmail(email.getText()) != null;
             if(emailAlreadyExists) {
@@ -63,7 +65,7 @@ public class UserEditingController {
             }
         }
 
-        else if (userDAO.updateUser(userToEdit)) {
+        else if (userDAO.updateUser(editedUser)) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Benutzeränderung");
             alert.setHeaderText("Benutzer geändert"); // oder null
