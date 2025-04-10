@@ -1,6 +1,7 @@
 package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.User;
+import at.jku.se.lunchify.models.UserDAO;
 import at.jku.se.lunchify.security.PasswordService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,49 +22,46 @@ public class UserCreationController {
     protected ChoiceBox<String> userType;
     @FXML
     protected CheckBox inactiveCheck;
-    private User userToEdit;
 
-    String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-    String username = "postgres.yxshntkgvmksefegyfhz";
-    String DBpassword = "CaMaKe25!";
-    PasswordService passwordService = new PasswordService();
+    private UserDAO userDAO = new UserDAO();
+    private PasswordService passwordService = new PasswordService();
+
+    public void onUserCreationButtonClick() throws Exception {
+        String newEmail = email.getText();
+        String newFirstname = firstname.getText();
+        String newSurname = surname.getText();
+        String newPassword = passwordService.hashPassword(password.getText().trim());
+        String newUserType = userType.getValue();
+        boolean isactive = !inactiveCheck.isSelected();
 
 
-    public void onUserCreationButtonClick() throws SQLException {
-        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        User userToCreate = new User (1, newEmail, newFirstname, newSurname, newUserType, isactive, false, newPassword);
+        User userAlreadyExists = userDAO.getUserByEmail(email.getText());
 
-        try {
-            PreparedStatement checkps = connection.prepareStatement("SELECT userid FROM \"User\" where email = ?");
-            checkps.setString(1, email.getText());
-            ResultSet rs = checkps.executeQuery();
-            while (rs.next()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Benutzeranlage");
-                alert.setHeaderText("Benutzer schon vorhanden"); // oder null
-                alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
-                alert.showAndWait();
-                return;
-            }
+        if (userAlreadyExists != null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Benutzeranlage");
+            alert.setHeaderText("Benutzer schon vorhanden"); // oder null
+            alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
+            alert.showAndWait();
+            return;
         }
-        catch (SQLException e) {
-            e.printStackTrace();
+
+        else if(userDAO.insertUser(userToCreate)) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Benutzeranlage");
+            alert.setHeaderText("Benutzer angelegt"); // oder null
+            alert.setContentText("Benutzer wurde erfolgreich angelegt!");
+            alert.showAndWait();
         }
-        PreparedStatement ps = connection.prepareStatement("insert into \"User\" (email, firstname, surname, type, isactive, password) values (?,?,?,?,?,?);");
 
-        ps.setString(1, email.getText());
-        ps.setString(2, firstname.getText());
-        ps.setString(3, surname.getText());
-        ps.setString(4, userType.getValue());
-        ps.setBoolean(5, !(inactiveCheck.isSelected()));
-        ps.setString(6, passwordService.hashPassword(password.getText().trim()));
-        ps.executeUpdate();
-        ps.close();
-        connection.close();
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Benutzeranlage");
-        alert.setHeaderText("Benutzer angelegt"); // oder null
-        alert.setContentText("Benutzer wurde erfolgreich angelegt!");
-        alert.showAndWait();
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Benutzeranlage");
+            alert.setHeaderText("Benutzer nicht angelegt"); // oder null
+            alert.setContentText("Benutzer konnte nicht angelegt werden!");
+            alert.showAndWait();
+            return;
+        }
     }
 }

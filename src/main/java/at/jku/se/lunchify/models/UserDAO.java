@@ -61,7 +61,7 @@ public class UserDAO {
 
     public User getUserByEmail(String email) {
         User user = null;
-        String sql = "SELECT * FROM \"User\" WHERE email = \'"+email+"\'";
+        String sql = "SELECT * FROM \"User\" WHERE email = \'" + email + "\'";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
              PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet resultSet = ps.executeQuery()) {
@@ -87,20 +87,43 @@ public class UserDAO {
     }
 
     public boolean updateUser(User user) throws SQLException {
-        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-        PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;");
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;");) {
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getFirstname());
+            ps.setString(3, user.getSurname());
+            ps.setString(4, user.getType());
+            ps.setBoolean(5, user.isIsactive());
+            ps.setString(6, passwordService.hashPassword(user.getPassword().trim()));
+            ps.setInt(7, user.getUserid());
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
+            return true;
+        }
+            catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+        }
+    }
 
-        ps.setString(1, user.getEmail());
-        ps.setString(2, user.getFirstname());
-        ps.setString(3, user.getSurname());
-        ps.setString(4, user.getType());
-        ps.setBoolean(5, user.isIsactive());
-        ps.setString(6, passwordService.hashPassword(user.getPassword().trim()));
-        ps.setInt(7, user.getUserid());
-        ps.executeUpdate();
-        ps.close();
-        connection.close();
-
-        return true;
+    public boolean insertUser(User user) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        PreparedStatement ps = connection.prepareStatement("insert into \"User\" (email, firstname, surname, type, isactive, password) values (?,?,?,?,?,?);");){
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getFirstname());
+            ps.setString(3, user.getSurname());
+            ps.setString(4, user.getType());
+            ps.setBoolean(5, user.isIsactive());
+            ps.setString(6, passwordService.hashPassword(user.getPassword().trim()));
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
+            return true;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

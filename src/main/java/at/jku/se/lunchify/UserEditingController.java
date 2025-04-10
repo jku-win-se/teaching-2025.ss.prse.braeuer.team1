@@ -26,10 +26,10 @@ public class UserEditingController {
     protected ChoiceBox<String> userType;
     @FXML
     protected CheckBox inactiveCheck;
-    private User userToEdit;
-    PasswordService passwordService = new PasswordService();
 
-    UserDAO userDAO = new UserDAO();
+    private User userToEdit;
+    private PasswordService passwordService = new PasswordService();
+    private UserDAO userDAO = new UserDAO();
 
     public void initialize() {
         ObservableList<String> userList = userDAO.getAllUserMails();
@@ -52,7 +52,7 @@ public class UserEditingController {
 
     public void onSaveChangesButtonClick() throws Exception {
         User editedUser = new User(1, email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), false, passwordService.hashPassword(password.getText().trim()));
-
+        System.out.println(editedUser.getPassword());
         if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
             boolean emailAlreadyExists = userDAO.getUserByEmail(email.getText()) != null;
             if(emailAlreadyExists) {
