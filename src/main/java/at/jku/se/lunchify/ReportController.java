@@ -76,7 +76,6 @@ public class ReportController {
     private void setSelectedData () {
         selectedMail = allUsers.getSelectionModel().getSelectedItem();
         selectedUser = userDAO.getUserByEmail(selectedMail);
-        System.out.println(selectedMail + ": " + selectedUser.getUserid()); // Test mail und user-id wird zurückgegeben
         selectedDateFrom = valueOf(dateFrom.getValue());
         selectedDateTo = valueOf(dateTo.getValue());
         selectedInvoiceType = invoiceType.getValue();
