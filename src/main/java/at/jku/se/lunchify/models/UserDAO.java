@@ -32,7 +32,6 @@ public class UserDAO {
                 boolean isAnomalous = resultSet.getBoolean("isanomalous");
 
                 users.add(new User(userid, emailToEdit, firstNameToEdit, surnameToEdit, typeToEdit, isActive, isAnomalous, passwordToEdit));
-                connection.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,7 +50,6 @@ public class UserDAO {
             while (resultSet.next()) {
                 String emailToEdit = resultSet.getString("email");
                 users.add(emailToEdit);
-                connection.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,28 +59,31 @@ public class UserDAO {
 
     public User getUserByEmail(String email) {
         User user = null;
-        String sql = "SELECT * FROM \"User\" WHERE email = \'" + email + "\'";
+        String sql = "SELECT * FROM \"User\" WHERE email = ?";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
 
-            while (resultSet.next()) {
-                int userid = resultSet.getInt("userid");
-                String emailTo = resultSet.getString("email");
-                String firstNameTo = resultSet.getString("firstname");
-                String surnameTo = resultSet.getString("surname");
-                String passwordTo = resultSet.getString("password");
-                String typeTo = resultSet.getString("type");
-                boolean isActive = resultSet.getBoolean("isactive");
-                boolean isAnomalous = resultSet.getBoolean("isanomalous");
-                connection.close();
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    int userid = resultSet.getInt("userid");
+                    String emailTo = resultSet.getString("email");
+                    String firstNameTo = resultSet.getString("firstname");
+                    String surnameTo = resultSet.getString("surname");
+                    String passwordTo = resultSet.getString("password");
+                    String typeTo = resultSet.getString("type");
+                    boolean isActive = resultSet.getBoolean("isactive");
+                    boolean isAnomalous = resultSet.getBoolean("isanomalous");
+                    connection.close();
 
-                user = new User(userid, emailTo, firstNameTo, surnameTo, typeTo, isActive, isAnomalous, passwordTo);
+                    user = new User(userid, emailTo, firstNameTo, surnameTo, typeTo, isActive, isAnomalous, passwordTo);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return user;
     }
 
@@ -125,5 +126,10 @@ public class UserDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean checkUserAlreadyExists(User user) throws SQLException {
+        User userAlreadyExists = getUserByEmail(user.getEmail());
+        return userAlreadyExists != null; //User existiert nicht -> return false; User existiert -> return true;
     }
 }

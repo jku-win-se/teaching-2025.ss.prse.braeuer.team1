@@ -26,7 +26,7 @@ public class UserCreationController {
     private UserDAO userDAO = new UserDAO();
     private PasswordService passwordService = new PasswordService();
 
-    public void onUserCreationButtonClick() throws Exception {
+    public User onUserCreationButtonClick() throws Exception {
         String newEmail = email.getText();
         String newFirstname = firstname.getText();
         String newSurname = surname.getText();
@@ -36,32 +36,35 @@ public class UserCreationController {
 
 
         User userToCreate = new User (1, newEmail, newFirstname, newSurname, newUserType, isactive, false, newPassword);
-        User userAlreadyExists = userDAO.getUserByEmail(email.getText());
 
-        if (userAlreadyExists != null) {
+        //User existiert bereits
+        if (userDAO.checkUserAlreadyExists(userToCreate)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Benutzeranlage");
             alert.setHeaderText("Benutzer schon vorhanden"); // oder null
             alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
             alert.showAndWait();
-            return;
+            return null;
         }
 
+        //User kann erfolgreich angelegt werden
         else if(userDAO.insertUser(userToCreate)) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Benutzeranlage");
             alert.setHeaderText("Benutzer angelegt"); // oder null
             alert.setContentText("Benutzer wurde erfolgreich angelegt!");
             alert.showAndWait();
+            return userToCreate;
         }
 
+        //User kann nicht angelegt werden
         else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Benutzeranlage");
             alert.setHeaderText("Benutzer nicht angelegt"); // oder null
             alert.setContentText("Benutzer konnte nicht angelegt werden!");
             alert.showAndWait();
-            return;
+            return null;
         }
     }
 }
