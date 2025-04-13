@@ -34,7 +34,6 @@ public class UserCreationController {
         String newUserType = userType.getValue();
         boolean isactive = !inactiveCheck.isSelected();
 
-
         User userToCreate = new User (1, newEmail, newFirstname, newSurname, newUserType, isactive, false, newPassword);
 
         //User existiert bereits

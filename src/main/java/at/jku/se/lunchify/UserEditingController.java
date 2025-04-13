@@ -2,12 +2,10 @@ package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.User;
 import at.jku.se.lunchify.models.UserDAO;
-import at.jku.se.lunchify.security.PasswordService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.sql.*;
 import java.util.Objects;
 
 public class UserEditingController {
@@ -28,7 +26,6 @@ public class UserEditingController {
     protected CheckBox inactiveCheck;
 
     private User userToEdit;
-    private PasswordService passwordService = new PasswordService();
     private UserDAO userDAO = new UserDAO();
 
     public void initialize() {
@@ -78,6 +75,5 @@ public class UserEditingController {
             alert.setContentText("Benutzer konnte nicht geändert werden!");
             alert.showAndWait();
         }
-
     }
 }
