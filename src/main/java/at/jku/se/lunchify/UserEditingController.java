@@ -38,7 +38,6 @@ public class UserEditingController {
 
     public void onSelectUserButtonClick() throws Exception {
         String selectedUserEmail = allUsers.getSelectionModel().getSelectedItem();
-        System.out.println(selectedUserEmail);
         if (selectedUserEmail != null) {
             userToEdit = userDAO.getUserByEmail(selectedUserEmail);
             email.setText(userToEdit.getEmail());
@@ -51,17 +50,17 @@ public class UserEditingController {
     }
 
     public void onSaveChangesButtonClick() throws Exception {
-        User editedUser = new User(1, email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), false, passwordService.hashPassword(password.getText().trim()));
+        User editedUser = new User(userToEdit.getUserid(), email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), userToEdit.isIsanomalous(), passwordService.hashPassword(password.getText().trim()));
         System.out.println(editedUser.getPassword());
+        //Email-Adresse wurde geändert
         if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
-            boolean emailAlreadyExists = userDAO.getUserByEmail(email.getText()) != null;
-            if(emailAlreadyExists) {
+            //check ob neue Email schon exisitiert
+            if(userDAO.getUserByEmail(editedUser.getEmail()) != null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Benutzeranlage");
                 alert.setHeaderText("Benutzer schon vorhanden"); // oder null
                 alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
                 alert.showAndWait();
-                return;
             }
         }
 
@@ -71,7 +70,6 @@ public class UserEditingController {
             alert.setHeaderText("Benutzer geändert"); // oder null
             alert.setContentText("Benutzer wurde erfolgreich geändert!");
             alert.showAndWait();
-            return;
         }
         else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -79,7 +77,6 @@ public class UserEditingController {
             alert.setHeaderText("Benutzer nicht geändert"); // oder null
             alert.setContentText("Benutzer konnte nicht geändert werden!");
             alert.showAndWait();
-            return;
         }
 
     }
