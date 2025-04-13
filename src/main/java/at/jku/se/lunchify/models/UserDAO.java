@@ -57,6 +57,12 @@ public class UserDAO {
         return users;
     }
 
+    public ObservableList<String> getAllUserMailsWithAll() {
+        ObservableList<String> usersWithAll = this.getAllUserMails();
+        usersWithAll.addFirst("alle Benutzer");
+        return usersWithAll;
+    }
+
     public User getUserByEmail(String email) {
         User user = null;
         String sql = "SELECT * FROM \"User\"";
