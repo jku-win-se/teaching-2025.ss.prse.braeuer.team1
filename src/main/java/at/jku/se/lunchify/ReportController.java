@@ -12,8 +12,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
-import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import static java.sql.Date.valueOf;
 
@@ -47,13 +48,17 @@ public class ReportController {
 
     protected String selectedMail;
     protected User selectedUser;
-    protected Date selectedDateFrom;
-    protected Date selectedDateTo;
+    protected java.sql.Date selectedDateFrom;
+    protected java.sql.Date selectedDateTo;
     protected String selectedInvoiceType;
     protected boolean inputCorrect = false;
 
     private InvoiceDAO invoiceDAO;
     private UserDAO userDAO;
+
+    private Date today = new Date();
+    private LocalDate heuteVorEinemJahr = LocalDate.now().minusYears(1);
+    private Date todayLastYear = Date.from(heuteVorEinemJahr.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
@@ -65,7 +70,7 @@ public class ReportController {
     }
 
     public void showAllUsers() {
-        allUsers.setItems(userDAO.getAllUserMails());
+        allUsers.setItems(userDAO.getAllUserMailsWithAll());
 }
 
     private void setSelectedData () {
@@ -84,12 +89,12 @@ public class ReportController {
         else if(selectedDateTo.before(selectedDateFrom)) {
             warningText.setText("Bis-Datum darf nicht vor dem Von-Datum liegen!");
         }
-        else if(selectedDateTo.after(new Date(2025,4,7))) {  //gehört noch korrekt implementiert -> heute
+        else if(selectedDateTo.after(today)) {
             warningText.setText("Bis-Datum darf nicht in der Zukunft liegen!");
         }
-        //else if(selectedDateTo.getYear()<(LocalDate.now().getYear()-2)) {       //gehört noch korrekt implementiert - genau 12 Monate!
-        //    warningText.setText("Auswertung für max. 12 Monate zurück!");
-        //}
+        else if(selectedDateFrom.before(todayLastYear)) {
+            warningText.setText("Auswertung für max. 12 Monate zurück!");
+        }
         else {
             inputCorrect=true;
         }
