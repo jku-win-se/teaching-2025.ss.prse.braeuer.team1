@@ -50,7 +50,7 @@ public class UserEditingController {
     }
 
     public void onSaveChangesButtonClick() throws Exception {
-        User editedUser = new User(userToEdit.getUserid(), email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), userToEdit.isIsanomalous(), passwordService.hashPassword(password.getText().trim()));
+        User editedUser = new User(userToEdit.getUserid(), email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), userToEdit.isIsanomalous(), password.getText());
         System.out.println(editedUser.getPassword());
         //Email-Adresse wurde geändert
         if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
