@@ -43,7 +43,8 @@ public class InvoiceDAO {
 
     public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String selectedInvoiceType) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
-
+        //alle Benutzer -> keine Einschränkung auf Mail
+        //alle Rechnungstypen -> keine Einschränkung auf Invoicetyp
         String sql = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, 2.5, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword))
              {
