@@ -128,8 +128,8 @@ public class UserDAO {
         }
     }
 
-    public boolean checkUserAlreadyExists(User user) throws SQLException {
-        User userAlreadyExists = getUserByEmail(user.getEmail());
-        return userAlreadyExists != null; //User existiert nicht -> return false; User existiert -> return true;
+    public boolean checkUserAlreadyExists(User user) {
+        if (user==null) return false;
+        else return getUserByEmail(user.getEmail()) != null;
     }
 }

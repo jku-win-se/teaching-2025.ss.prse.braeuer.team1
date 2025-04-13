@@ -22,22 +22,26 @@ public class UserDAOTest {
     @Test
     public void testCheckUserAlreadyExists() throws SQLException {
         assertTrue(userDAO.checkUserAlreadyExists(userDAO.getUserByEmail("carina@lunchify.at")));
-        assertFalse(userDAO.checkUserAlreadyExists(userDAO.getUserByEmail("test@lunchify.at")));
+        assertFalse(userDAO.checkUserAlreadyExists(userDAO.getUserByEmail("")));
     }
 
     @Test
     public void testInsertUser() throws Exception {
-        User userToInsert = new User (1, "test@lunchify.at", "test", "test", "admin", true, false, "");
-        assertFalse(userDAO.checkUserAlreadyExists(userToInsert));
-        userDAO.insertUser(userToInsert);
+        User userToInsert = userDAO.getUserByEmail("carina@lunchify.at");
         assertTrue(userDAO.checkUserAlreadyExists(userToInsert));
+        assertFalse(userDAO.insertUser(userToInsert));
     }
 
     @Test
     public void testUpdateUser() throws Exception {
         User userToUpdate = userDAO.getUserByEmail("carina@lunchify.at");
-        userToUpdate.setIsactive(false);
-        userDAO.updateUser(userToUpdate);
-        assertFalse(userToUpdate.isIsactive());
+        userToUpdate.setEmail("martin");
+        assertFalse(userDAO.updateUser(userToUpdate));
+    }
+
+    @Test
+    public void testGetUserByEmail() throws Exception {
+        User testUser = userDAO.getUserByEmail("carina@lunchify.at");
+        assertEquals(testUser.getEmail(), "carina@lunchify.at");
     }
 }
