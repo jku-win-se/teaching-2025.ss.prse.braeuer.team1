@@ -2,6 +2,7 @@ package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.User;
 import at.jku.se.lunchify.models.UserDAO;
+import at.jku.se.lunchify.security.PasswordService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -27,6 +28,7 @@ public class UserEditingController {
 
     private User userToEdit;
     private UserDAO userDAO = new UserDAO();
+    private PasswordService passwordService = new PasswordService();
 
     public void initialize() {
         ObservableList<String> userList = userDAO.getAllUserMails();
@@ -47,8 +49,12 @@ public class UserEditingController {
     }
 
     public void onSaveChangesButtonClick() throws Exception {
-        User editedUser = new User(userToEdit.getUserid(), email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), userToEdit.isIsanomalous(), password.getText());
-        System.out.println(editedUser.getPassword());
+        User editedUser = new User(userToEdit.getUserid(), email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), userToEdit.isIsanomalous(), userToEdit.getPassword());
+        //Passwort wurde geändert
+        if(!password.getText().equals(userToEdit.getPassword())) {
+            editedUser.setPassword(passwordService.hashPassword(password.getText().trim()));
+        }
+
         //Email-Adresse wurde geändert
         if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
             //check ob neue Email schon exisitiert
