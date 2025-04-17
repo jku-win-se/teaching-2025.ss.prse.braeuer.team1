@@ -28,6 +28,8 @@ public class UploadController {
     @FXML
     protected TextField invoiceValue;
     @FXML
+    protected TextField reimbursementValue;
+    @FXML
     protected ChoiceBox<String> invoiceType;
     @FXML
     protected DatePicker invoiceDate;
@@ -39,6 +41,7 @@ public class UploadController {
     protected TextField invoiceNumber;
 
     double invoiceValueDouble;
+    double reimbursementValueDouble;
     int invoiceNumberInt; // nur Nummern? Problem bei z.B. RE123
     File selectedFile;
 
@@ -71,6 +74,14 @@ public class UploadController {
             warningText.setText("Rechnungsnummer muss eine Zahl sein!");
             return;
         }
+        if (invoiceType.getValue() == "Restaurant") {
+            reimbursementValue.setText("3.0");
+            reimbursementValueDouble = 3.0;
+        }
+        if (invoiceType.getValue() == "Supermarkt") {
+            reimbursementValue.setText("2.5");
+            reimbursementValueDouble = 2.5;
+        }
         try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
             String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
 
@@ -89,15 +100,17 @@ public class UploadController {
 
                         Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
 
-                        PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, type, status, isanomalous, file) values(?,?,?,?,?,?,?,?);");
+                        PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbureementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);");
                         ps.setInt(1, LoginController.currentUserId);
                         ps.setInt(2, invoiceNumberInt);
                         ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
                         ps.setDouble(4, invoiceValueDouble);
-                        ps.setString(5, invoiceType.getValue());
-                        ps.setString(6, "eingereicht");
-                        ps.setBoolean(7, false);
-                        ps.setBytes(8, FileUtils.readFileToByteArray(selectedFile));
+                        ps.setDouble(5, reimbursementValueDouble);
+                        ps.setString(6, invoiceType.getValue());
+                        ps.setString(7, "eingereicht");
+                        ps.setBoolean(8, false);
+                        ps.setBytes(9, FileUtils.readFileToByteArray(selectedFile));
+                        ps.setInt(10, 0);
                         ps.executeUpdate();
                         ps.close();
                         connection.close();
