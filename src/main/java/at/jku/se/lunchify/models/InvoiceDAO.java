@@ -47,10 +47,21 @@ public class InvoiceDAO {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
         String sql = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
+        String sqlAllInvoiceTypes = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
+        String sqlAllUsers = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
+        String sqlAllUsersAllTypes = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword))
              {
-                 PreparedStatement sps = connection.prepareStatement(sql);
-                 ResultSet resultSet = sps.executeQuery();
+                 PreparedStatement ps;
+                 //alle Benutzer und alle Rechnungstypen
+                 if (email.equals("alle Benutzer") && selectedInvoiceType.equals("alle Rechnungstypen")) ps = connection.prepareStatement(sqlAllUsersAllTypes);
+                 //alle Rechnungstypen
+                 else if (selectedInvoiceType.equals("alle Rechnungstypen")) ps = connection.prepareStatement(sqlAllInvoiceTypes);
+                 //alle Benutzer
+                 else if (email.equals("alle Benutzer")) ps = connection.prepareStatement(sqlAllUsers);
+                 //Filter auf Benutzer und Rechnungstypen
+                 else ps = connection.prepareStatement(sql);
+                 ResultSet resultSet = ps.executeQuery();
                  while (resultSet.next()) {
                     int selectedInvoicenumber = resultSet.getInt("invoicenumber");
                     Date selectedDate = resultSet.getDate("date");
@@ -60,8 +71,9 @@ public class InvoiceDAO {
                     String selectedStatus = resultSet.getString("status");
                     boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
                     int selectedUserid = resultSet.getInt("userid");
-                    int selectedTimesChanged = resultSet.getInt("timesChanged");
-                    Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
+                    //int selectedTimesChanged = resultSet.getInt("timesChanged");
+                     Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,1);
+                     //Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
                     nextInvoice.setStatus(selectedStatus);
                     invoices.add(nextInvoice);
                 }

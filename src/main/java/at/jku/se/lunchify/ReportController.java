@@ -12,8 +12,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
-import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import static java.sql.Date.valueOf;
 
@@ -33,8 +34,6 @@ public class ReportController {
     @FXML
     protected TableView<Invoice> invoiceTable;
     @FXML
-    protected TableColumn<Invoice, String> userEmail;
-    @FXML
     protected TableColumn<Invoice, Date> invoiceDate;
     @FXML
     protected TableColumn<Invoice, Double> invoiceAmount;
@@ -47,17 +46,17 @@ public class ReportController {
 
     protected String selectedMail;
     protected User selectedUser;
-    protected Date selectedDateFrom;
-    protected Date selectedDateTo;
+    protected java.sql.Date selectedDateFrom;
+    protected java.sql.Date selectedDateTo;
     protected String selectedInvoiceType;
     protected boolean inputCorrect = false;
 
     private InvoiceDAO invoiceDAO;
     private UserDAO userDAO;
 
-    String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-    String username = "postgres.yxshntkgvmksefegyfhz";
-    String DBpassword = "CaMaKe25!";
+    private final Date today = new Date();
+    private final LocalDate heuteVorEinemJahr = LocalDate.now().minusYears(1);
+    private final Date todayLastYear = Date.from(heuteVorEinemJahr.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     public void initialize() {
         invoiceDAO = new InvoiceDAO();
@@ -65,13 +64,12 @@ public class ReportController {
     }
 
     public void showAllUsers() {
-        allUsers.setItems(userDAO.getAllUserMails());
+        allUsers.setItems(userDAO.getAllUserMailsWithAll());
 }
 
     private void setSelectedData () {
         selectedMail = allUsers.getSelectionModel().getSelectedItem();
         selectedUser = userDAO.getUserByEmail(selectedMail);
-        System.out.println(selectedMail + ": " + selectedUser.getUserid()); // Test mail und user-id wird zurückgegeben
         selectedDateFrom = valueOf(dateFrom.getValue());
         selectedDateTo = valueOf(dateTo.getValue());
         selectedInvoiceType = invoiceType.getValue();
@@ -84,12 +82,12 @@ public class ReportController {
         else if(selectedDateTo.before(selectedDateFrom)) {
             warningText.setText("Bis-Datum darf nicht vor dem Von-Datum liegen!");
         }
-        else if(selectedDateTo.after(new Date(2025,4,7))) {  //gehört noch korrekt implementiert -> heute
+        else if(selectedDateTo.after(today)) {
             warningText.setText("Bis-Datum darf nicht in der Zukunft liegen!");
         }
-        //else if(selectedDateTo.getYear()<(LocalDate.now().getYear()-2)) {       //gehört noch korrekt implementiert - genau 12 Monate!
-        //    warningText.setText("Auswertung für max. 12 Monate zurück!");
-        //}
+        else if(selectedDateFrom.before(todayLastYear)) {
+            warningText.setText("Auswertung für max. 12 Monate zurück!");
+        }
         else {
             inputCorrect=true;
         }
@@ -106,7 +104,7 @@ public class ReportController {
         setSelectedData();
         checkSelectedData();
         if (inputCorrect) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceStatistics-view-TEST.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceStatistics-view.fxml"));
             Parent root = loader.load();
             ReportController controller = loader.getController();
             controller.filterInfo.setText("Rechnungen ("+selectedInvoiceType+") von "+ selectedMail +" (Zeitraum: "+selectedDateFrom.toString()+" bis "+selectedDateTo.toString()+")");
@@ -115,25 +113,12 @@ public class ReportController {
             //controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
             controller.invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
             controller.invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-            controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementamount"));
+            controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
             controller.invType.setCellValueFactory(new PropertyValueFactory<>("type"));
             controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-            //ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoices(selectedUser);
             ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoices(selectedMail,selectedDateFrom,selectedDateTo,selectedInvoiceType);
-            //System.out.println(invoiceList);
             controller.invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
-
-        /*
-            // Tabelle konfigurieren (PropertyValueFactory bindet die Columns an die entsprechenden Eigenschaften im Invoice-Objekt)
-            controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-            controller.invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-            controller.invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-            //controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
-            controller.invType.setCellValueFactory(new PropertyValueFactory<>("invType"));
-            controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-         */
         }
     }
-
 }
