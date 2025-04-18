@@ -3,10 +3,12 @@ package at.jku.se.lunchify;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class LunchifyApplication extends Application {
 
@@ -19,6 +21,7 @@ public class LunchifyApplication extends Application {
         Scene scene = new Scene(root, 1024, 768);
         stage.setTitle("Lunchify - hol dir dein Geld zurück, du Geizhals! :-D");
         stage.setScene(scene);
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("Logo-Lunchify.jpeg"))));
         stage.show();
 
         // Controller setzen, damit er von dem LoginController, MenuController etc. erreichbar ist

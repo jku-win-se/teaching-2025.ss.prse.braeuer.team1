@@ -7,7 +7,7 @@ public class Invoice {
 
     private int invoiceid;
     private int userid;
-    private int invoicenumber;
+    private String invoicenumber;
     private Date date;
     private double amount;
     private double reimbursementAmount;
@@ -19,8 +19,20 @@ public class Invoice {
     private byte[] file;
     private int timesChanged;
 
-    public Invoice(int invoiceid, int userid, int invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged) throws Exception {
+    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged) throws Exception {
         this.invoiceid = invoiceid;
+        this.userid = userid;
+        this.invoicenumber = invoicenumber;
+        this.date = date;
+        this.amount = amount;
+        this.reimbursementAmount = reimbursementAmount;
+        this.type = type;
+        this.status = String.valueOf(invoicestatus.eingereicht);
+        this.isanomalous = isanomalous;
+        this.file = file;
+        this.timesChanged = timesChanged;
+    }
+    public Invoice(int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged) throws Exception {
         this.userid = userid;
         this.invoicenumber = invoicenumber;
         this.date = date;
@@ -56,11 +68,11 @@ public class Invoice {
         this.userid = userid;
     }
 
-    public int getInvoicenumber() {
+    public String getInvoicenumber() {
         return invoicenumber;
     }
 
-    public void setInvoicenumber(int invoicenumber) {
+    public void setInvoicenumber(String invoicenumber) {
         this.invoicenumber = invoicenumber;
     }
 
