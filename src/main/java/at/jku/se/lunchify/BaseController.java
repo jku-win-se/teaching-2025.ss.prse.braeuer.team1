@@ -21,10 +21,6 @@ public class BaseController {
             basePane.setCenter(loadView(fxml));
     }
 
-    public void showRightView(String fxml) throws IOException {
-        basePane.setRight(loadView(fxml));
-    }
-
     public void showMenu(String fxml) throws IOException {
                 basePane.setTop(loadView(fxml));
     }
