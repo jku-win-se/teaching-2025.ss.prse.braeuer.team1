@@ -87,17 +87,18 @@ public class UserEditingController {
                 email.setText(emailToEdit);
                 firstname.setText(firstNameToEdit);
                 surname.setText(surnameToEdit);
-                password.setText(passwordToEdit);
+                //password.setText(passwordToEdit);
                 userType.setValue(typeToEdit);
                 inactiveCheck.selectedProperty().setValue(!(isActive));
 
                 userToEdit = new User(userid, emailToEdit, firstNameToEdit, surnameToEdit, typeToEdit, isActive, isAnomalous, passwordToEdit);
+
             }
             System.out.println("userToEdit: " + userToEdit);
         }
     }
 
-    public void onSafeChangesButtonClick() throws SQLException {
+    public void onSaveChangesButtonClick() throws SQLException {
         Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
         try {
             if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
@@ -106,7 +107,7 @@ public class UserEditingController {
                 ResultSet rs = checkps.executeQuery();
                 while (rs.next()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Benutzernlage");
+                    alert.setTitle("Benutzeranlage");
                     alert.setHeaderText("Benutzer schon vorhanden"); // oder null
                     alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
                     alert.showAndWait();

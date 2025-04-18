@@ -1,0 +1,289 @@
+@startuml
+class at.jku.se.lunchify.models.InvoiceSetting {
+- int settingid
+- double valueinvoicesupermarket
+- double valueinvoicerestaurants
++ int getSettingid()
++ void setSettingid(int)
++ double getValueinvoicesupermarket()
++ void setValueinvoicesupermarket(double)
++ double getValueinvoicerestaurants()
++ void setValueinvoicerestaurants(double)
++ String toString()
+}
+
+
+class at.jku.se.lunchify.models.LoginService {
+- String jdbcUrl
+- String dbUsername
+- String dbPassword
+- PasswordService passwordService
+- int userId
++ int getUserId()
++ LoginResult login(String,String)
+}
+
+
+enum at.jku.se.lunchify.models.LoginResult {
++  SUCCESS_ADMIN
++  SUCCESS_USER
++  INVALID_USER
++  INVALID_PW
++  USER_INACTIVE
++  EMPTY_FIELDS
++  ERROR
+}
+
+class at.jku.se.lunchify.UserEditingController {
+# ComboBox<String> allUsers
+# TextField email
+# TextField firstname
+# TextField surname
+# PasswordField password
+# ChoiceBox<String> userType
+# CheckBox inactiveCheck
+- User userToEdit
+~ PasswordService passwordService
+~ String jdbcUrl
+~ String username
+~ String DBpassword
++ void initialize()
++ List<String> getAllUsers()
++ void onSelectUserButtonClick()
++ void onSaveChangesButtonClick()
+}
+
+
+class at.jku.se.lunchify.LunchifyApplication {
++ {static} BaseController baseController
++ void start(Stage)
++ {static} void main(String[])
+}
+
+
+class at.jku.se.lunchify.models.User {
+- int userid
+- String email
+- String firstname
+- String surname
+- String type
+- boolean isactive
+- boolean isanomalous
+- String password
++ int getUserid()
++ void setUserid(int)
++ String getEmail()
++ void setEmail(String)
++ String getFirstname()
++ void setFirstname(String)
++ String getSurname()
++ void setSurname(String)
++ String getType()
++ void setType(String)
++ boolean isIsactive()
++ void setIsactive(boolean)
++ boolean isIsanomalous()
++ void setIsanomalous(boolean)
++ String getPassword()
++ void setPassword(String)
++ String toString()
+}
+
+
+enum at.jku.se.lunchify.models.usertype {
++  Admin
++  User
+}
+
+class at.jku.se.lunchify.MenuController {
+- Button logout
++ void onLogoutButtonClick()
++ void onUploadButtonClick()
++ void onHistoryButtonClick()
++ void onUserManagementButtonClick()
++ void onInvoiceSettingButtonClick()
++ void onReportButtonClick()
+}
+
+
+class at.jku.se.lunchify.models.InvoiceDAO {
+~ String jdbcUrl
+~ String username
+~ String DBpassword
++ ObservableList<Invoice> getAllInvoices()
++ ObservableList<Invoice> getSelectedInvoices(String,Date,Date,String)
++ ObservableList<Invoice> getSelectedInvoices(User)
+}
+
+
+class at.jku.se.lunchify.models.UserDAO {
+~ String jdbcUrl
+~ String username
+~ String DBpassword
++ ObservableList<User> getAllUsers()
++ ObservableList<String> getAllUserMails()
++ User getUserByEmail(String)
+}
+
+
+class at.jku.se.lunchify.UserCreationController {
+# TextField email
+# TextField firstname
+# TextField surname
+# PasswordField password
+# ChoiceBox<String> userType
+# CheckBox inactiveCheck
+- User userToEdit
+~ String jdbcUrl
+~ String username
+~ String DBpassword
+~ PasswordService passwordService
++ void onUserCreationButtonClick()
+}
+
+
+class at.jku.se.lunchify.LoginController {
+# Button loginButton
+# TextField email
+# PasswordField password
+# Label warningText
++ {static} int currentUserId
++ void onLoginButtonClick()
+}
+
+
+class at.jku.se.lunchify.UploadController {
+- {static} String JDBC_URL
+- {static} String DB_USER
+- {static} String DB_PASSWORD
+# Button invoiceUploadButton
+# Label warningText
+# TextField invoiceValue
+# ChoiceBox<String> invoiceType
+# DatePicker invoiceDate
+# Label fileName
+# Button invoiceAttachmentButton
+# TextField invoiceNumber
+~ double invoiceValueDouble
+~ int invoiceNumberInt
+~ File selectedFile
++ void onInvoiceUploadButtonClick()
++ void onInvoiceAttachmentButtonClick()
+}
+
+
+class at.jku.se.lunchify.security.PasswordService {
+- BCryptPasswordEncoder passwordEncoder
++ String hashPassword(String)
++ boolean verifyPassword(String,String)
+}
+
+
+class at.jku.se.lunchify.models.Invoice {
+- int invoiceid
+- int userid
+- int invoicenumber
+- Date date
+- double amount
+- String type
+- String status
+- boolean isanomalous
+- byte[] file
++ int getInvoiceid()
++ void setInvoiceid(int)
++ int getUserid()
++ void setUserid(int)
++ int getInvoicenumber()
++ void setInvoicenumber(int)
++ Date getDate()
++ void setDate(Date)
++ double getAmount()
++ void setAmount(double)
++ String getType()
++ void setType(String)
++ String getStatus()
++ void setStatus(String)
++ boolean isIsanomalous()
++ void setIsanomalous(boolean)
++ byte[] getFile()
++ void setFile(byte[])
++ String toString()
+}
+
+
+enum at.jku.se.lunchify.models.invoicetype {
++  Supermarkt
++  Restaurant
+}
+
+enum at.jku.se.lunchify.models.invoicestatus {
++  eingereicht
++  genehmigt
++  abgelehnt
+}
+
+class at.jku.se.lunchify.UserManagementController {
++ void onNewUserButtonClick()
++ void onEditUserButtonClick()
+}
+
+class at.jku.se.lunchify.Main {
++ {static} void main(String[])
+}
+
+class at.jku.se.lunchify.ReportController {
+# Label warningText
+# ComboBox<String> allUsers
+# ChoiceBox<String> invoiceType
+# DatePicker dateFrom
+# DatePicker dateTo
+# Label filterInfo
+# TableView<Invoice> invoiceTable
+# TableColumn<Invoice,String> userEmail
+# TableColumn<Invoice,Date> invoiceDate
+# TableColumn<Invoice,Double> invoiceAmount
+# TableColumn<Invoice,Double> reimbursementAmount
+# TableColumn<Invoice,String> invType
+# TableColumn<Invoice,String> invoiceStatus
+# String selectedMail
+# User selectedUser
+# Date selectedDateFrom
+# Date selectedDateTo
+# String selectedInvoiceType
+# boolean inputCorrect
+- InvoiceDAO invoiceDAO
+- UserDAO userDAO
+~ String jdbcUrl
+~ String username
+~ String DBpassword
++ void initialize()
++ void showAllUsers()
+- void setSelectedData()
+- void checkSelectedData()
++ void onInvoiceIndicatorsButtonClick()
++ void onInvoiceStatisticsButtonClick()
+}
+
+
+class at.jku.se.lunchify.LoginServiceTest {
+- LoginService loginService
++ void setup()
++ void testLoginWithEmptyFields()
++ void testLoginWithValidAdminCredentials()
++ void testLoginWithInvalidUsername()
+}
+
+
+class at.jku.se.lunchify.BaseController {
+# BorderPane basePane
++ Parent loadView(String)
++ void showCenterView(String)
++ void showRightView(String)
++ void showMenu(String)
+}
+
+
+
+
+javafx.application.Application <|-- at.jku.se.lunchify.LunchifyApplication
+@enduml
