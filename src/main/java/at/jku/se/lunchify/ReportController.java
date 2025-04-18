@@ -60,10 +60,6 @@ public class ReportController {
     private LocalDate heuteVorEinemJahr = LocalDate.now().minusYears(1);
     private Date todayLastYear = Date.from(heuteVorEinemJahr.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-    String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-    String username = "postgres.yxshntkgvmksefegyfhz";
-    String DBpassword = "CaMaKe25!";
-
     public void initialize() {
         invoiceDAO = new InvoiceDAO();
         userDAO = new UserDAO();
@@ -110,7 +106,7 @@ public class ReportController {
         setSelectedData();
         checkSelectedData();
         if (inputCorrect) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceStatistics-view-TEST.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceStatistics-view.fxml"));
             Parent root = loader.load();
             ReportController controller = loader.getController();
             controller.filterInfo.setText("Rechnungen ("+selectedInvoiceType+") von "+ selectedMail +" (Zeitraum: "+selectedDateFrom.toString()+" bis "+selectedDateTo.toString()+")");
@@ -123,21 +119,8 @@ public class ReportController {
             controller.invType.setCellValueFactory(new PropertyValueFactory<>("type"));
             controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-            //ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoices(selectedUser);
             ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoices(selectedMail,selectedDateFrom,selectedDateTo,selectedInvoiceType);
-            //System.out.println(invoiceList);
             controller.invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
-
-        /*
-            // Tabelle konfigurieren (PropertyValueFactory bindet die Columns an die entsprechenden Eigenschaften im Invoice-Objekt)
-            controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-            controller.invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-            controller.invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-            //controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
-            controller.invType.setCellValueFactory(new PropertyValueFactory<>("invType"));
-            controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-         */
         }
     }
-
 }
