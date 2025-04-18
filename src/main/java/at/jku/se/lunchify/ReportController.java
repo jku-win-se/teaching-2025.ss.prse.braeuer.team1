@@ -34,8 +34,6 @@ public class ReportController {
     @FXML
     protected TableView<Invoice> invoiceTable;
     @FXML
-    protected TableColumn<Invoice, String> userEmail;
-    @FXML
     protected TableColumn<Invoice, Date> invoiceDate;
     @FXML
     protected TableColumn<Invoice, Double> invoiceAmount;
@@ -56,9 +54,9 @@ public class ReportController {
     private InvoiceDAO invoiceDAO;
     private UserDAO userDAO;
 
-    private Date today = new Date();
-    private LocalDate heuteVorEinemJahr = LocalDate.now().minusYears(1);
-    private Date todayLastYear = Date.from(heuteVorEinemJahr.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    private final Date today = new Date();
+    private final LocalDate heuteVorEinemJahr = LocalDate.now().minusYears(1);
+    private final Date todayLastYear = Date.from(heuteVorEinemJahr.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     public void initialize() {
         invoiceDAO = new InvoiceDAO();
