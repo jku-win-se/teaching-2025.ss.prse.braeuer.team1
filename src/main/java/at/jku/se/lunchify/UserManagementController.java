@@ -21,7 +21,4 @@ public class UserManagementController {
     public void onEditUserButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("user-editing-view.fxml");
     }
-
-    //Klick auf Spalte soll Änderungs-View aufrufen
-
 }
