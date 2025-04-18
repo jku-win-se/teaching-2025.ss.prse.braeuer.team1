@@ -113,7 +113,7 @@ public class ReportController {
             //controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
             controller.invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
             controller.invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-            controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementamount"));
+            controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
             controller.invType.setCellValueFactory(new PropertyValueFactory<>("type"));
             controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
