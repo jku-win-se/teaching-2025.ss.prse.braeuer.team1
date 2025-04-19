@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class InvoiceClearingController {
 
     protected String selectedMail;
 
-    public void initialize() throws IOException {
+    public void initialize() {
         invoiceDAO = new InvoiceDAO();
         userDAO = new UserDAO();
         allUsers.setValue("alle Benutzer");
