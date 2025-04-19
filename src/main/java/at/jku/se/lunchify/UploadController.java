@@ -45,36 +45,40 @@ public class UploadController {
     int invoiceNumberInt; // nur Nummern? Problem bei z.B. RE123
     File selectedFile;
 
-    private boolean checkDateInPast(LocalDate date) {
-        if (invoiceDate.getValue().isAfter(LocalDate.now())) {
-            warningText.setText("Rechnungsdatum liegt in der Zukunft!");
+    public boolean checkDateInPast(LocalDate date) {
+        if (date.isAfter(LocalDate.now())) {
             return false;
         } else {
             return true;
         }
     }
 
-    private boolean checkInvoiceValueIsPositive(String value) {
+    public boolean checkInvoiceValueIsNumber(String value) {
+        try {
+            invoiceValueDouble = Double.parseDouble(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public boolean checkInvoiceValueIsPositive(String value) {
         try {
             invoiceValueDouble = Double.parseDouble(value);
             if (invoiceValueDouble <= 0) {
-                warningText.setText("Rechnungsbetrag muss positiv sein!");
                 return false;
             } else {
                 return true;
             }
         } catch (NumberFormatException e) {
-            warningText.setText("Rechnungsbetrag muss eine Zahl sein!");
             return false;
         }
     }
 
-    private double getReimbursementValueFromInvoiceType(String type) {
+    public double getReimbursementValueFromInvoiceType(String type) {
         if (type == "Restaurant") {
-            reimbursementValue.setText("3.0");
             return 3.0;
         } else if (type == "Supermarkt") {
-            reimbursementValue.setText("2.5");
             return 2.5;
         } else {
             return 0;
@@ -87,56 +91,68 @@ public class UploadController {
             warningText.setText("Alle Felder ausfüllen!");
             return;
         }
-        if (checkDateInPast(invoiceDate.getValue()) && checkInvoiceValueIsPositive(invoiceValue.getText())) {
-            reimbursementValueDouble = getReimbursementValueFromInvoiceType(invoiceType.getValue());
-            if (reimbursementValueDouble > 0) {
-                try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-                    String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
+        if (checkDateInPast(invoiceDate.getValue())) {
+            if (checkInvoiceValueIsNumber(invoiceValue.getText())) {
+                if (checkInvoiceValueIsPositive(invoiceValue.getText())) {
+                    reimbursementValueDouble = getReimbursementValueFromInvoiceType(invoiceType.getValue());
+                    reimbursementValue.setText(reimbursementValueDouble + "");
+                    if (reimbursementValueDouble > 0) {
+                        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
+                            String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
 
-                    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                        pstmt.setInt(1, LoginController.currentUserId);
-                        pstmt.setDate(2, Date.valueOf(invoiceDate.getValue()));
-                        try (ResultSet rs = pstmt.executeQuery()) {
-                            if (rs.next()) {
-                                // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
-                                warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
+                            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                                pstmt.setInt(1, LoginController.currentUserId);
+                                pstmt.setDate(2, Date.valueOf(invoiceDate.getValue()));
+                                try (ResultSet rs = pstmt.executeQuery()) {
+                                    if (rs.next()) {
+                                        // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
+                                        warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
 
-                            } else {
-                                String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-                                String username = "postgres.yxshntkgvmksefegyfhz";
-                                String DBpassword = "CaMaKe25!";
+                                    } else {
+                                        String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
+                                        String username = "postgres.yxshntkgvmksefegyfhz";
+                                        String DBpassword = "CaMaKe25!";
 
-                                Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+                                        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
 
-                                PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbureementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);");
-                                ps.setInt(1, LoginController.currentUserId);
-                                ps.setInt(2, invoiceNumberInt);
-                                ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
-                                ps.setDouble(4, invoiceValueDouble);
-                                ps.setDouble(5, reimbursementValueDouble);
-                                ps.setString(6, invoiceType.getValue());
-                                ps.setString(7, "eingereicht");
-                                ps.setBoolean(8, false);
-                                ps.setBytes(9, FileUtils.readFileToByteArray(selectedFile));
-                                ps.setInt(10, 0);
-                                ps.executeUpdate();
-                                ps.close();
-                                connection.close();
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("Rechnung hochgeladen");
-                                alert.setHeaderText("Rechnung erfolgreich hochgeladen!"); // oder null
-                                alert.setContentText("Ihre Rechnung wurde erfolgreich hochgeladen! Sie dürfen gleich eine weitere Rechnung hochladen!");
-                                alert.showAndWait();
+                                        PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbureementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);");
+                                        ps.setInt(1, LoginController.currentUserId);
+                                        ps.setInt(2, invoiceNumberInt);
+                                        ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
+                                        ps.setDouble(4, invoiceValueDouble);
+                                        ps.setDouble(5, reimbursementValueDouble);
+                                        ps.setString(6, invoiceType.getValue());
+                                        ps.setString(7, "eingereicht");
+                                        ps.setBoolean(8, false);
+                                        ps.setBytes(9, FileUtils.readFileToByteArray(selectedFile));
+                                        ps.setInt(10, 0);
+                                        ps.executeUpdate();
+                                        ps.close();
+                                        connection.close();
+                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                        alert.setTitle("Rechnung hochgeladen");
+                                        alert.setHeaderText("Rechnung erfolgreich hochgeladen!"); // oder null
+                                        alert.setContentText("Ihre Rechnung wurde erfolgreich hochgeladen! Sie dürfen gleich eine weitere Rechnung hochladen!");
+                                        alert.showAndWait();
+                                    }
+                                }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
                         }
+                    } else {
+                        warningText.setText("Rechnung scheint nicht von einem Supermarkt oder Restaurant zu sein");
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
+                } else {
+                    warningText.setText("Rechnungsbetrag muss positiv sein!");
                 }
-            } else {
-                warningText.setText("Rechnung scheint nicht von einem Supermarkt oder Restaurant zu sein");
             }
+            else{
+                warningText.setText("Rechnungsbetrag muss eine Zahl sein!");
+            }
+        } else {
+            warningText.setText("Rechnungsdatum liegt in der Zukunft!");
         }
     }
 
