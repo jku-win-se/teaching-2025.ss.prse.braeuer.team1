@@ -1,7 +1,9 @@
 package at.jku.se.lunchify.models;
 
+import at.jku.se.lunchify.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.commons.io.FileUtils;
 
 import javax.print.DocFlavor;
 import java.sql.*;
@@ -92,5 +94,30 @@ public class InvoiceDAO {
             e.printStackTrace();
         }
         return invoices;
+    }
+
+    public boolean insertInvoice(Invoice invoice) {
+        String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbureementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+             PreparedStatement sps = connection.prepareStatement(sql))
+        {
+            sps.setInt(1, invoice.getInvoiceid());
+            sps.setString(2, invoice.getInvoicenumber());
+            sps.setDate(3, (Date) invoice.getDate());
+            sps.setDouble(4, invoice.getAmount());
+            sps.setDouble(5, invoice.getReimbursementAmount());
+            sps.setString(6, invoice.getType());
+            sps.setString(7, invoice.getStatus());
+            sps.setBoolean(8, invoice.isIsanomalous());
+            sps.setBytes(9, invoice.getFile());
+            sps.setInt(10, 0);
+            sps.executeUpdate();
+            return true;
+        }
+     catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+
     }
 }
