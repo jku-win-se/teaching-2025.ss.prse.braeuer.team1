@@ -100,7 +100,7 @@ public class UploadController {
 
                         Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
 
-                        PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbureementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);");
+                        PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);");
                         ps.setInt(1, LoginController.currentUserId);
                         ps.setInt(2, invoiceNumberInt);
                         ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
