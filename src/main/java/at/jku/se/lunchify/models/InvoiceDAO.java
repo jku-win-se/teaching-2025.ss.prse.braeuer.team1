@@ -22,7 +22,7 @@ public class InvoiceDAO {
             while (resultSet.next()) {
                 int invoiceid = resultSet.getInt("invoiceid");
                 int userid = resultSet.getInt("userid");
-                int invoicenumber = resultSet.getInt("invoicenumber");
+                String invoicenumber = resultSet.getString("invoicenumber");
                 Date date = resultSet.getDate("date");
                 double amount = resultSet.getDouble("amount");
                 double reimbursementAmount = resultSet.getDouble("reimbursementAmount");
@@ -52,7 +52,7 @@ public class InvoiceDAO {
                  PreparedStatement sps = connection.prepareStatement(sql);
                  ResultSet resultSet = sps.executeQuery();
                  while (resultSet.next()) {
-                    int selectedInvoicenumber = resultSet.getInt("invoicenumber");
+                    String selectedInvoicenumber = resultSet.getString("invoicenumber");
                     Date selectedDate = resultSet.getDate("date");
                     double selectedAmount = resultSet.getDouble("amount");
                     double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
@@ -61,7 +61,7 @@ public class InvoiceDAO {
                     boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
                     int selectedUserid = resultSet.getInt("userid");
                     int selectedTimesChanged = resultSet.getInt("timesChanged");
-                    Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
+                    Invoice nextInvoice = new Invoice(selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
                     nextInvoice.setStatus(selectedStatus);
                     invoices.add(nextInvoice);
                 }
