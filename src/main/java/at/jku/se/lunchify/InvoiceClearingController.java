@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -97,8 +98,6 @@ public class InvoiceClearingController {
             Stage stage = new Stage();
             stage.setTitle("Rechnungsdetails");
             stage.setScene(new Scene(root));
-            //stage.initModality(Modality.APPLICATION_MODAL);
-            //stage.initOwner(root.getScene().getWindow());
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
