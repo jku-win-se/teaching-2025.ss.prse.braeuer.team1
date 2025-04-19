@@ -32,17 +32,19 @@ public class InvoiceClearingController {
     @FXML
     protected TableColumn<Invoice, String> invType;
     @FXML
-    protected TableColumn<Invoice, String> email;
-
-    protected String selectedMail;
-    protected User selectedUser;
+    protected TableColumn<Invoice, String> userid;
 
     private InvoiceDAO invoiceDAO;
     private UserDAO userDAO;
 
-    public void initialize() {
+    protected String selectedMail;
+    protected User selectedUser;
+
+    public void initialize() throws IOException {
         invoiceDAO = new InvoiceDAO();
         userDAO = new UserDAO();
+        allUsers.setValue("alle Benutzer");
+        userSelectionChanged();
 
         invoiceTable.setRowFactory(tableView -> {
             TableRow<Invoice> row = new TableRow<>();
@@ -63,7 +65,9 @@ public class InvoiceClearingController {
 
     private void setSelectedData () {
         selectedMail = allUsers.getSelectionModel().getSelectedItem();
-        selectedUser = userDAO.getUserByEmail(selectedMail);
+        if (selectedMail == null || selectedMail.equals("alle Benutzer")) {
+            selectedMail = null;
+        }
     }
 
 
@@ -71,14 +75,14 @@ public class InvoiceClearingController {
         setSelectedData();
 
         //userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        email.setCellValueFactory(new PropertyValueFactory<>("email"));
+        userid.setCellValueFactory(new PropertyValueFactory<>("userid"));
         invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
         reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
         invType.setCellValueFactory(new PropertyValueFactory<>("type"));
 
 
-        ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToClear(selectedUser, "eingereicht", true);
+        ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToClear(selectedMail, "eingereicht", true);
         invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
     }
 }

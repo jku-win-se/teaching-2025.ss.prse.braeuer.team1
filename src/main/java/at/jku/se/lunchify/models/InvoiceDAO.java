@@ -83,10 +83,10 @@ public class InvoiceDAO {
         return invoices;
     }
 
-    public ObservableList<Invoice> getSelectedInvoicesToClear(User user, String status, boolean anomalous) {
+    public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "SELECT \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"User\".email " +
+        String sql = "SELECT \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"User\".userid " +
                 "FROM \"Invoice\" " +
                 "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
                 "WHERE (? IS NULL OR \"User\".email = ? )" +
@@ -95,8 +95,8 @@ public class InvoiceDAO {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getEmail());
+            ps.setString(1, email);
+            ps.setString(2, email);
             ps.setString(3, status);
             ps.setBoolean(4, anomalous);
             ResultSet resultSet = ps.executeQuery();
@@ -105,7 +105,8 @@ public class InvoiceDAO {
                 Date selectedDate = resultSet.getDate("date");
                 double selectedAmount = resultSet.getDouble("amount");
                 double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
-                Invoice nextInvoice = new Invoice(user.getUserid(), selectedDate, selectedAmount,selectedReimbursementAmount);
+                int selectedUserid = resultSet.getInt("userid");
+                Invoice nextInvoice = new Invoice(selectedUserid, selectedDate, selectedAmount,selectedReimbursementAmount);
                 invoices.add(nextInvoice);
                 connection.close();
             }
