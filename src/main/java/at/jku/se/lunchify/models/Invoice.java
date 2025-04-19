@@ -19,7 +19,7 @@ public class Invoice {
     private byte[] file;
     private int timesChanged;
 
-    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged) throws Exception {
+    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged){
         this.invoiceid = invoiceid;
         this.userid = userid;
         this.invoicenumber = invoicenumber;
@@ -32,7 +32,7 @@ public class Invoice {
         this.file = file;
         this.timesChanged = timesChanged;
     }
-    public Invoice(int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged) throws Exception {
+    public Invoice(int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged){
         this.userid = userid;
         this.invoicenumber = invoicenumber;
         this.date = date;
@@ -45,7 +45,7 @@ public class Invoice {
         this.timesChanged = timesChanged;
     }
 
-    public Invoice(int userid, Date date, double amount, double reimbursementAmount) throws Exception {
+    public Invoice(int userid, Date date, double amount, double reimbursementAmount){
         this.userid = userid;
         this.date = date;
         this.amount = amount;

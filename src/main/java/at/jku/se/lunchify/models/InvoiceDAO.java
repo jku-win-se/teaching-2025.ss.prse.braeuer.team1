@@ -4,9 +4,11 @@ import at.jku.se.lunchify.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.commons.io.FileUtils;
+import org.springframework.cglib.core.Local;
 
 import javax.print.DocFlavor;
 import java.sql.*;
+import java.time.LocalDate;
 
 public class InvoiceDAO {
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
@@ -119,6 +121,23 @@ public class InvoiceDAO {
         e.printStackTrace();
         return false;
     }
+    }
 
+    public boolean checkInvoicesByDateAndUser(int userid, LocalDate date) {
+        String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = "+userid+" AND date = "+Date.valueOf(date);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+             PreparedStatement sps = connection.prepareStatement(sql);
+             ResultSet resultSet = sps.executeQuery()) {
+
+            if (resultSet.next()) {
+                return false;
+            }
+            else{
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
