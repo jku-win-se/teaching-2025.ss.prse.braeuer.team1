@@ -83,13 +83,23 @@ public class InvoiceDAO {
         return invoices;
     }
 
-    public ObservableList<Invoice> getSelectedInvoices(User user) {
+    public ObservableList<Invoice> getSelectedInvoicesToClear(User user, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "select \"Invoice\".date, \"Invoice\".amount,, \"Invoice\".reimbursementamount, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = "+user.getEmail()+";";
+        String sql = "SELECT \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"User\".email " +
+                "FROM \"Invoice\" " +
+                "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
+                "WHERE (? IS NULL OR \"User\".email = ? )" +
+                "AND \"Invoice\".status = ? " +
+                "AND \"Invoice\".isanomalous = ?;";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-             PreparedStatement sps = connection.prepareStatement(sql);
-             ResultSet resultSet = sps.executeQuery()) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, status);
+            ps.setBoolean(4, anomalous);
+            ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
                 Date selectedDate = resultSet.getDate("date");

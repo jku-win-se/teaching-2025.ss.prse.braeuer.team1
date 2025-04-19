@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="612.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceClearingController">
+   <center>
+      <TableView fx:id="invoiceTable" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+         <columns>
+            <TableColumn fx:id="user" minWidth="0.0" prefWidth="134.0" resizable="false" text="Benutzer" />
+            <TableColumn fx:id="invoiceDate" prefWidth="174.0" resizable="false" text="Rechnungsdatum" />
+            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" />
+            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="173.0" resizable="false" text="Rückzahlungsbetrag" />
+            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="121.0" resizable="false" text="Typ" />
+         </columns>
+      </TableView>
+   </center>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="10.0">
+         <children>
+            <Label fx:id="filterInfo" text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
+            <ComboBox fx:id="allUsers" onAction="#userSelectionChanged" onShowing="#showAllUsers" prefWidth="150.0" promptText="alle" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </HBox>
+   </top>
+</BorderPane>

@@ -18,7 +18,7 @@
             <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#onUploadButtonClick" text="Rechnung hochladen" />
             <Button fx:id="historyButton" mnemonicParsing="false" onAction="#onHistoryButtonClick" text="Meine Rechnungen" />
             <Button fx:id="userManagementButton" mnemonicParsing="false" onAction="#onUserManagementButtonClick" text="Benutzerverwaltung" />
-            <Button fx:id="InvoiceEditButton" mnemonicParsing="false" text="Rechnungsfreigabe" />
+            <Button fx:id="invoiceClearanceButton" mnemonicParsing="false" onAction="#onInvoiceClearanceButtonClick" text="Rechnungsfreigabe" />
             <Button fx:id="invoiceSettingButton" mnemonicParsing="false" onAction="#onInvoiceSettingButtonClick" text="Konfiguration" />
             <Button fx:id="reportButton" mnemonicParsing="false" onAction="#onReportButtonClick" text="Auswertungen" />
          </children>
