@@ -131,7 +131,7 @@ public class UserDAO {
             ps.setString(3, user.getSurname());
             ps.setString(4, user.getType());
             ps.setBoolean(5, user.isIsactive());
-            ps.setString(6, passwordService.hashPassword(user.getPassword().trim()));
+            ps.setString(6, user.getPassword());
             ps.setInt(7, user.getUserid());
             ps.executeUpdate();
             ps.close();
