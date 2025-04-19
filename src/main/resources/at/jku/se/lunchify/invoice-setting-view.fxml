@@ -6,22 +6,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="invoiceSettingPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="266.0" prefWidth="236.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.LoginController">
+<VBox fx:id="invoiceSettingPane" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceSettingController">
    <children>
-      <Label fx:id="userPaneText" prefHeight="21.0" prefWidth="192.0" text="Refundierungsbeträge:">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font></Label>
-      <Label prefHeight="21.0" prefWidth="192.0" text="Supermarkt" />
-      <TextField fx:id="valueInvoiceSupermarket" prefColumnCount="0" prefHeight="21.0" prefWidth="192.0" promptText="Supermarkt" />
-      <Label prefHeight="21.0" prefWidth="192.0" text="Restaurant" />
-      <TextField fx:id="valueInvoiceRestaurant" prefHeight="21.0" prefWidth="192.0" promptText="Restaurant" />
-      <Button fx:id="userCreationButton" maxWidth="220.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="220.0" text="Refundierungsbetrag ändern">
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin></Button>
+      <Label fx:id="warningText" textAlignment="CENTER" textFill="RED">
+      <font>
+         <Font name="System Bold" size="24.0" />
+      </font>
+      </Label>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="236.0" spacing="10.0" stylesheets="@lunchify-style.css">
+         <children>
+            <Label fx:id="userPaneText" prefHeight="21.0" prefWidth="192.0" text="Refundierungsbeträge:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="21.0" prefWidth="192.0" text="Supermarkt" />
+            <TextField fx:id="valueInvoiceSupermarket" onAction="#onChangeInvoiceValueButtonClick" prefColumnCount="0" prefHeight="21.0" prefWidth="192.0" promptText="Supermarkt" />
+            <Label prefHeight="21.0" prefWidth="192.0" text="Restaurant" />
+            <TextField fx:id="valueInvoiceRestaurant" onAction="#onChangeInvoiceValueButtonClick" prefHeight="21.0" prefWidth="192.0" promptText="Restaurant" />
+            <Button fx:id="changeInvoiceValueButton" maxWidth="220.0" mnemonicParsing="false" onAction="#onChangeInvoiceValueButtonClick" prefHeight="31.0" prefWidth="220.0" text="Refundierungsbetrag ändern">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
    </children>
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-   </padding>
 </VBox>
