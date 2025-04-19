@@ -86,7 +86,7 @@ public class InvoiceDAO {
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "SELECT \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"User\".userid " +
+        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"User\".userid, \"User\".surname, \"User\".firstname " +
                 "FROM \"Invoice\" " +
                 "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
                 "WHERE (? IS NULL OR \"User\".email = ? )" +
@@ -102,11 +102,12 @@ public class InvoiceDAO {
             ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
+                int selectedInvoiceid = resultSet.getInt("invoiceid");
                 Date selectedDate = resultSet.getDate("date");
                 double selectedAmount = resultSet.getDouble("amount");
                 double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
                 int selectedUserid = resultSet.getInt("userid");
-                Invoice nextInvoice = new Invoice(selectedUserid, selectedDate, selectedAmount,selectedReimbursementAmount);
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedDate, selectedAmount,selectedReimbursementAmount);
                 invoices.add(nextInvoice);
                 connection.close();
             }
@@ -114,5 +115,38 @@ public class InvoiceDAO {
             e.printStackTrace();
         }
         return invoices;
+    }
+
+    public Invoice getInvoiceById (int id) {
+        Invoice invoice = null;
+        String sql = "SELECT * FROM \"Invoice\" WHERE \"Invoice\".invoiceid = ?";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    int selectedInvoiceid = resultSet.getInt("invoiceid");
+                    int selectedInvoicenumber = resultSet.getInt("invoicenumber");
+                    int selectedUserid = resultSet.getInt("userid");
+                    Date selectedDate = resultSet.getDate("date");
+                    double selectedAmount = resultSet.getDouble("amount");
+                    double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
+                    String selectedType = resultSet.getString("type");
+                    String selectedStatus = resultSet.getString("status");
+                    boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
+                    int selectedTimesChanged = resultSet.getInt("timesChanged");
+                    byte[] selectedFile = resultSet.getBytes("file");
+                    connection.close();
+
+                    invoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return invoice;
     }
 }

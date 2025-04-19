@@ -9,6 +9,7 @@
    <center>
       <TableView fx:id="invoiceTable" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
          <columns>
+            <TableColumn fx:id="invoiceid" minWidth="0.0" prefWidth="134.0" resizable="false" text="ID" />
             <TableColumn fx:id="userid" minWidth="0.0" prefWidth="134.0" resizable="false" text="Benutzer" />
             <TableColumn fx:id="invoiceDate" prefWidth="174.0" resizable="false" text="Rechnungsdatum" />
             <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" />

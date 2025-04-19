@@ -33,6 +33,14 @@ public class Invoice {
         this.timesChanged = timesChanged;
     }
 
+    public Invoice(int invoiceid, int userid, Date date, double amount, double reimbursementAmount) throws Exception {
+        this.invoiceid = invoiceid;
+        this.userid = userid;
+        this.date = date;
+        this.amount = amount;
+        this.reimbursementAmount = reimbursementAmount;
+    }
+
     public Invoice(int userid, Date date, double amount, double reimbursementAmount) throws Exception {
         this.userid = userid;
         this.date = date;

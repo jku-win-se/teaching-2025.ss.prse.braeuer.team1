@@ -8,8 +8,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -33,12 +36,13 @@ public class InvoiceClearingController {
     protected TableColumn<Invoice, String> invType;
     @FXML
     protected TableColumn<Invoice, String> userid;
+    @FXML
+    protected TableColumn<Invoice, String> invoiceid;
 
     private InvoiceDAO invoiceDAO;
     private UserDAO userDAO;
 
     protected String selectedMail;
-    protected User selectedUser;
 
     public void initialize() throws IOException {
         invoiceDAO = new InvoiceDAO();
@@ -46,13 +50,14 @@ public class InvoiceClearingController {
         allUsers.setValue("alle Benutzer");
         userSelectionChanged();
 
+        //AI assisted
         invoiceTable.setRowFactory(tableView -> {
             TableRow<Invoice> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty()) {
-                Invoice invoice = row.getItem();
-                //Hier soll Rechnungsdetail angezeigt werden
-                    System.out.println("Rechnung iHv:" + invoice.getAmount());
+                    Invoice invoice = row.getItem();
+                    Invoice selectedInvoice = invoiceDAO.getInvoiceById(invoice.getInvoiceid());
+                    showInvoiceDetails(selectedInvoice);
                 }
             });
             return row;
@@ -70,11 +75,11 @@ public class InvoiceClearingController {
         }
     }
 
-
     public void userSelectionChanged() throws IOException {
         setSelectedData();
 
         //userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        invoiceid.setCellValueFactory(new PropertyValueFactory<>("invoiceid"));
         userid.setCellValueFactory(new PropertyValueFactory<>("userid"));
         invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         invoiceAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
@@ -84,5 +89,25 @@ public class InvoiceClearingController {
 
         ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToClear(selectedMail, "eingereicht", true);
         invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
+    }
+
+    private void showInvoiceDetails(Invoice invoice) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceDetail-view.fxml"));
+            Parent root = loader.load();
+
+            // Detail-Controller holen und Daten übergeben
+            InvoiceDetailController controller = loader.getController();
+            controller.setInvoice(invoice); // Übergabe-Methode im Detail-Controller
+
+            Stage stage = new Stage();
+            stage.setTitle("Rechnungsdetails");
+            stage.setScene(new Scene(root));
+            //stage.initModality(Modality.APPLICATION_MODAL);
+            //stage.initOwner(root.getScene().getWindow());
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
