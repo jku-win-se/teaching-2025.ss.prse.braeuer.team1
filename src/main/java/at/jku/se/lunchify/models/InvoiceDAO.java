@@ -112,6 +112,7 @@ public class InvoiceDAO {
             sps.setBytes(9, invoice.getFile());
             sps.setInt(10, 0);
             sps.executeUpdate();
+            sps.close();
             return true;
         }
      catch (Exception e) {

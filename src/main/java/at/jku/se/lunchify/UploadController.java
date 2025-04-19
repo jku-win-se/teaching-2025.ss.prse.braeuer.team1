@@ -1,12 +1,15 @@
 package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
+import at.jku.se.lunchify.models.InvoiceDAO;
+import at.jku.se.lunchify.models.UserDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 
+import java.awt.event.InvocationEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -42,8 +45,9 @@ public class UploadController {
 
     double invoiceValueDouble;
     double reimbursementValueDouble;
-    int invoiceNumberInt; // nur Nummern? Problem bei z.B. RE123
     File selectedFile;
+
+    private InvoiceDAO invoiceDAO = new InvoiceDAO();
 
     private boolean checkDateInPast(LocalDate date) {
         if (invoiceDate.getValue().isAfter(LocalDate.now())) {
@@ -102,31 +106,18 @@ public class UploadController {
                                 warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
 
                             } else {
-                                String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-                                String username = "postgres.yxshntkgvmksefegyfhz";
-                                String DBpassword = "CaMaKe25!";
+                                Invoice invoice = new Invoice(LoginController.currentUserId,invoiceNumber.getText(),Date.valueOf(invoiceDate.getValue()),invoiceValueDouble,reimbursementValueDouble,invoiceType.getValue(),false,FileUtils.readFileToByteArray(selectedFile),0);
 
-                                Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-
-                                PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbureementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);");
-                                ps.setInt(1, LoginController.currentUserId);
-                                ps.setInt(2, invoiceNumberInt);
-                                ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
-                                ps.setDouble(4, invoiceValueDouble);
-                                ps.setDouble(5, reimbursementValueDouble);
-                                ps.setString(6, invoiceType.getValue());
-                                ps.setString(7, "eingereicht");
-                                ps.setBoolean(8, false);
-                                ps.setBytes(9, FileUtils.readFileToByteArray(selectedFile));
-                                ps.setInt(10, 0);
-                                ps.executeUpdate();
-                                ps.close();
-                                connection.close();
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("Rechnung hochgeladen");
-                                alert.setHeaderText("Rechnung erfolgreich hochgeladen!"); // oder null
-                                alert.setContentText("Ihre Rechnung wurde erfolgreich hochgeladen! Sie dürfen gleich eine weitere Rechnung hochladen!");
-                                alert.showAndWait();
+                                if(invoiceDAO.insertInvoice(invoice)) {
+                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                    alert.setTitle("Rechnung hochgeladen");
+                                    alert.setHeaderText("Rechnung erfolgreich hochgeladen!"); // oder null
+                                    alert.setContentText("Ihre Rechnung wurde erfolgreich hochgeladen! Sie dürfen gleich eine weitere Rechnung hochladen!");
+                                    alert.showAndWait();
+                                }
+                                else{
+                                    warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
+                                }
                             }
                         }
                     }
