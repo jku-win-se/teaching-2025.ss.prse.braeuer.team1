@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -24,7 +23,7 @@
    <top>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
-            <Label fx:id="filterInfo" text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
+            <Label text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
             <ComboBox fx:id="allUsers" onAction="#userSelectionChanged" onShowing="#showAllUsers" prefWidth="150.0" promptText="alle" />
          </children>
          <BorderPane.margin>

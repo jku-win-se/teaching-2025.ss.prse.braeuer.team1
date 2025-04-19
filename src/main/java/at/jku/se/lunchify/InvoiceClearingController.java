@@ -2,7 +2,6 @@ package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
 import at.jku.se.lunchify.models.InvoiceDAO;
-import at.jku.se.lunchify.models.User;
 import at.jku.se.lunchify.models.UserDAO;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,15 +10,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
-
-import static java.sql.Date.valueOf;
 
 public class InvoiceClearingController {
     @FXML
@@ -75,7 +69,7 @@ public class InvoiceClearingController {
         }
     }
 
-    public void userSelectionChanged() throws IOException {
+    public void userSelectionChanged() {
         setSelectedData();
 
         //userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));

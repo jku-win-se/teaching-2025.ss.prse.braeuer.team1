@@ -7,8 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.ByteArrayInputStream;
-import java.time.LocalDate;
-import java.time.ZoneId;
 
 public class InvoiceDetailController {
     @FXML

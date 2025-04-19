@@ -7,18 +7,11 @@
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.collections.FXCollections?>
-
 
 <SplitPane dividerPositions="0.5" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceDetailController">
    <items>
       <VBox alignment="CENTER">
          <children>
-            <Label fx:id="warningText" alignment="CENTER" textFill="RED">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-            </Label>
             <VBox alignment="CENTER" prefHeight="240.0" prefWidth="213.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
                <children>
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungstyp" />
@@ -50,11 +43,6 @@
                         <Insets />
                      </VBox.margin>
                   </TextField>
-                  <Label fx:id="fileName" prefHeight="21.0" prefWidth="192.0">
-                     <font>
-                        <Font size="8.0" />
-                     </font>
-                  </Label>
                   <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="31.0" prefWidth="114.0" text="freigeben" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets top="10.0" />
