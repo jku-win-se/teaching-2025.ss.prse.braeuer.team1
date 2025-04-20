@@ -1,9 +1,14 @@
 package at.jku.se.lunchify.models;
 
+import at.jku.se.lunchify.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.commons.io.FileUtils;
+import org.springframework.cglib.core.Local;
 
+import javax.print.DocFlavor;
 import java.sql.*;
+import java.time.LocalDate;
 
 public class InvoiceDAO {
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
@@ -22,7 +27,7 @@ public class InvoiceDAO {
             while (resultSet.next()) {
                 int invoiceid = resultSet.getInt("invoiceid");
                 int userid = resultSet.getInt("userid");
-                int invoicenumber = resultSet.getInt("invoicenumber");
+                String invoicenumber = resultSet.getString("invoicenumber");
                 Date date = resultSet.getDate("date");
                 double amount = resultSet.getDouble("amount");
                 double reimbursementAmount = resultSet.getDouble("reimbursementAmount");
@@ -52,7 +57,7 @@ public class InvoiceDAO {
                  PreparedStatement sps = connection.prepareStatement(sql);
                  ResultSet resultSet = sps.executeQuery();
                  while (resultSet.next()) {
-                    int selectedInvoicenumber = resultSet.getInt("invoicenumber");
+                    String selectedInvoicenumber = resultSet.getString("invoicenumber");
                     Date selectedDate = resultSet.getDate("date");
                     double selectedAmount = resultSet.getDouble("amount");
                     double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
@@ -61,7 +66,7 @@ public class InvoiceDAO {
                     boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
                     int selectedUserid = resultSet.getInt("userid");
                     int selectedTimesChanged = resultSet.getInt("timesChanged");
-                    Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
+                    Invoice nextInvoice = new Invoice(selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
                     nextInvoice.setStatus(selectedStatus);
                     invoices.add(nextInvoice);
                 }
@@ -91,5 +96,49 @@ public class InvoiceDAO {
             e.printStackTrace();
         }
         return invoices;
+    }
+
+    public boolean insertInvoice(Invoice invoice) {
+        String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+             PreparedStatement sps = connection.prepareStatement(sql))
+        {
+            sps.setInt(1, invoice.getUserid());
+            sps.setString(2, invoice.getInvoicenumber());
+            sps.setDate(3, (Date) invoice.getDate());
+            sps.setDouble(4, invoice.getAmount());
+            sps.setDouble(5, invoice.getReimbursementAmount());
+            sps.setString(6, invoice.getType());
+            sps.setString(7, invoice.getStatus());
+            sps.setBoolean(8, invoice.isIsanomalous());
+            sps.setBytes(9, invoice.getFile());
+            sps.setInt(10, 0);
+            sps.executeUpdate();
+            sps.close();
+            return true;
+        }
+     catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+    }
+
+    public boolean checkInvoicesByDateAndUser(int userid, LocalDate date) {
+        String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+             PreparedStatement sps = connection.prepareStatement(sql)) {
+            sps.setInt(1,userid);
+            sps.setDate(2,Date.valueOf(date));
+            ResultSet resultSet = sps.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
