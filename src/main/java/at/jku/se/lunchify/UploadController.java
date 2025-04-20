@@ -1,6 +1,7 @@
 package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
+import at.jku.se.lunchify.models.InvoiceDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
