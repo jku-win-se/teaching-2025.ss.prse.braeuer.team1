@@ -33,10 +33,9 @@ public class InvoiceDetailController {
         invoiceNumber.setText(String.valueOf(invoice.getInvoicenumber()));
         //invoiceDate.setValue(invoice.getDate().toInstant().atZone(ZoneId.systemDefault().toLocalDate()));
 
-        //AI generated
+        //AI generated -> nicht bei PDF möglich
         if (invoice.getFile() != null && invoice.getFile().length > 0) {
             invoiceImage.setImage(new Image(new ByteArrayInputStream(invoice.getFile())));
-            System.out.println("Rechnung ist da");
         }
         else System.out.println("Rechnung ist nicht da");
     }

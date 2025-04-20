@@ -56,6 +56,6 @@
             </VBox>
          </children>
       </VBox>
-      <ImageView fx:id="invoiceImage" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="invoiceImage" fitHeight="600.0" pickOnBounds="true" preserveRatio="true" />
    </items>
 </SplitPane>
