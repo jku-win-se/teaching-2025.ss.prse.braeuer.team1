@@ -1,18 +1,24 @@
 package at.jku.se.lunchify;
 import at.jku.se.lunchify.models.InvoiceSettingService;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//AI-Assisted
 class InvoiceSettingServiceTest {
 
-    InvoiceSettingService service;
+    static InvoiceSettingService service;
+    private static double originalSupermarketValue;
+    private static double originalRestaurantValue;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void init() {
         service = new InvoiceSettingService();
+        originalSupermarketValue = service.getCurrentSupermarketValue();
+        originalRestaurantValue = service.getCurrentRestaurantValue();
     }
 
     @Test
@@ -34,25 +40,6 @@ class InvoiceSettingServiceTest {
     void testValidInput_withInvalidString() {
         assertFalse(service.isValidInput("abc"));
     }
-    /*
-    // Achtung: Diese Tests verändern den Datenbankzustand!
-    @Test
-    void testUpdateOnlySupermarketValue() {
-        boolean result = service.updateInvoiceSettings("2.5", "");
-        assertTrue(result);
-    }
-
-    @Test
-    void testUpdateOnlyRestaurantValue() {
-        boolean result = service.updateInvoiceSettings("", "3.5");
-        assertTrue(result);
-    }
-
-    @Test
-    void testUpdateBothValues() {
-        boolean result = service.updateInvoiceSettings("1.0", "1.5");
-        assertTrue(result);
-    }
 
     @Test
     void testUpdateWithInvalidValues() {
@@ -60,5 +47,41 @@ class InvoiceSettingServiceTest {
         assertFalse(result); // sollte intern failen
     }
 
-     */
+    @Test
+    void testUpdateBothInvoiceSettings() {
+        double newSupermarket = originalSupermarketValue + 1.11;
+        double newRestaurant = originalRestaurantValue + 2.22;
+
+        boolean updated = service.updateInvoiceSettings(
+                String.valueOf(newSupermarket),
+                String.valueOf(newRestaurant)
+        );
+
+        assertTrue(updated);
+        assertEquals(newSupermarket, service.getCurrentSupermarketValue(), 0.001);
+        assertEquals(newRestaurant, service.getCurrentRestaurantValue(), 0.001);
+    }
+
+    @Test
+    void testUpdateOnlySupermarketValue() {
+        double newSupermarket = originalSupermarketValue + 5.55;
+
+        boolean updated = service.updateInvoiceSettings(
+                String.valueOf(newSupermarket),
+                ""
+        );
+
+        assertTrue(updated);
+        assertEquals(newSupermarket, service.getCurrentSupermarketValue(), 0.001);
+        assertEquals(originalRestaurantValue, service.getCurrentRestaurantValue(), 0.001);
+    }
+
+    @AfterAll
+    static void restoreOriginalValues() {
+        service.updateInvoiceSettings(
+                String.valueOf(originalSupermarketValue),
+                String.valueOf(originalRestaurantValue)
+        );
+    }
+
 }

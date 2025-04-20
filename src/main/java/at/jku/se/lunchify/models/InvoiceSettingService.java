@@ -1,9 +1,8 @@
 package at.jku.se.lunchify.models;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.*;
 
+//AI-Assisted
 public class InvoiceSettingService {
     private final String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     private final String username = "postgres.yxshntkgvmksefegyfhz";
@@ -15,6 +14,10 @@ public class InvoiceSettingService {
 
         if (!updateSupermarket && !updateRestaurant) {
             return false; // nichts zu ändern
+        }
+
+        if(!isValidInput(supermarketValueStr) || !isValidInput(restaurantValueStr)) {
+            return false; // falsche Eingaben
         }
 
         StringBuilder sql = new StringBuilder("UPDATE \"InvoiceSetting\" SET ");
@@ -49,5 +52,35 @@ public class InvoiceSettingService {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public double getCurrentSupermarketValue() {
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+            String query = "SELECT valueinvoicesupermarket FROM \"InvoiceSetting\" WHERE settingid = 1";
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("valueinvoicesupermarket");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public double getCurrentRestaurantValue() {
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+            String query = "SELECT valueinvoicerestaurant FROM \"InvoiceSetting\" WHERE settingid = 1";
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("valueinvoicerestaurant");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
