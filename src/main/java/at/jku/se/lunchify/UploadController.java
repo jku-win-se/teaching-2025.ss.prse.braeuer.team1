@@ -49,15 +49,15 @@ public class UploadController {
 
     private InvoiceDAO invoiceDAO = new InvoiceDAO();
 
-    private boolean checkDateInPast(LocalDate date) {
-        if (invoiceDate.getValue().isAfter(LocalDate.now())) {
+    public boolean checkDateInPast(LocalDate date) {
+        if (date.isAfter(LocalDate.now())) {
             return false;
         } else {
             return true;
         }
     }
 
-    private boolean checkInvoiceValueIsPositive(Double value) {
+    public boolean checkInvoiceValueIsPositive(Double value) {
         if (invoiceValueDouble <= 0) {
             return false;
         } else {
@@ -65,10 +65,10 @@ public class UploadController {
         }
     }
 
-    private double getReimbursementValueFromInvoiceType(String type) {
-        if (type == "Restaurant") {
+    public double getReimbursementValueFromInvoiceType(String type) {
+        if (type.equals("Restaurant")) {
             return 3.0;
-        } else if (type == "Supermarkt") {
+        } else if (type.equals("Supermarkt")) {
             return 2.5;
         } else {
             return 0;
@@ -91,7 +91,13 @@ public class UploadController {
                 warningText.setText("Es gab einen Fehler bei der Verarbeitung des Rechnungstyps!");
                 return;
             }
-            if (checkInvoiceValueIsPositive(reimbursementValueDouble)) {
+            try{
+                invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
+            } catch (NumberFormatException e) {
+                warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
+                return;
+            }
+            if (checkInvoiceValueIsPositive(invoiceValueDouble)) {
                 if (invoiceDAO.checkInvoicesByDateAndUser(LoginController.currentUserId, invoiceDate.getValue())) {
                     // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
                     warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");

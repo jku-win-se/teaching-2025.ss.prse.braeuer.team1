@@ -99,11 +99,11 @@ public class InvoiceDAO {
     }
 
     public boolean insertInvoice(Invoice invoice) {
-        String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbureementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);";
+        String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
              PreparedStatement sps = connection.prepareStatement(sql))
         {
-            sps.setInt(1, invoice.getInvoiceid());
+            sps.setInt(1, invoice.getUserid());
             sps.setString(2, invoice.getInvoicenumber());
             sps.setDate(3, (Date) invoice.getDate());
             sps.setDouble(4, invoice.getAmount());
@@ -124,16 +124,17 @@ public class InvoiceDAO {
     }
 
     public boolean checkInvoicesByDateAndUser(int userid, LocalDate date) {
-        String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = "+userid+" AND date = "+Date.valueOf(date);
+        String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-             PreparedStatement sps = connection.prepareStatement(sql);
-             ResultSet resultSet = sps.executeQuery()) {
-
+             PreparedStatement sps = connection.prepareStatement(sql)) {
+            sps.setInt(1,userid);
+            sps.setDate(2,Date.valueOf(date));
+            ResultSet resultSet = sps.executeQuery();
             if (resultSet.next()) {
-                return false;
+                return true;
             }
             else{
-                return true;
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
