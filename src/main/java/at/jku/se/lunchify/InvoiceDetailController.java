@@ -14,8 +14,6 @@ public class InvoiceDetailController {
     @FXML
     protected Button declineButton;
     @FXML
-    protected Label warningText;
-    @FXML
     protected TextField invoiceValue;
     @FXML
     protected TextField reimbursementValue;

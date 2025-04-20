@@ -71,9 +71,9 @@ public class InvoiceDAO {
                     String selectedStatus = resultSet.getString("status");
                     boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
                     int selectedUserid = resultSet.getInt("userid");
-                    //int selectedTimesChanged = resultSet.getInt("timesChanged");
-                     Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,1);
-                     //Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
+                    byte[] selectedFile = resultSet.getBytes("file");
+                    int selectedTimesChanged = resultSet.getInt("timesChanged");
+                    Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
                     nextInvoice.setStatus(selectedStatus);
                     invoices.add(nextInvoice);
                 }
@@ -86,7 +86,7 @@ public class InvoiceDAO {
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"User\".userid, \"User\".surname, \"User\".firstname " +
+        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"User\".userid, \"User\".surname, \"User\".firstname " +
                 "FROM \"Invoice\" " +
                 "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
                 "WHERE (? IS NULL OR \"User\".email = ? )" +
@@ -107,7 +107,8 @@ public class InvoiceDAO {
                 double selectedAmount = resultSet.getDouble("amount");
                 double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
                 int selectedUserid = resultSet.getInt("userid");
-                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedDate, selectedAmount,selectedReimbursementAmount);
+                String selectedType = resultSet.getString("type");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType);
                 invoices.add(nextInvoice);
                 connection.close();
             }

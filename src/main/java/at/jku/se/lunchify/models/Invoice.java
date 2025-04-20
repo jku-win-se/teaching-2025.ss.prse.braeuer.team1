@@ -33,12 +33,13 @@ public class Invoice {
         this.timesChanged = timesChanged;
     }
 
-    public Invoice(int invoiceid, int userid, Date date, double amount, double reimbursementAmount) {
+    public Invoice(int invoiceid, int userid, Date date, double amount, double reimbursementAmount, String type) {
         this.invoiceid = invoiceid;
         this.userid = userid;
         this.date = date;
         this.amount = amount;
         this.reimbursementAmount = reimbursementAmount;
+        this.type = type;
     }
 
     public Invoice(int userid, Date date, double amount, double reimbursementAmount)  {

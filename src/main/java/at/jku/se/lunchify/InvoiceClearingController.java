@@ -72,7 +72,6 @@ public class InvoiceClearingController {
     public void userSelectionChanged() {
         setSelectedData();
 
-        //userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         invoiceid.setCellValueFactory(new PropertyValueFactory<>("invoiceid"));
         userid.setCellValueFactory(new PropertyValueFactory<>("userid"));
         invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));

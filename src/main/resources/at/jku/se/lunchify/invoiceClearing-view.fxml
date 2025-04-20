@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="612.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceClearingController">
+<BorderPane prefWidth="894.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceClearingController">
    <center>
-      <TableView fx:id="invoiceTable" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+      <TableView fx:id="invoiceTable" maxWidth="984.0" minWidth="984.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn fx:id="invoiceid" minWidth="0.0" prefWidth="134.0" resizable="false" text="ID" />
-            <TableColumn fx:id="userid" minWidth="0.0" prefWidth="134.0" resizable="false" text="Benutzer" />
-            <TableColumn fx:id="invoiceDate" prefWidth="174.0" resizable="false" text="Rechnungsdatum" />
-            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" />
-            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="173.0" resizable="false" text="Rückzahlungsbetrag" />
-            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="121.0" resizable="false" text="Typ" />
+            <TableColumn fx:id="invoiceid" minWidth="0.0" prefWidth="91.0" resizable="false" text="ID" />
+            <TableColumn fx:id="userid" minWidth="0.0" prefWidth="129.0" resizable="false" text="Benutzer" />
+            <TableColumn fx:id="invoiceDate" prefWidth="199.0" resizable="false" text="Rechnungsdatum" />
+            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="190.0" resizable="false" text="Rechnungsbetrag" />
+            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="216.0" resizable="false" text="Rückzahlungsbetrag" />
+            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="157.0" resizable="false" text="Typ" />
          </columns>
       </TableView>
    </center>
