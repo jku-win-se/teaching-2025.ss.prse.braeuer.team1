@@ -5,8 +5,8 @@ import java.sql.*;
 //AI-Assisted
 public class InvoiceSettingService {
     private final String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-    private final String username = "postgres.yxshntkgvmksefegyfhz";
-    private final String DBpassword = "CaMaKe25!";
+    private final String dbUsername = "postgres.yxshntkgvmksefegyfhz";
+    private final String dbPassword = "CaMaKe25!";
 
     public boolean updateInvoiceSettings(String supermarketValueStr, String restaurantValueStr) {
         boolean updateSupermarket = !supermarketValueStr.isBlank();
@@ -28,7 +28,7 @@ public class InvoiceSettingService {
         }
         sql.append(" WHERE settingid = 1");
 
-        try (Connection conn = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword);
              PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
 
             int index = 1;
@@ -55,7 +55,7 @@ public class InvoiceSettingService {
     }
 
     public double getCurrentSupermarketValue() {
-        try (Connection conn = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
             String query = "SELECT valueinvoicesupermarket FROM \"InvoiceSetting\" WHERE settingid = 1";
             try (PreparedStatement stmt = conn.prepareStatement(query);
                  ResultSet rs = stmt.executeQuery()) {
@@ -70,7 +70,7 @@ public class InvoiceSettingService {
     }
 
     public double getCurrentRestaurantValue() {
-        try (Connection conn = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
             String query = "SELECT valueinvoicerestaurant FROM \"InvoiceSetting\" WHERE settingid = 1";
             try (PreparedStatement stmt = conn.prepareStatement(query);
                  ResultSet rs = stmt.executeQuery()) {

@@ -12,7 +12,7 @@ import java.io.IOException;
 //AI-Assisted
 public class InvoiceSettingController {
     @FXML
-    public Label warningText;
+    protected Label warningText;
     @FXML
     protected TextField valueInvoiceSupermarket;
     @FXML
