@@ -1,10 +1,7 @@
 package at.jku.se.lunchify.models;
 
-import at.jku.se.lunchify.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.apache.commons.io.FileUtils;
-import org.springframework.cglib.core.Local;
 
 import java.sql.*;
 import java.time.LocalDate;
