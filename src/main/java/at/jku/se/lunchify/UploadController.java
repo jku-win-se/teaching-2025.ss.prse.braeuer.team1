@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
+import java.util.regex.Pattern;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -43,6 +44,8 @@ public class UploadController {
     protected Button invoiceAttachmentButton;
     @FXML
     protected TextField invoiceNumber;
+    @FXML
+    protected Label isAnomalous;
 
     double invoiceValueDouble;
     double reimbursementValueDouble;
@@ -159,6 +162,160 @@ public class UploadController {
         if (selectedFile != null) {
             // Hier kannst du mit der ausgewählten Datei weiterarbeiten
             fileName.setText(selectedFile.getAbsoluteFile().toString());
+            Tesseract tesseract = new Tesseract();
+
+            // Setze Pfad zu den Sprachdaten im Projekt (relativ oder absolut)
+            tesseract.setDatapath("src/main/resources/tessdata");
+            tesseract.setLanguage("deu"); // oder "eng"
+
+            try {
+                String text = tesseract.doOCR(selectedFile);
+                System.out.println("Erkannter Text:\n" + text);
+                //Rechnungstyp ermitteln
+                if(text.toLowerCase().contains("billa") || text.toLowerCase().contains("billa plus") || text.toLowerCase().contains("hofer") || text.toLowerCase().contains("spar") || text.toLowerCase().contains("eurospar") || text.toLowerCase().contains("interspar") || text.toLowerCase().contains("supermarkt"))
+                {
+                    invoiceType.setValue("Supermarkt");
+                }
+                else if(text.toLowerCase().contains("restaurant") || text.toLowerCase().contains("mensa") || text.toLowerCase().contains("imbiss") || text.toLowerCase().contains("grill") || text.toLowerCase().contains("gastronomie"))
+                {
+                    invoiceType.setValue("Restaurant");
+                }
+                else {
+                    isAnomalous.setText("0");
+                }
+                //Rechnungsnummer ermitteln
+                if(text.toLowerCase().contains("re-nr")) //Billa Rechnungen
+                {
+                    invoiceNumber.setText(text.toLowerCase().split("re-nr:")[1].trim().substring(0,21));
+                }
+                else if(text.toLowerCase().contains("beleg-nr:")) //Burak Supermarkt
+                {
+                    invoiceNumber.setText(text.toLowerCase().split("beleg-nr:")[1].trim().substring(0,7));
+                }
+                else if(text.toLowerCase().contains("bon")) // Spar Rechnungen (Spar, Eurospar und Interspar)
+                {
+                    invoiceNumber.setText(text.toLowerCase().split("bon")[1].trim().substring(0,4));
+                }
+                else if(text.toLowerCase().contains("vielen")) // Hofer Rechnungen
+                {
+                    String invNumberText = text.toLowerCase().split("vielen")[0].trim();
+                    invoiceNumber.setText(invNumberText.substring(invNumberText.length()-36,invNumberText.length()-15));
+                }
+                else if(text.toLowerCase().contains("rechnung")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
+                {
+                    invoiceNumber.setText(text.toLowerCase().split("rechnung")[1].trim().substring(0,6));
+                }
+                else {
+                    isAnomalous.setText("0");
+                }
+                //Rechnungsdatum ermitteln
+                if(text.toLowerCase().contains("datum:")) //Billa Rechnungen
+                {
+                    String day = text.toLowerCase().split("datum:")[1].trim().substring(0,2);
+                    String month = text.toLowerCase().split("datum:")[1].trim().substring(3,5);
+                    String year = text.toLowerCase().split("datum:")[1].trim().substring(6,10);
+
+                    if (day.startsWith("0"))
+                    {
+                        day = day.substring(1);
+                    }
+                    if (month.startsWith("0"))
+                    {
+                        month = month.substring(1);
+                    }
+                    invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+                }
+                else if(text.toLowerCase().contains("verkauf")) // Burak Supermarkt
+                {
+                    String day = text.toLowerCase().split("verkauf")[1].trim().substring(0,2);
+                    String month = text.toLowerCase().split("verkauf")[1].trim().substring(3,5);
+                    String year = text.toLowerCase().split("verkauf")[1].trim().substring(6,10);
+
+                    if (day.startsWith("0"))
+                    {
+                        day = day.substring(1);
+                    }
+                    if (month.startsWith("0"))
+                    {
+                        month = month.substring(1);
+                    }
+                    invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+                }
+                else if(text.toLowerCase().contains("ihr einkauf am")) // Spar Rechnungen (Spar, Eurospar und Interspar)
+                {
+                    String day = text.toLowerCase().split("am")[1].trim().substring(0,2);
+                    String month = text.toLowerCase().split("am")[1].trim().substring(3,5);
+                    String year = text.toLowerCase().split("am")[1].trim().substring(6,10);
+
+                    if (day.startsWith("0"))
+                    {
+                        day = day.substring(1);
+                    }
+                    if (month.startsWith("0"))
+                    {
+                        month = month.substring(1);
+                    }
+                    invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+                }
+                else if(text.toLowerCase().contains("vielen")) // Hofer Rechnungen
+                {
+                    String dateWithText = text.toLowerCase().split("vielen")[0].trim();
+                    String date = dateWithText.substring(dateWithText.length()-14,dateWithText.length()-5);
+                    String day = date.toLowerCase().substring(0,2);
+                    String month = date.toLowerCase().substring(3,5);
+                    String year = "20"+date.toLowerCase().substring(6,8);
+
+                    if (day.startsWith("0"))
+                    {
+                        day = day.substring(1);
+                    }
+                    if (month.startsWith("0"))
+                    {
+                        month = month.substring(1);
+                    }
+                    invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+
+                }
+                else if(text.toLowerCase().contains("rechnung")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
+                {
+                    String[] dateArray = text.toLowerCase().split("rechnung")[1].trim().substring(7,16).split(".");
+                    invoiceDate.setValue(LocalDate.of(Integer.parseInt(dateArray[2]), Integer.parseInt(dateArray[1]), Integer.parseInt(dateArray[0])));
+                }
+                else {
+                    isAnomalous.setText("0");
+                }
+                //Rechnungssumme ermitteln
+                if(text.toLowerCase().contains("summe eur")) //Billa Rechnungen
+                {
+                    invoiceValue.setText(text.toLowerCase().split("summe eur")[1].trim().split("gegeben")[0]);
+                }
+                else if(text.toLowerCase().contains("gesamt")) // Burak Supermarkt
+                {
+                    invoiceValue.setText(text.toLowerCase().split("gesamt")[1].trim().split("€")[0].trim().replace(',','.'));
+                }
+                else if(text.toLowerCase().contains("summe:")) // Spar Rechnungen (Spar, Eurospar und Interspar)
+                {
+                    invoiceValue.setText(text.toLowerCase().split("summe:")[1].trim().substring(0,12).trim().split(" ")[0].replace(',','.'));
+                }
+                else if(text.toLowerCase().contains("hofer preis")) // Hofer Rechnungen
+                {
+
+                    String euro = text.toLowerCase().split("hofer preis")[1].trim().substring(0,2);
+                    String cent = text.toLowerCase().split("hofer preis")[1].trim().substring(5,7);
+
+                    invoiceValue.setText(euro+"."+cent);
+                }
+                else if(text.toLowerCase().contains("summe in €")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
+                {
+                    String[] valueArray = text.toLowerCase().split("summe in €        ")[1].trim().replace(',','.').split(".");
+                    invoiceValue.setText(valueArray[0]+"."+valueArray[1].substring(0,1));
+                }
+                else {
+                    isAnomalous.setText("0");
+                }
+            } catch (TesseractException | IndexOutOfBoundsException e) {
+                System.err.println("OCR-Fehler: " + e.getMessage());
+            }
 
 
         } else {
