@@ -7,6 +7,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 
 public class InvoiceDetailController {
     @FXML
@@ -31,7 +34,13 @@ public class InvoiceDetailController {
         reimbursementValue.setText(String.valueOf(invoice.getReimbursementAmount()));
         invoiceType.setValue(invoice.getType());
         invoiceNumber.setText(String.valueOf(invoice.getInvoicenumber()));
-        //invoiceDate.setValue(invoice.getDate().toInstant().atZone(ZoneId.systemDefault().toLocalDate()));
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(invoice.getDate());
+        
+        invoiceDate.setValue(calendar.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate());
 
         //AI generated -> nicht bei PDF möglich
         if (invoice.getFile() != null && invoice.getFile().length > 0) {
