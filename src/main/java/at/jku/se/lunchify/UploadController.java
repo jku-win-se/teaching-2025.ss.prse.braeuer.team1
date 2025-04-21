@@ -14,6 +14,9 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+
 
 public class UploadController {
 
@@ -74,6 +77,19 @@ public class UploadController {
     }
 
     public void onInvoiceUploadButtonClick() throws IOException, SQLException {
+        Tesseract tesseract = new Tesseract();
+
+        // Setze Pfad zu den Sprachdaten im Projekt (relativ oder absolut)
+        tesseract.setDatapath("src/main/resources/tessdata");
+        tesseract.setLanguage("deu"); // oder "eng"
+
+        try {
+            String text = tesseract.doOCR(selectedFile);
+            System.out.println("Erkannter Text:\n" + text);
+        } catch (TesseractException e) {
+            System.err.println("OCR-Fehler: " + e.getMessage());
+        }
+
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
                 || invoiceNumber.getText().isEmpty() || selectedFile == null) {
             warningText.setText("Alle Felder ausfüllen!");
