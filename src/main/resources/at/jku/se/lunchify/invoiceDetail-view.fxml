@@ -13,6 +13,7 @@
          <children>
             <VBox alignment="CENTER" prefHeight="240.0" prefWidth="213.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
                <children>
+                  <Label fx:id="warningText" style="-fx-text-fill: red;" />
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungstyp" />
                   <ChoiceBox fx:id="invoiceType" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
                   <items>
@@ -33,7 +34,7 @@
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsbetrag" />
                   <TextField fx:id="invoiceValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" />
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rückerstattungsbetrag" />
-                  <TextField fx:id="reimbursementValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0"/>
+                  <TextField fx:id="reimbursementValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" />
                   <Button fx:id="saveChangesButton" mnemonicParsing="false" onAction="#onSaveChangesButtonClick" prefHeight="31.0" prefWidth="170.0" text="Änderungen speichern" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets top="10.0" />

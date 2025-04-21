@@ -1,6 +1,7 @@
 package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
+import at.jku.se.lunchify.models.InvoiceDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
@@ -42,8 +43,35 @@ public class UploadController {
 
     double invoiceValueDouble;
     double reimbursementValueDouble;
-    int invoiceNumberInt; // nur Nummern? Problem bei z.B. RE123
     File selectedFile;
+
+    private InvoiceDAO invoiceDAO = new InvoiceDAO();
+
+    public boolean checkDateInPast(LocalDate date) {
+        if (date.isAfter(LocalDate.now())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean checkInvoiceValueIsPositive(Double value) {
+        if (invoiceValueDouble <= 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public double getReimbursementValueFromInvoiceType(String type) {
+        if (type.equals("Restaurant")) {
+            return 3.0;
+        } else if (type.equals("Supermarkt")) {
+            return 2.5;
+        } else {
+            return 0;
+        }
+    }
 
     public void onInvoiceUploadButtonClick() throws IOException, SQLException {
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
@@ -51,80 +79,45 @@ public class UploadController {
             warningText.setText("Alle Felder ausfüllen!");
             return;
         }
-        if (invoiceDate.getValue().isAfter(LocalDate.now())) {
-            warningText.setText("Rechnungsdatum liegt in der Zukunft!");
-            return;
-        }
-        try {
-            invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
-            if (invoiceValueDouble <= 0) {
-                warningText.setText("Rechnungsbetrag muss positiv sein!");
-
+        if (checkDateInPast(invoiceDate.getValue())) {
+            reimbursementValueDouble = getReimbursementValueFromInvoiceType(invoiceType.getValue());
+            if (reimbursementValueDouble == 3.0) {
+                reimbursementValue.setText("3.0");
+            } else if (reimbursementValueDouble == 2.5) {
+                reimbursementValue.setText("2.5");
+            } else {
+                warningText.setText("Es gab einen Fehler bei der Verarbeitung des Rechnungstyps!");
                 return;
             }
-        } catch (NumberFormatException e) {
-            warningText.setText("Rechnungsbetrag muss eine Zahl sein!");
-            return;
-        }
-        try {
-            invoiceNumberInt = Integer.parseInt(invoiceNumber.getText());
-            warningText.setText("");
-
+            try{
+                invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
             } catch (NumberFormatException e) {
-            warningText.setText("Rechnungsnummer muss eine Zahl sein!");
-            return;
-        }
-        if (invoiceType.getValue() == "Restaurant") {
-            reimbursementValue.setText("3.0");
-            reimbursementValueDouble = 3.0;
-        }
-        if (invoiceType.getValue() == "Supermarkt") {
-            reimbursementValue.setText("2.5");
-            reimbursementValueDouble = 2.5;
-        }
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
+                warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
+                return;
+            }
+            if (checkInvoiceValueIsPositive(invoiceValueDouble)) {
+                if (invoiceDAO.checkInvoicesByDateAndUser(LoginController.currentUserId, invoiceDate.getValue())) {
+                    // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
+                    warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
 
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setInt(1, LoginController.currentUserId);
-                pstmt.setDate(2, Date.valueOf(invoiceDate.getValue()));
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    if (rs.next()) {
-                        // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
-                            warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
+                } else {
+                    Invoice invoice = new Invoice(LoginController.currentUserId, invoiceNumber.getText(), Date.valueOf(invoiceDate.getValue()), invoiceValueDouble, reimbursementValueDouble, invoiceType.getValue(), false, FileUtils.readFileToByteArray(selectedFile), 0);
 
-                    } else {
-                        String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-                        String username = "postgres.yxshntkgvmksefegyfhz";
-                        String DBpassword = "CaMaKe25!";
-
-                        Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-
-                        PreparedStatement ps = connection.prepareStatement("insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbureementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);");
-                        ps.setInt(1, LoginController.currentUserId);
-                        ps.setInt(2, invoiceNumberInt);
-                        ps.setDate(3, Date.valueOf(invoiceDate.getValue()));
-                        ps.setDouble(4, invoiceValueDouble);
-                        ps.setDouble(5, reimbursementValueDouble);
-                        ps.setString(6, invoiceType.getValue());
-                        ps.setString(7, "eingereicht");
-                        ps.setBoolean(8, false);
-                        ps.setBytes(9, FileUtils.readFileToByteArray(selectedFile));
-                        ps.setInt(10, 0);
-                        ps.executeUpdate();
-                        ps.close();
-                        connection.close();
+                    if (invoiceDAO.insertInvoice(invoice)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Rechnung hochgeladen");
                         alert.setHeaderText("Rechnung erfolgreich hochgeladen!"); // oder null
                         alert.setContentText("Ihre Rechnung wurde erfolgreich hochgeladen! Sie dürfen gleich eine weitere Rechnung hochladen!");
                         alert.showAndWait();
+                    } else {
+                        warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
                     }
                 }
+            } else {
+                warningText.setText("Rechnungsbetrag muss positiv sein!");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
+        } else {
+            warningText.setText("Rechnungsdatum liegt in der Zukunft!");
         }
     }
     public void onInvoiceAttachmentButtonClick() throws IOException, SQLException {

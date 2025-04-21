@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -31,9 +32,14 @@ public class InvoiceDetailController {
     protected TextField invoiceNumber;
     @FXML
     protected ImageView invoiceImage;
+    @FXML
+    protected Label warningText;
 
     private Invoice invoice;
     private InvoiceDAO invoiceDAO = new InvoiceDAO();
+
+    double invoiceValueDouble;
+    double reimbursementValueDouble;
 
     public void setInvoice(Invoice invoice) throws IOException {
         this.invoice = invoice;
@@ -49,7 +55,7 @@ public class InvoiceDetailController {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate());
 
-        //AI generated -> nicht bei PDF möglich
+        //AI generated -> jpg+png wird in imageView geladen und PDF extra im PDF-Reader
         byte[] file = invoice.getFile();
         if (invoice.getFile() != null && invoice.getFile().length > 0) {
             invoiceImage.setImage(new Image(new ByteArrayInputStream(file)));
@@ -119,7 +125,89 @@ public class InvoiceDetailController {
         }
     }
 
-    public void onSaveChangesButtonClick() {}
+    public boolean checkDateInPast(LocalDate date) {
+        if (date.isAfter(LocalDate.now())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean checkInvoiceValueIsPositive(Double value) {
+        if (invoiceValueDouble <= 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public double getReimbursementValueFromInvoiceType(String type) {
+        if (type.equals("Restaurant")) {
+            return 3.0;
+        } else if (type.equals("Supermarkt")) {
+            return 2.5;
+        } else {
+            return 0;
+        }
+    }
+
+    public void onSaveChangesButtonClick() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(invoice.getDate());
+        LocalDate convertedDate = calendar.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
+                || invoiceNumber.getText().isEmpty()) {
+            warningText.setText("Alle Felder ausfüllen!");
+            return;
+        }
+        if (checkDateInPast(invoiceDate.getValue())) {
+            reimbursementValueDouble = getReimbursementValueFromInvoiceType(invoiceType.getValue());
+            if (reimbursementValueDouble == 3.0) {
+                reimbursementValue.setText("3.0");
+            } else if (reimbursementValueDouble == 2.5) {
+                reimbursementValue.setText("2.5");
+            } else {
+                warningText.setText("Es gab einen Fehler bei der Verarbeitung des Rechnungstyps!");
+                return;
+            }
+            try{
+                invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
+            } catch (NumberFormatException e) {
+                warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
+                return;
+            }
+            if (checkInvoiceValueIsPositive(invoiceValueDouble)) {
+                if (!convertedDate.equals(invoiceDate.getValue()) && invoiceDAO.checkInvoicesByDateAndUser(LoginController.currentUserId, invoiceDate.getValue())) {
+                    // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
+                    warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
+
+                } else {
+                    invoice.setType(invoiceType.getValue());
+                    invoice.setInvoicenumber(invoiceNumber.getText());
+                    invoice.setAmount(invoiceValueDouble);
+                    invoice.setDate(Date.valueOf(invoiceDate.getValue()));
+
+                    System.out.println(invoice.getAmount());
+                    if (invoiceDAO.updateInvoice(invoice)) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Rechnung geändert");
+                        alert.setHeaderText("Rechnung erfolgreich geändert!"); // oder null
+                        alert.setContentText("Rechnung wurde erfolgreich geändert!");
+                        alert.showAndWait();
+                    } else {
+                        warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
+                    }
+                }
+            } else {
+                warningText.setText("Rechnungsbetrag muss positiv sein!");
+            }
+        } else {
+            warningText.setText("Rechnungsdatum liegt in der Zukunft!");
+        }
+    }
 
     public void onDeleteButtonClick() {
         if (invoiceDAO.deleteInvoice(invoice.getInvoiceid())) {
