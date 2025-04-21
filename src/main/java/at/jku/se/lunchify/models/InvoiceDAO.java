@@ -21,7 +21,7 @@ public class InvoiceDAO {
             while (resultSet.next()) {
                 int invoiceid = resultSet.getInt("invoiceid");
                 int userid = resultSet.getInt("userid");
-                int invoicenumber = resultSet.getInt("invoicenumber");
+                String invoicenumber = resultSet.getString("invoicenumber");
                 Date date = resultSet.getDate("date");
                 double amount = resultSet.getDouble("amount");
                 double reimbursementAmount = resultSet.getDouble("reimbursementAmount");
@@ -45,10 +45,10 @@ public class InvoiceDAO {
     public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String selectedInvoiceType) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
-        String sqlAllInvoiceTypes = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
-        String sqlAllUsers = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
-        String sqlAllUsersAllTypes = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
+        String sql = "select \"Invoice\".invoiceid, \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, \"Invoice\".file, \"Invoice\".timesChanged, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
+        String sqlAllInvoiceTypes = "select \"Invoice\".invoiceid, \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, \"Invoice\".file, \"Invoice\".timesChanged, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
+        String sqlAllUsers = "select \"Invoice\".invoiceid, \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, \"Invoice\".file, \"Invoice\".timesChanged, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
+        String sqlAllUsersAllTypes = "select \"Invoice\".invoiceid, \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, \"Invoice\".file, \"Invoice\".timesChanged, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword))
              {
                  PreparedStatement ps;
@@ -62,8 +62,9 @@ public class InvoiceDAO {
                  else ps = connection.prepareStatement(sql);
                  ResultSet resultSet = ps.executeQuery();
                  while (resultSet.next()) {
-                    int selectedInvoicenumber = resultSet.getInt("invoicenumber");
+                    String selectedInvoicenumber = resultSet.getString("invoicenumber");
                     Date selectedDate = resultSet.getDate("date");
+                    int selectedInvoiceid = resultSet.getInt("invoiceid");
                     double selectedAmount = resultSet.getDouble("amount");
                     double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
                     String selectedType = resultSet.getString("type");
@@ -72,7 +73,7 @@ public class InvoiceDAO {
                     int selectedUserid = resultSet.getInt("userid");
                     byte[] selectedFile = resultSet.getBytes("file");
                     int selectedTimesChanged = resultSet.getInt("timesChanged");
-                    Invoice nextInvoice = new Invoice(selectedInvoicenumber, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                    Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
                     nextInvoice.setStatus(selectedStatus);
                     invoices.add(nextInvoice);
                 }
@@ -128,7 +129,7 @@ public class InvoiceDAO {
             try (ResultSet resultSet = ps.executeQuery()) {
                 if (resultSet.next()) {
                     int selectedInvoiceid = resultSet.getInt("invoiceid");
-                    int selectedInvoicenumber = resultSet.getInt("invoicenumber");
+                    String selectedInvoicenumber = resultSet.getString("invoicenumber");
                     int selectedUserid = resultSet.getInt("userid");
                     Date selectedDate = resultSet.getDate("date");
                     double selectedAmount = resultSet.getDouble("amount");
@@ -149,5 +150,21 @@ public class InvoiceDAO {
             e.printStackTrace();
         }
         return invoice;
+    }
+
+    public boolean clearInvoice(int id) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+            PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET status = ? where invoiceid = ?;")) {
+            ps.setString(1, "genehmigt");
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
+            return true;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

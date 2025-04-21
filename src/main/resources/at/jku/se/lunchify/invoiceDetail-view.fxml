@@ -32,17 +32,9 @@
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsdatum" />
                   <DatePicker fx:id="invoiceDate" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" />
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsbetrag" />
-                  <TextField fx:id="invoiceValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </TextField>
+                  <TextField fx:id="invoiceValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" />
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rückerstattungsbetrag" />
-                  <TextField fx:id="reimbursementValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </TextField>
+                  <TextField fx:id="reimbursementValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0"/>
                   <Button fx:id="saveChangesButton" mnemonicParsing="false" onAction="#onSaveChangesButtonClick" prefHeight="31.0" prefWidth="170.0" text="Änderungen speichern" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets top="10.0" />

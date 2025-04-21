@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -92,13 +93,18 @@ public class InvoiceClearingController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceDetail-view.fxml"));
             Parent root = loader.load();
 
-            // Detail-Controller holen und Daten übergeben
+            // AI-generated: Detail-Controller holen und Daten übergeben
             InvoiceDetailController controller = loader.getController();
             controller.setInvoice(invoice); // Übergabe-Methode im Detail-Controller
-
             Stage stage = new Stage();
             stage.setTitle("Rechnungsdetails");
             stage.setScene(new Scene(root));
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(invoiceTable.getScene().getWindow());
+            stage.setOnHidden(event -> {
+                // Tabelle aktualisieren
+                userSelectionChanged();
+            });
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
