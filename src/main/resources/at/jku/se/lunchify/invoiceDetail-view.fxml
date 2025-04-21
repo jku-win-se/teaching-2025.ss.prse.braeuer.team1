@@ -43,12 +43,18 @@
                         <Insets />
                      </VBox.margin>
                   </TextField>
-                  <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="31.0" prefWidth="114.0" text="freigeben" textAlignment="CENTER">
+                  <Button fx:id="saveChangesButton" mnemonicParsing="false" onAction="#onSaveChangesButtonClick" prefHeight="31.0" prefWidth="170.0" text="Änderungen speichern" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="declineButton" mnemonicParsing="false" onAction="#onDeclineButtonClick" prefHeight="31.0" prefWidth="114.0" text="ablehnen" textAlignment="CENTER" />
+                  <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="31.0" prefWidth="170.0" text="freigeben" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="declineButton" mnemonicParsing="false" onAction="#onDeclineButtonClick" prefHeight="31.0" prefWidth="170.0" text="ablehnen" textAlignment="CENTER" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="31.0" prefWidth="170.0" text="löschen" textAlignment="CENTER" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

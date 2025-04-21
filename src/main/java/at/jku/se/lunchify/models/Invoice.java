@@ -1,5 +1,9 @@
 package at.jku.se.lunchify.models;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -11,6 +15,7 @@ public class Invoice {
     private Date date;
     private double amount;
     private double reimbursementAmount;
+
     enum invoicetype  {Supermarkt,Restaurant}
     private String type;
     enum invoicestatus  {eingereicht,genehmigt,abgelehnt}
@@ -33,13 +38,14 @@ public class Invoice {
         this.timesChanged = timesChanged;
     }
 
-    public Invoice(int invoiceid, int userid, Date date, double amount, double reimbursementAmount, String type) {
+    public Invoice(int invoiceid, int userid, Date date, double amount, double reimbursementAmount, String type, int timesChanged) {
         this.invoiceid = invoiceid;
         this.userid = userid;
         this.date = date;
         this.amount = amount;
         this.reimbursementAmount = reimbursementAmount;
         this.type = type;
+        this.timesChanged = timesChanged;
     }
 
     public Invoice(int userid, Date date, double amount, double reimbursementAmount)  {
@@ -135,6 +141,20 @@ public class Invoice {
 
     public void setTimesChanged(int timesChanged) {
         this.timesChanged = timesChanged;
+    }
+
+    //AI-generated
+    public void openPDF() throws IOException {
+        File tempFile = File.createTempFile("invoice_", ".pdf");
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(file);
+        }
+
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(tempFile);
+        } else {
+            System.out.println("PDF öffnen wird nicht unterstützt.");
+        }
     }
 
     @Override

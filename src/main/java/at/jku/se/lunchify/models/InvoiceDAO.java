@@ -2,7 +2,6 @@ package at.jku.se.lunchify.models;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.*;
 
 public class InvoiceDAO {
@@ -86,7 +85,7 @@ public class InvoiceDAO {
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"User\".userid, \"User\".surname, \"User\".firstname " +
+        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".timeschanged, \"User\".userid, \"User\".surname, \"User\".firstname " +
                 "FROM \"Invoice\" " +
                 "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
                 "WHERE (? IS NULL OR \"User\".email = ? )" +
@@ -108,7 +107,8 @@ public class InvoiceDAO {
                 double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
                 int selectedUserid = resultSet.getInt("userid");
                 String selectedType = resultSet.getString("type");
-                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType);
+                int selectedTimesChanged = resultSet.getInt("timeschanged");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedTimesChanged);
                 invoices.add(nextInvoice);
                 connection.close();
             }

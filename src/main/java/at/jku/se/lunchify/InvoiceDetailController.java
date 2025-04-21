@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.ByteArrayInputStream;
-import java.time.LocalDate;
+import java.io.IOException;
 import java.time.ZoneId;
 import java.util.Calendar;
 
@@ -29,7 +29,7 @@ public class InvoiceDetailController {
     @FXML
     protected ImageView invoiceImage;
 
-    public void setInvoice(Invoice invoice) {
+    public void setInvoice(Invoice invoice) throws IOException {
         invoiceValue.setText(String.valueOf(invoice.getAmount()));
         reimbursementValue.setText(String.valueOf(invoice.getReimbursementAmount()));
         invoiceType.setValue(invoice.getType());
@@ -45,6 +45,8 @@ public class InvoiceDetailController {
         //AI generated -> nicht bei PDF möglich
         if (invoice.getFile() != null && invoice.getFile().length > 0) {
             invoiceImage.setImage(new Image(new ByteArrayInputStream(invoice.getFile())));
+            //check ob kein image geladen
+            invoice.openPDF();
         }
         else System.out.println("Rechnung ist nicht da");
     }
@@ -52,5 +54,9 @@ public class InvoiceDetailController {
     public void onClearButtonClick() {}
 
     public void onDeclineButtonClick() {}
+
+    public void onSaveChangesButtonClick() {}
+
+    public void onDeleteButtonClick() {}
 
 }
