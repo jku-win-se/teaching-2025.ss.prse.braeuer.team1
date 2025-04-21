@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import org.apache.commons.io.FileUtils;
 import org.springframework.cglib.core.Local;
 
-import javax.print.DocFlavor;
 import java.sql.*;
 import java.time.LocalDate;
 
@@ -57,7 +56,8 @@ public class InvoiceDAO {
                  PreparedStatement sps = connection.prepareStatement(sql);
                  ResultSet resultSet = sps.executeQuery();
                  while (resultSet.next()) {
-                    String selectedInvoicenumber = resultSet.getString("invoicenumber");
+                     int selectedInvoiceId = resultSet.getInt("invoiceid");
+                     String selectedInvoicenumber = resultSet.getString("invoicenumber");
                     Date selectedDate = resultSet.getDate("date");
                     double selectedAmount = resultSet.getDouble("amount");
                     double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
@@ -66,7 +66,7 @@ public class InvoiceDAO {
                     boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
                     int selectedUserid = resultSet.getInt("userid");
                     int selectedTimesChanged = resultSet.getInt("timesChanged");
-                    Invoice nextInvoice = new Invoice(selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
+                    Invoice nextInvoice = new Invoice(selectedInvoiceId, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null,selectedTimesChanged);
                     nextInvoice.setStatus(selectedStatus);
                     invoices.add(nextInvoice);
                 }
