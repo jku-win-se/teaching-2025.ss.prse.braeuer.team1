@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 
@@ -75,13 +76,12 @@ public class InvoiceDetailController {
             else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Rechnungsfreigabe");
-                alert.setHeaderText("Rechnung nicht freigegeben"); // oder null
+                alert.setHeaderText("Rechnung nicht freigegeben");
                 alert.setContentText("Rechnung konnte nicht freigeben werden!");
                 alert.showAndWait();
             }
         }
         else {
-            System.out.println("else");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fehler");
             alert.setHeaderText("Änderungen zerst speichern");
@@ -97,9 +97,15 @@ public class InvoiceDetailController {
     public void onDeleteButtonClick() {}
 
     public boolean checkNoChanges() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(invoice.getDate());
+        LocalDate convertedDate = calendar.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
         if (!invoice.getInvoicenumber().equals(invoiceNumber.getText())) return false;
         else if (!invoice.getType().equals(invoiceType.getValue())) return false;
-        //else if (!invoice.getDate().equals(invoiceDate.getValue())) return false;
+        else if (!convertedDate.equals(invoiceDate.getValue())) return false;
         else if (invoice.getAmount()!= Double.parseDouble(invoiceValue.getText())) return false;
         else if (invoice.getReimbursementAmount()!= Double.parseDouble(reimbursementValue.getText())) return false;
         else return true;
