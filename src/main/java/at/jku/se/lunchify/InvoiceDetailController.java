@@ -63,7 +63,7 @@ public class InvoiceDetailController {
 
     public void onClearButtonClick() {
         if (checkNoChanges()) {
-            if (invoiceDAO.clearInvoice(invoice.getInvoiceid())) {
+            if (invoiceDAO.setInvoiceStatus(invoice.getInvoiceid(),"genehmigt")) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Rechnungsfreigabe");
                 alert.setHeaderText("Rechnung freigegeben");
@@ -90,11 +90,56 @@ public class InvoiceDetailController {
         }
     }
 
-    public void onDeclineButtonClick() {}
+    public void onDeclineButtonClick() {
+        if (checkNoChanges()) {
+            if (invoiceDAO.setInvoiceStatus(invoice.getInvoiceid(),"abgelehnt")) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Rechnungsablehnung");
+                alert.setHeaderText("Rechnung abgelehnt");
+                alert.setContentText("Rechnung wurde erfolgreich abgelehnt!");
+                alert.showAndWait();
+                // AI-assisted: Fenster schließen
+                Stage currentStage = (Stage) clearButton.getScene().getWindow();
+                currentStage.close();
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Rechnungsablehnung");
+                alert.setHeaderText("Rechnung nicht abgelehnt");
+                alert.setContentText("Rechnung konnte nicht abgelehnt werden!");
+                alert.showAndWait();
+            }
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fehler");
+            alert.setHeaderText("Änderungen zerst speichern");
+            alert.setContentText("Änderungen müssen zuerst gespeichert werden!");
+            alert.showAndWait();
+        }
+    }
 
     public void onSaveChangesButtonClick() {}
 
-    public void onDeleteButtonClick() {}
+    public void onDeleteButtonClick() {
+        if (invoiceDAO.deleteInvoice(invoice.getInvoiceid())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Rechnungslöschung");
+            alert.setHeaderText("Rechnung gelöscht");
+            alert.setContentText("Rechnung wurde erfolgreich gelöscht!");
+            alert.showAndWait();
+            // AI-assisted: Fenster schließen
+            Stage currentStage = (Stage) clearButton.getScene().getWindow();
+            currentStage.close();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Rechnungslöschung");
+            alert.setHeaderText("Rechnung nicht gelöscht");
+            alert.setContentText("Rechnung konnte nicht gelöscht werden!");
+            alert.showAndWait();
+        }
+    }
 
     public boolean checkNoChanges() {
         Calendar calendar = Calendar.getInstance();

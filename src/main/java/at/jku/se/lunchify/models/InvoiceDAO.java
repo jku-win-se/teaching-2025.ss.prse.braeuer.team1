@@ -93,8 +93,7 @@ public class InvoiceDAO {
                 "AND \"Invoice\".status = ? " +
                 "AND \"Invoice\".isanomalous = ?;";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
+            PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, email);
             ps.setString(3, status);
@@ -152,11 +151,26 @@ public class InvoiceDAO {
         return invoice;
     }
 
-    public boolean clearInvoice(int id) {
+    public boolean setInvoiceStatus(int id, String newStatus) {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET status = ? where invoiceid = ?;")) {
-            ps.setString(1, "genehmigt");
+            ps.setString(1, newStatus);
             ps.setInt(2, id);
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
+            return true;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteInvoice(int id) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+            PreparedStatement ps = connection.prepareStatement("delete FROM \"Invoice\" where invoiceid = ?;")) {
+            ps.setInt(1, id);
             ps.executeUpdate();
             ps.close();
             connection.close();
