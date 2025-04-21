@@ -12,8 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
-
 
 public class UploadController {
 
@@ -44,7 +42,7 @@ public class UploadController {
     double invoiceValueDouble;
     double reimbursementValueDouble;
     File selectedFile;
-
+    private File lastUsedDirectory = new File(System.getProperty("user.home") + "/Desktop");
     private InvoiceDAO invoiceDAO = new InvoiceDAO();
 
     public boolean checkDateInPast(LocalDate date) {
@@ -105,10 +103,18 @@ public class UploadController {
 
                     if (invoiceDAO.insertInvoice(invoice)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Rechnung hochgeladen");
-                        alert.setHeaderText("Rechnung erfolgreich hochgeladen!"); // oder null
-                        alert.setContentText("Ihre Rechnung wurde erfolgreich hochgeladen! Sie dürfen gleich eine weitere Rechnung hochladen!");
+                        alert.setTitle("Hochladen erfolgreich");
+                        alert.setHeaderText("Rechnung erfolgreich hochgeladen!");
+
+                        alert.setContentText(
+                                "Ihre Rechnung vom " + invoiceDate.getValue().toString() + " wurde erfolgreich hochgeladen.\n" +
+                                        "Eingereichter Rechnungsbetrag: " + invoiceValueDouble + " €\n" +
+                                        "Voraussichtlicher Rückerstattungsbetrag: " + reimbursementValueDouble + " €"
+                        );
+
+                        warningText.setText("");
                         alert.showAndWait();
+                        LunchifyApplication.baseController.showCenterView("upload-view.fxml");
                     } else {
                         warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
                     }
@@ -120,33 +126,29 @@ public class UploadController {
             warningText.setText("Rechnungsdatum liegt in der Zukunft!");
         }
     }
-    public void onInvoiceAttachmentButtonClick() throws IOException, SQLException {
-        //AI generated
-        // Zugriff auf die Stage, die mit dem Button verbunden ist
-        Stage stage = (Stage) invoiceAttachmentButton.getScene().getWindow();
 
-        // FileChooser erstellen
+    //AI-Assisted
+    public void onInvoiceAttachmentButtonClick() throws IOException, SQLException {
+        Stage stage = (Stage) invoiceAttachmentButton.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
 
-        // Filter für PDF-, JPEG- und PNG-Dateien festlegen
-        FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Dateien (*.pdf)", "*.pdf");
-        FileChooser.ExtensionFilter jpegFilter = new FileChooser.ExtensionFilter("JPEG Dateien (*.jpg, *.jpeg)", "*.jpg", "*.jpeg");
-        FileChooser.ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG Dateien (*.png)", "*.png");
+        // Filter für alle unterstützten Dateien
+        FileChooser.ExtensionFilter allSupported = new FileChooser.ExtensionFilter(
+                "Unterstützte Dateien (*.pdf, *.jpg, *.jpeg, *.png)", "*.pdf", "*.jpg", "*.jpeg", "*.png"
+        );
+        fileChooser.getExtensionFilters().add(allSupported);
+        fileChooser.setSelectedExtensionFilter(allSupported);
 
-        // Füge die Filter zum FileChooser hinzu
-        fileChooser.getExtensionFilters().addAll(pdfFilter, jpegFilter, pngFilter);
+        // Initialverzeichnis setzen, zuerst Desktop
+        fileChooser.setInitialDirectory(lastUsedDirectory);
 
-        // Zeige den FileChooser und hole die ausgewählte Datei
+        // Datei auswählen
         this.selectedFile = fileChooser.showOpenDialog(stage);
 
-        // Überprüfen, ob eine Datei ausgewählt wurde
         if (selectedFile != null) {
-            // Hier kannst du mit der ausgewählten Datei weiterarbeiten
-            fileName.setText(selectedFile.getAbsoluteFile().toString());
-
-
+            fileName.setText(selectedFile.getAbsolutePath());
+            lastUsedDirectory = selectedFile.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
         } else {
-            // Der Benutzer hat den Dialog abgebrochen oder keine Datei ausgewählt
             fileName.setText("Keine Datei ausgewählt.");
         }
     }
