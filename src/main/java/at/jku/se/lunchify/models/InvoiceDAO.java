@@ -12,6 +12,24 @@ public class InvoiceDAO {
     String username = "postgres.yxshntkgvmksefegyfhz";
     String DBpassword = "CaMaKe25!";
 
+    public boolean checkDateInPast(LocalDate date) {
+        return !date.isAfter(LocalDate.now());
+    }
+
+    public boolean checkInvoiceValueIsPositive(Double value) {
+        return value > 0;
+    }
+
+    public double getReimbursementValueFromInvoiceType(String type) {
+        if (type.equals("Restaurant")) {
+            return 3.0;
+        } else if (type.equals("Supermarkt")) {
+            return 2.5;
+        } else {
+            return 0;
+        }
+    }
+
     // Methode zum Abrufen aller Rechnungen
     public ObservableList<Invoice> getAllInvoices() {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
@@ -45,44 +63,46 @@ public class InvoiceDAO {
         return invoices;
     }
 
-    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String selectedInvoiceType) {
+    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String selectedInvoiceType) throws SQLException {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
+        if (email.equals("alle Benutzer")) email = null;
+        if (selectedInvoiceType.equals("alle Rechnungstypen")) selectedInvoiceType = null;
+        String sql = "SELECT * "+
+                "FROM \"Invoice\" " +
+                "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
+                "WHERE (? IS NULL OR email = ?) " +
+                "AND \"Invoice\".date BETWEEN ? AND ? " +
+                "AND (? IS NULL OR \"Invoice\".type = ?)";
 
-        String sql = "select \"Invoice\".invoiceid, \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, \"Invoice\".file, \"Invoice\".timesChanged, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
-        String sqlAllInvoiceTypes = "select \"Invoice\".invoiceid, \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, \"Invoice\".file, \"Invoice\".timesChanged, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
-        String sqlAllUsers = "select \"Invoice\".invoiceid, \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, \"Invoice\".file, \"Invoice\".timesChanged, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
-        String sqlAllUsersAllTypes = "select \"Invoice\".invoiceid, \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, \"Invoice\".file, \"Invoice\".timesChanged, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword))
-             {
-                 PreparedStatement ps;
-                 //alle Benutzer und alle Rechnungstypen
-                 if (email.equals("alle Benutzer") && selectedInvoiceType.equals("alle Rechnungstypen")) ps = connection.prepareStatement(sqlAllUsersAllTypes);
-                 //alle Rechnungstypen
-                 else if (selectedInvoiceType.equals("alle Rechnungstypen")) ps = connection.prepareStatement(sqlAllInvoiceTypes);
-                 //alle Benutzer
-                 else if (email.equals("alle Benutzer")) ps = connection.prepareStatement(sqlAllUsers);
-                 //Filter auf Benutzer und Rechnungstypen
-                 else ps = connection.prepareStatement(sql);
-                 ResultSet resultSet = ps.executeQuery();
-                 while (resultSet.next()) {
-                    String selectedInvoicenumber = resultSet.getString("invoicenumber");
-                    Date selectedDate = resultSet.getDate("date");
-                    int selectedInvoiceid = resultSet.getInt("invoiceid");
-                    double selectedAmount = resultSet.getDouble("amount");
-                    double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
-                    String selectedType = resultSet.getString("type");
-                    String selectedStatus = resultSet.getString("status");
-                    boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
-                    int selectedUserid = resultSet.getInt("userid");
-                    byte[] selectedFile = resultSet.getBytes("file");
-                    int selectedTimesChanged = resultSet.getInt("timesChanged");
-                    Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
-                    nextInvoice.setStatus(selectedStatus);
-                    invoices.add(nextInvoice);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);                    // IS NULL
+            ps.setString(2, email);                    // Vergleich
+            ps.setDate(3, dateFrom);                   // Von
+            ps.setDate(4, dateTo);                     // Bis
+            ps.setString(5, selectedInvoiceType);      // IS NULL
+            ps.setString(6, selectedInvoiceType);      // Vergleich
+
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                String selectedInvoicenumber = resultSet.getString("invoicenumber");
+                Date selectedDate = resultSet.getDate("date");
+                int selectedInvoiceid = resultSet.getInt("invoiceid");
+                double selectedAmount = resultSet.getDouble("amount");
+                double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
+                String selectedType = resultSet.getString("type");
+                String selectedStatus = resultSet.getString("status");
+                boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
+                int selectedUserid = resultSet.getInt("userid");
+                byte[] selectedFile = resultSet.getBytes("file");
+                int selectedTimesChanged = resultSet.getInt("timesChanged");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                nextInvoice.setStatus(selectedStatus);
+                invoices.add(nextInvoice);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return invoices;
     }
 
