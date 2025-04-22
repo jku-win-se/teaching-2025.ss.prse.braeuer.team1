@@ -1,5 +1,6 @@
 package at.jku.se.lunchify.models;
 
+import at.jku.se.lunchify.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -93,13 +94,15 @@ public class InvoiceDAO {
                 "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
                 "WHERE (? IS NULL OR \"User\".email = ? )" +
                 "AND \"Invoice\".status = ? " +
-                "AND \"Invoice\".isanomalous = ?;";
+                "AND \"Invoice\".isanomalous = ? " +
+                "AND \"Invoice\".userid <> ?"; //Admin kann seine eigenen Rechnungen nicht freigeben
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, email);
             ps.setString(3, status);
             ps.setBoolean(4, anomalous);
+            ps.setInt(5, LoginController.currentUserId);
             ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
