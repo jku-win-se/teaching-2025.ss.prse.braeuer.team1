@@ -8,6 +8,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
@@ -42,7 +43,7 @@ public class UploadController {
     double invoiceValueDouble;
     double reimbursementValueDouble;
     File selectedFile;
-    private File lastUsedDirectory = new File(System.getProperty("user.home") + "/Desktop");
+    private File lastUsedDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
     private InvoiceDAO invoiceDAO = new InvoiceDAO();
 
     public boolean checkDateInPast(LocalDate date) {
