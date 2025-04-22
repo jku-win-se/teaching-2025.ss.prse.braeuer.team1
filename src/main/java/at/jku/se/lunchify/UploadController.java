@@ -46,10 +46,19 @@ public class UploadController {
     protected TextField invoiceNumber;
     @FXML
     protected Label isAnomalous;
+    @FXML
+    protected Label invoiceTypeOCR;
+    @FXML
+    protected Label invoiceNumberOCR;
+    @FXML
+    protected Label invoiceValueOCR;
+    @FXML
+    protected DatePicker invoiceDateOCR;
 
     double invoiceValueDouble;
     double reimbursementValueDouble;
     File selectedFile;
+    boolean invoiceAnomalous = false;
 
     private InvoiceDAO invoiceDAO = new InvoiceDAO();
 
@@ -80,19 +89,6 @@ public class UploadController {
     }
 
     public void onInvoiceUploadButtonClick() throws IOException, SQLException {
-        Tesseract tesseract = new Tesseract();
-
-        // Setze Pfad zu den Sprachdaten im Projekt (relativ oder absolut)
-        tesseract.setDatapath("src/main/resources/tessdata");
-        tesseract.setLanguage("deu"); // oder "eng"
-
-        try {
-            String text = tesseract.doOCR(selectedFile);
-            System.out.println("Erkannter Text:\n" + text);
-        } catch (TesseractException e) {
-            System.err.println("OCR-Fehler: " + e.getMessage());
-        }
-
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
                 || invoiceNumber.getText().isEmpty() || selectedFile == null) {
             warningText.setText("Alle Felder ausfüllen!");
@@ -120,7 +116,15 @@ public class UploadController {
                     warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
 
                 } else {
-                    Invoice invoice = new Invoice(LoginController.currentUserId, invoiceNumber.getText(), Date.valueOf(invoiceDate.getValue()), invoiceValueDouble, reimbursementValueDouble, invoiceType.getValue(), false, FileUtils.readFileToByteArray(selectedFile), 0);
+                    if(!invoiceTypeOCR.getText().equals(invoiceType.getValue()) || !invoiceNumberOCR.getText().equals(invoiceNumber.getText()) || !invoiceValueOCR.getText().equals(invoiceValue.getText()) || !invoiceDateOCR.getValue().equals(invoiceDate.getValue()))
+                    {
+                        isAnomalous.setText("0");
+                    }
+                    if(isAnomalous.getText().equals("0"))
+                    {
+                        invoiceAnomalous = true;
+                    }
+                    Invoice invoice = new Invoice(LoginController.currentUserId, invoiceNumber.getText(), Date.valueOf(invoiceDate.getValue()), invoiceValueDouble, reimbursementValueDouble, invoiceType.getValue(), invoiceAnomalous, FileUtils.readFileToByteArray(selectedFile), 0);
 
                     if (invoiceDAO.insertInvoice(invoice)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -175,10 +179,12 @@ public class UploadController {
                 if(text.toLowerCase().contains("billa") || text.toLowerCase().contains("billa plus") || text.toLowerCase().contains("hofer") || text.toLowerCase().contains("spar") || text.toLowerCase().contains("eurospar") || text.toLowerCase().contains("interspar") || text.toLowerCase().contains("supermarkt"))
                 {
                     invoiceType.setValue("Supermarkt");
+                    invoiceTypeOCR.setText(invoiceType.getValue());
                 }
                 else if(text.toLowerCase().contains("restaurant") || text.toLowerCase().contains("mensa") || text.toLowerCase().contains("imbiss") || text.toLowerCase().contains("grill") || text.toLowerCase().contains("gastronomie"))
                 {
                     invoiceType.setValue("Restaurant");
+                    invoiceTypeOCR.setText(invoiceType.getValue());
                 }
                 else {
                     isAnomalous.setText("0");
@@ -187,23 +193,28 @@ public class UploadController {
                 if(text.toLowerCase().contains("re-nr")) //Billa Rechnungen
                 {
                     invoiceNumber.setText(text.toLowerCase().split("re-nr:")[1].trim().substring(0,21));
+                    invoiceNumberOCR.setText(invoiceNumber.getText());
                 }
                 else if(text.toLowerCase().contains("beleg-nr:")) //Burak Supermarkt
                 {
                     invoiceNumber.setText(text.toLowerCase().split("beleg-nr:")[1].trim().substring(0,7));
+                    invoiceNumberOCR.setText(invoiceNumber.getText());
                 }
                 else if(text.toLowerCase().contains("bon")) // Spar Rechnungen (Spar, Eurospar und Interspar)
                 {
                     invoiceNumber.setText(text.toLowerCase().split("bon")[1].trim().substring(0,4));
+                    invoiceNumberOCR.setText(invoiceNumber.getText());
                 }
                 else if(text.toLowerCase().contains("vielen")) // Hofer Rechnungen
                 {
                     String invNumberText = text.toLowerCase().split("vielen")[0].trim();
                     invoiceNumber.setText(invNumberText.substring(invNumberText.length()-36,invNumberText.length()-15));
+                    invoiceNumberOCR.setText(invoiceNumber.getText());
                 }
                 else if(text.toLowerCase().contains("rechnung")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
                 {
                     invoiceNumber.setText(text.toLowerCase().split("rechnung")[1].trim().substring(0,6));
+                    invoiceNumberOCR.setText(invoiceNumber.getText());
                 }
                 else {
                     isAnomalous.setText("0");
@@ -224,6 +235,8 @@ public class UploadController {
                         month = month.substring(1);
                     }
                     invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+                    invoiceDateOCR.setValue(invoiceDate.getValue());
+
                 }
                 else if(text.toLowerCase().contains("verkauf")) // Burak Supermarkt
                 {
@@ -240,6 +253,7 @@ public class UploadController {
                         month = month.substring(1);
                     }
                     invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+                    invoiceDateOCR.setValue(invoiceDate.getValue());
                 }
                 else if(text.toLowerCase().contains("ihr einkauf am")) // Spar Rechnungen (Spar, Eurospar und Interspar)
                 {
@@ -256,6 +270,7 @@ public class UploadController {
                         month = month.substring(1);
                     }
                     invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+                    invoiceDateOCR.setValue(invoiceDate.getValue());
                 }
                 else if(text.toLowerCase().contains("vielen")) // Hofer Rechnungen
                 {
@@ -274,6 +289,7 @@ public class UploadController {
                         month = month.substring(1);
                     }
                     invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+                    invoiceDateOCR.setValue(invoiceDate.getValue());
 
                 }
                 else if(text.toLowerCase().contains("rechnung")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
@@ -293,6 +309,7 @@ public class UploadController {
                         month = month.substring(1);
                     }
                     invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+                    invoiceDateOCR.setValue(invoiceDate.getValue());
 
                 }
                 else {
@@ -302,14 +319,17 @@ public class UploadController {
                 if(text.toLowerCase().contains("summe eur")) //Billa Rechnungen
                 {
                     invoiceValue.setText(text.toLowerCase().split("summe eur")[1].trim().split("gegeben")[0]);
+                    invoiceValueOCR.setText(invoiceValue.getText());
                 }
                 else if(text.toLowerCase().contains("gesamt")) // Burak Supermarkt
                 {
                     invoiceValue.setText(text.toLowerCase().split("gesamt")[1].trim().split("€")[0].trim().replace(',','.'));
+                    invoiceValueOCR.setText(invoiceValue.getText());
                 }
                 else if(text.toLowerCase().contains("summe:")) // Spar Rechnungen (Spar, Eurospar und Interspar)
                 {
                     invoiceValue.setText(text.toLowerCase().split("summe:")[1].trim().substring(0,12).trim().split(" ")[0].replace(',','.'));
+                    invoiceValueOCR.setText(invoiceValue.getText());
                 }
                 else if(text.toLowerCase().contains("hofer preis")) // Hofer Rechnungen
                 {
@@ -318,12 +338,14 @@ public class UploadController {
                     String cent = text.toLowerCase().split("hofer preis")[1].trim().substring(5,7);
 
                     invoiceValue.setText(euro+"."+cent);
+                    invoiceValueOCR.setText(invoiceValue.getText());
                 }
                 else if(text.toLowerCase().contains("summe in€")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
                 {
                     String euro = text.toLowerCase().split("summe in€")[1].trim().substring(0,2);
                     String cent = text.toLowerCase().split("summe in€")[1].trim().substring(4,6);
                     invoiceValue.setText(euro+"."+cent);
+                    invoiceValueOCR.setText(invoiceValue.getText());
                 }
                 else {
                     isAnomalous.setText("0");
