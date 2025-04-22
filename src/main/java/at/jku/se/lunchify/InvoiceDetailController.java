@@ -47,13 +47,7 @@ public class InvoiceDetailController {
         reimbursementValue.setText(String.valueOf(invoice.getReimbursementAmount()));
         invoiceType.setValue(invoice.getType());
         invoiceNumber.setText(String.valueOf(invoice.getInvoicenumber()));
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(invoice.getDate());
-        
-        invoiceDate.setValue(calendar.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate());
+        invoiceDate.setValue(convertDateToLocalDate(invoice.getDate()));
 
         //AI generated -> jpg+png wird in imageView geladen und PDF extra im PDF-Reader
         byte[] file = invoice.getFile();
@@ -125,46 +119,14 @@ public class InvoiceDetailController {
         }
     }
 
-    public boolean checkDateInPast(LocalDate date) {
-        if (date.isAfter(LocalDate.now())) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public boolean checkInvoiceValueIsPositive(Double value) {
-        if (invoiceValueDouble <= 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public double getReimbursementValueFromInvoiceType(String type) {
-        if (type.equals("Restaurant")) {
-            return 3.0;
-        } else if (type.equals("Supermarkt")) {
-            return 2.5;
-        } else {
-            return 0;
-        }
-    }
-
     public void onSaveChangesButtonClick() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(invoice.getDate());
-        LocalDate convertedDate = calendar.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
                 || invoiceNumber.getText().isEmpty()) {
             warningText.setText("Alle Felder ausfüllen!");
             return;
         }
-        if (checkDateInPast(invoiceDate.getValue())) {
-            reimbursementValueDouble = getReimbursementValueFromInvoiceType(invoiceType.getValue());
+        if (invoiceDAO.checkDateInPast(invoiceDate.getValue())) {
+            reimbursementValueDouble = invoiceDAO.getReimbursementValueFromInvoiceType(invoiceType.getValue());
             if (reimbursementValueDouble == 3.0) {
                 reimbursementValue.setText("3.0");
             } else if (reimbursementValueDouble == 2.5) {
@@ -179,8 +141,8 @@ public class InvoiceDetailController {
                 warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
                 return;
             }
-            if (checkInvoiceValueIsPositive(invoiceValueDouble)) {
-                if (!convertedDate.equals(invoiceDate.getValue()) && invoiceDAO.checkInvoicesByDateAndUser(LoginController.currentUserId, invoiceDate.getValue())) {
+            if (invoiceDAO.checkInvoiceValueIsPositive(invoiceValueDouble)) {
+                if (!convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) && invoiceDAO.checkInvoicesByDateAndUser(invoice.getUserid(), invoiceDate.getValue())) {
                     // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
                     warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
 
@@ -230,17 +192,19 @@ public class InvoiceDetailController {
     }
 
     public boolean checkNoChanges() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(invoice.getDate());
-        LocalDate convertedDate = calendar.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-
         if (!invoice.getInvoicenumber().equals(invoiceNumber.getText())) return false;
         else if (!invoice.getType().equals(invoiceType.getValue())) return false;
-        else if (!convertedDate.equals(invoiceDate.getValue())) return false;
+        else if (!convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue())) return false;
         else if (invoice.getAmount()!= Double.parseDouble(invoiceValue.getText())) return false;
         else if (invoice.getReimbursementAmount()!= Double.parseDouble(reimbursementValue.getText())) return false;
         else return true;
+    }
+
+    private LocalDate convertDateToLocalDate(java.util.Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 }
