@@ -278,8 +278,22 @@ public class UploadController {
                 }
                 else if(text.toLowerCase().contains("rechnung")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
                 {
-                    String[] dateArray = text.toLowerCase().split("rechnung")[1].trim().substring(7,16).split(".");
-                    invoiceDate.setValue(LocalDate.of(Integer.parseInt(dateArray[2]), Integer.parseInt(dateArray[1]), Integer.parseInt(dateArray[0])));
+                    String dateWithText = text.toLowerCase().split("tisch")[0].trim();
+                    String date = dateWithText.substring(dateWithText.length()-19,dateWithText.length()-9);
+                    String day = date.toLowerCase().substring(0,2);
+                    String month = date.toLowerCase().substring(3,5);
+                    String year = date.toLowerCase().substring(6,10);
+
+                    if (day.startsWith("0"))
+                    {
+                        day = day.substring(1);
+                    }
+                    if (month.startsWith("0"))
+                    {
+                        month = month.substring(1);
+                    }
+                    invoiceDate.setValue(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+
                 }
                 else {
                     isAnomalous.setText("0");
@@ -305,10 +319,11 @@ public class UploadController {
 
                     invoiceValue.setText(euro+"."+cent);
                 }
-                else if(text.toLowerCase().contains("summe in €")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
+                else if(text.toLowerCase().contains("summe in€")) // Restaurant-Rechnung, siehe Ordner Invoices im Repository
                 {
-                    String[] valueArray = text.toLowerCase().split("summe in €        ")[1].trim().replace(',','.').split(".");
-                    invoiceValue.setText(valueArray[0]+"."+valueArray[1].substring(0,1));
+                    String euro = text.toLowerCase().split("summe in€")[1].trim().substring(0,2);
+                    String cent = text.toLowerCase().split("summe in€")[1].trim().substring(4,6);
+                    invoiceValue.setText(euro+"."+cent);
                 }
                 else {
                     isAnomalous.setText("0");
