@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -100,7 +101,7 @@ public class ReportController {
         LunchifyApplication.baseController.basePane.setRight(null);
     }
 
-    public void onInvoiceStatisticsButtonClick() throws IOException {
+    public void onInvoiceStatisticsButtonClick() throws IOException, SQLException {
         setSelectedData();
         checkSelectedData();
         if (inputCorrect) {
