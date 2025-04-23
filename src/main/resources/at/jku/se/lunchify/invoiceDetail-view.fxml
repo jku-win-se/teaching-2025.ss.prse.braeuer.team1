@@ -15,14 +15,7 @@
                <children>
                   <Label fx:id="warningText" style="-fx-text-fill: red;" />
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungstyp" />
-                  <ChoiceBox fx:id="invoiceType" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
-                  <items>
-                     <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Supermarkt" />
-                        <String fx:value="Restaurant" />
-                     </FXCollections>
-                  </items>
-                  </ChoiceBox>
+                  <ComboBox fx:id="invoiceType" onAction="#invoiceTypeChanged" onShowing="#showAllInvoiceTypes" prefHeight="21.0" prefWidth="192.0" />
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsnummer (laut Rechnung)" />
                   <TextField fx:id="invoiceNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
                      <VBox.margin>

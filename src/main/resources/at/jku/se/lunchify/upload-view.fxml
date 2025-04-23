@@ -18,14 +18,7 @@
       <VBox alignment="CENTER" prefHeight="240.0" prefWidth="213.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
          <children>
             <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungstyp" />
-            <ChoiceBox fx:id="invoiceType" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
-            <items>
-               <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="Supermarkt" />
-                  <String fx:value="Restaurant" />
-               </FXCollections>
-            </items>
-            </ChoiceBox>
+            <ComboBox fx:id="invoiceType" onAction="#invoiceTypeChanged" prefHeight="21.0" prefWidth="192.0" />
             <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsnummer (laut Rechnung)" />
             <TextField fx:id="invoiceNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
                <VBox.margin>
@@ -40,11 +33,8 @@
                   <Insets />
                </VBox.margin>
             </TextField>
-            <TextField fx:id="reimbursementValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </TextField>
+            <Label prefHeight="21.0" prefWidth="192.0" text="Rückerstattungsbetrag" />
+            <Label fx:id="reimbursementValue" prefHeight="21.0" prefWidth="192.0" />
             <Label prefHeight="21.0" prefWidth="192.0" text="Rechnung (PDF, JPEG. PNG)" />
             <Button fx:id="invoiceAttachmentButton" mnemonicParsing="false" onAction="#onInvoiceAttachmentButtonClick" prefHeight="31.0" prefWidth="189.0" style="-fx-background-color: #ECECEC; -fx-text-fill: black; -fx-border-color: #BEBEBE; -fx-border-radius: 3;" text="Rechnung anhängen" />
             <Label fx:id="fileName" prefHeight="21.0" prefWidth="192.0">
@@ -57,10 +47,10 @@
                </VBox.margin>
             </Button>
 <!--Elements for anomaly recognition Start-->
-            <Label fx:id="isAnomalous" alignment="CENTER" textFill="RED" visible="false"/>
-            <Label fx:id="invoiceTypeOCR" alignment="CENTER" textFill="RED" visible="false"/>
-            <Label fx:id="invoiceNumberOCR" alignment="CENTER" textFill="RED" visible="false"/>
-            <Label fx:id="invoiceValueOCR" alignment="CENTER" textFill="RED" visible="false"/>
+            <Label fx:id="isAnomalous" alignment="CENTER" textFill="RED" visible="false" />
+            <Label fx:id="invoiceTypeOCR" alignment="CENTER" textFill="RED" visible="false" />
+            <Label fx:id="invoiceNumberOCR" alignment="CENTER" textFill="RED" visible="false" />
+            <Label fx:id="invoiceValueOCR" alignment="CENTER" textFill="RED" visible="false" />
             <DatePicker fx:id="invoiceDateOCR" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" visible="false" />
 <!--Elements for anomaly recognition End-->
          </children>

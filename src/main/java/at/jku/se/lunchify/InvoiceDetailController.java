@@ -2,6 +2,9 @@ package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
 import at.jku.se.lunchify.models.InvoiceDAO;
+import at.jku.se.lunchify.models.InvoiceSettingService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -25,7 +28,7 @@ public class InvoiceDetailController {
     @FXML
     protected Label reimbursementValue;
     @FXML
-    protected ChoiceBox<String> invoiceType;
+    protected ComboBox<String> invoiceType;
     @FXML
     protected DatePicker invoiceDate;
     @FXML
@@ -37,12 +40,14 @@ public class InvoiceDetailController {
 
     private Invoice invoice;
     private final InvoiceDAO invoiceDAO = new InvoiceDAO();
+    private final InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
 
     double invoiceValueDouble;
-    double reimbursementValueDouble;
+    String selectedType;
 
     public void setInvoice(Invoice invoice) throws IOException {
         this.invoice = invoice;
+        showAllInvoiceTypes();
         invoiceValue.setText(String.valueOf(invoice.getAmount()));
         reimbursementValue.setText(String.valueOf(invoice.getReimbursementAmount()));
         invoiceType.setValue(invoice.getType());
@@ -58,7 +63,10 @@ public class InvoiceDetailController {
                 invoice.openPDF();
             }
         }
-        else System.out.println("Rechnung ist nicht da");
+    }
+
+    public void showAllInvoiceTypes() {
+        invoiceType.setItems(invoiceSettingService.getAllInvoiceTypes());
     }
 
     public void onClearButtonClick() {
@@ -126,8 +134,6 @@ public class InvoiceDetailController {
             return;
         }
         if (invoiceDAO.checkDateInPast(invoiceDate.getValue())) {
-            reimbursementValueDouble = invoiceDAO.getReimbursementValueFromInvoiceType(invoiceType.getValue());
-            reimbursementValue.setText(reimbursementValueDouble+"");
             try{
                 invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
             } catch (NumberFormatException e) {
@@ -144,6 +150,7 @@ public class InvoiceDetailController {
                     invoice.setInvoicenumber(invoiceNumber.getText());
                     invoice.setAmount(invoiceValueDouble);
                     invoice.setDate(Date.valueOf(invoiceDate.getValue()));
+                    invoice.setReimbursementAmount(Double.parseDouble(reimbursementValue.getText()));
 
                     if (invoiceDAO.updateInvoice(invoice)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -197,5 +204,13 @@ public class InvoiceDetailController {
         return calendar.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
+    }
+
+    public void invoiceTypeChanged() {
+        selectedType = invoiceType.getSelectionModel().getSelectedItem();
+        if (selectedType != null) {
+            if (selectedType.equals("Supermarkt")) reimbursementValue.setText(invoiceSettingService.getCurrentSupermarketValue()+"");
+            else if (selectedType.equals("Restaurant")) reimbursementValue.setText(invoiceSettingService.getCurrentRestaurantValue()+"");
+        }
     }
 }
