@@ -51,5 +51,9 @@ public class MenuController {
 
     public void onReportButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("report-view.fxml");
-    };
+    }
+
+    public void onInvoiceClearanceButtonClick() throws IOException {
+        LunchifyApplication.baseController.showCenterView("invoiceClearing-view.fxml");
+    }
 }

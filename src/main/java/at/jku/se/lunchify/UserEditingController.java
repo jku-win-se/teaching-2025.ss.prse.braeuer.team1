@@ -52,7 +52,7 @@ public class UserEditingController {
         User editedUser = new User(userToEdit.getUserid(), email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), userToEdit.isIsanomalous(), userToEdit.getPassword());
         //Passwort wurde geändert
         if(!password.getText().equals(userToEdit.getPassword())) {
-            editedUser.setPassword(passwordService.hashPassword(password.getText().trim()));
+            editedUser.setPassword(passwordService.hashPassword(password.getText()));
         }
 
         //Email-Adresse wurde geändert

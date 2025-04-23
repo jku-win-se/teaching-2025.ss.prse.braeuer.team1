@@ -93,6 +93,36 @@ public class UserDAO {
         return user;
     }
 
+    public User getUserByUserid(int userid) {
+        User user = null;
+        String sql = "SELECT * FROM \"User\" WHERE userid = ?";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userid);
+
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    int useridTo = resultSet.getInt("userid");
+                    String emailTo = resultSet.getString("email");
+                    String firstNameTo = resultSet.getString("firstname");
+                    String surnameTo = resultSet.getString("surname");
+                    String passwordTo = resultSet.getString("password");
+                    String typeTo = resultSet.getString("type");
+                    boolean isActive = resultSet.getBoolean("isactive");
+                    boolean isAnomalous = resultSet.getBoolean("isanomalous");
+                    connection.close();
+
+                    user = new User(useridTo, emailTo, firstNameTo, surnameTo, typeTo, isActive, isAnomalous, passwordTo);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
     public boolean updateUser(User user) throws SQLException {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
         PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;")) {

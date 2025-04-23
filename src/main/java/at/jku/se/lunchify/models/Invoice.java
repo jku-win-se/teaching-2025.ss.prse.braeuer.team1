@@ -1,5 +1,9 @@
 package at.jku.se.lunchify.models;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -138,6 +142,20 @@ public class Invoice {
 
     public void setTimesChanged(int timesChanged) {
         this.timesChanged = timesChanged;
+    }
+
+    //AI-generated
+    public void openPDF() throws IOException {
+        File tempFile = File.createTempFile("invoice_", ".pdf");
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(file);
+        }
+
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(tempFile);
+        } else {
+            System.out.println("PDF öffnen wird nicht unterstützt.");
+        }
     }
 
     @Override
