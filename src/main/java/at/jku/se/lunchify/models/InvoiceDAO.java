@@ -22,16 +22,6 @@ public class InvoiceDAO {
         return value > 0;
     }
 
-    public double getReimbursementValueFromInvoiceType(String type) {
-        if (type.equals("Restaurant")) {
-            return invoiceSettingService.getCurrentRestaurantValue();
-        } else if (type.equals("Supermarkt")) {
-            return invoiceSettingService.getCurrentSupermarketValue();
-        } else {
-            return 0;
-        }
-    }
-
     // Methode zum Abrufen aller Rechnungen
     public ObservableList<Invoice> getAllInvoices() {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();

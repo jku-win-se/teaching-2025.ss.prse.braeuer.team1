@@ -66,7 +66,7 @@ public class UploadController {
         invoiceType.setItems(invoiceSettingService.getAllInvoiceTypes());
     }
 
-    public void onInvoiceUploadButtonClick() throws IOException, SQLException {
+    public void onInvoiceUploadButtonClick() throws IOException {
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
                 || invoiceNumber.getText().isEmpty() || selectedFile == null) {
             warningText.setText("Alle Felder ausfüllen!");
@@ -122,7 +122,7 @@ public class UploadController {
     }
 
     //AI-Assisted
-    public void onInvoiceAttachmentButtonClick() throws IOException, SQLException {
+    public void onInvoiceAttachmentButtonClick() {
         Stage stage = (Stage) invoiceAttachmentButton.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
 
