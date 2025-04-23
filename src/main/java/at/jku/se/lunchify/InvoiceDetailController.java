@@ -36,7 +36,7 @@ public class InvoiceDetailController {
     protected Label warningText;
 
     private Invoice invoice;
-    private InvoiceDAO invoiceDAO = new InvoiceDAO();
+    private final InvoiceDAO invoiceDAO = new InvoiceDAO();
 
     double invoiceValueDouble;
     double reimbursementValueDouble;
@@ -84,7 +84,7 @@ public class InvoiceDetailController {
         else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fehler");
-            alert.setHeaderText("Änderungen zerst speichern");
+            alert.setHeaderText("Änderungen zuerst speichern");
             alert.setContentText("Änderungen müssen zuerst gespeichert werden!");
             alert.showAndWait();
         }
@@ -113,7 +113,7 @@ public class InvoiceDetailController {
         else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fehler");
-            alert.setHeaderText("Änderungen zerst speichern");
+            alert.setHeaderText("Änderungen zuerst speichern");
             alert.setContentText("Änderungen müssen zuerst gespeichert werden!");
             alert.showAndWait();
         }
@@ -127,14 +127,7 @@ public class InvoiceDetailController {
         }
         if (invoiceDAO.checkDateInPast(invoiceDate.getValue())) {
             reimbursementValueDouble = invoiceDAO.getReimbursementValueFromInvoiceType(invoiceType.getValue());
-            if (reimbursementValueDouble == 3.0) {
-                reimbursementValue.setText("3.0");
-            } else if (reimbursementValueDouble == 2.5) {
-                reimbursementValue.setText("2.5");
-            } else {
-                warningText.setText("Es gab einen Fehler bei der Verarbeitung des Rechnungstyps!");
-                return;
-            }
+            reimbursementValue.setText(reimbursementValueDouble+"");
             try{
                 invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
             } catch (NumberFormatException e) {
@@ -152,7 +145,6 @@ public class InvoiceDetailController {
                     invoice.setAmount(invoiceValueDouble);
                     invoice.setDate(Date.valueOf(invoiceDate.getValue()));
 
-                    System.out.println(invoice.getAmount());
                     if (invoiceDAO.updateInvoice(invoice)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Rechnung geändert");
@@ -192,12 +184,11 @@ public class InvoiceDetailController {
     }
 
     public boolean checkNoChanges() {
-        if (!invoice.getInvoicenumber().equals(invoiceNumber.getText())) return false;
-        else if (!invoice.getType().equals(invoiceType.getValue())) return false;
-        else if (!convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue())) return false;
-        else if (invoice.getAmount()!= Double.parseDouble(invoiceValue.getText())) return false;
-        else if (invoice.getReimbursementAmount()!= Double.parseDouble(reimbursementValue.getText())) return false;
-        else return true;
+        return (!invoice.getInvoicenumber().equals(invoiceNumber.getText()) &&
+        !invoice.getType().equals(invoiceType.getValue()) &&
+        !convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) &&
+        invoice.getAmount()!= Double.parseDouble(invoiceValue.getText()) &&
+        invoice.getReimbursementAmount()!= Double.parseDouble(reimbursementValue.getText()));
     }
 
     private LocalDate convertDateToLocalDate(java.util.Date date) {
