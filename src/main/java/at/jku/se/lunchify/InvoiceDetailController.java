@@ -184,11 +184,11 @@ public class InvoiceDetailController {
     }
 
     public boolean checkNoChanges() {
-        return (!invoice.getInvoicenumber().equals(invoiceNumber.getText()) &&
-        !invoice.getType().equals(invoiceType.getValue()) &&
-        !convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) &&
-        invoice.getAmount()!= Double.parseDouble(invoiceValue.getText()) &&
-        invoice.getReimbursementAmount()!= Double.parseDouble(reimbursementValue.getText()));
+        return (invoice.getInvoicenumber().equals(invoiceNumber.getText()) &&
+        invoice.getType().equals(invoiceType.getValue()) &&
+        convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) &&
+        invoice.getAmount() == Double.parseDouble(invoiceValue.getText()) &&
+        invoice.getReimbursementAmount()== Double.parseDouble(reimbursementValue.getText()));
     }
 
     private LocalDate convertDateToLocalDate(java.util.Date date) {
