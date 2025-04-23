@@ -23,7 +23,7 @@ public class InvoiceDetailController {
     @FXML
     protected TextField invoiceValue;
     @FXML
-    protected TextField reimbursementValue;
+    protected Label reimbursementValue;
     @FXML
     protected ChoiceBox<String> invoiceType;
     @FXML
