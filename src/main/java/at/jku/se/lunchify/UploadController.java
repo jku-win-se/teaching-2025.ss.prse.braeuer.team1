@@ -64,40 +64,14 @@ public class UploadController {
 
     private InvoiceDAO invoiceDAO = new InvoiceDAO();
 
-    public boolean checkDateInPast(LocalDate date) {
-        if (date.isAfter(LocalDate.now())) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public boolean checkInvoiceValueIsPositive(Double value) {
-        if (invoiceValueDouble <= 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public double getReimbursementValueFromInvoiceType(String type) {
-        if (type.equals("Restaurant")) {
-            return 3.0;
-        } else if (type.equals("Supermarkt")) {
-            return 2.5;
-        } else {
-            return 0;
-        }
-    }
-
     public void onInvoiceUploadButtonClick() throws IOException, SQLException {
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
                 || invoiceNumber.getText().isEmpty() || selectedFile == null) {
             warningText.setText("Alle Felder ausfüllen!");
             return;
         }
-        if (checkDateInPast(invoiceDate.getValue())) {
-            reimbursementValueDouble = getReimbursementValueFromInvoiceType(invoiceType.getValue());
+        if (invoiceDAO.checkDateInPast(invoiceDate.getValue())) {
+            reimbursementValueDouble = invoiceDAO.getReimbursementValueFromInvoiceType(invoiceType.getValue());
             if (reimbursementValueDouble == 3.0) {
                 reimbursementValue.setText("3.0");
             } else if (reimbursementValueDouble == 2.5) {
@@ -112,7 +86,7 @@ public class UploadController {
                 warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
                 return;
             }
-            if (checkInvoiceValueIsPositive(invoiceValueDouble)) {
+            if (invoiceDAO.checkInvoiceValueIsPositive(invoiceValueDouble)) {
                 if (invoiceDAO.checkInvoicesByDateAndUser(LoginController.currentUserId, invoiceDate.getValue())) {
                     // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
                     warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
@@ -141,6 +115,7 @@ public class UploadController {
 
                         warningText.setText("");
                         alert.showAndWait();
+                        LunchifyApplication.baseController.showCenterView("upload-view.fxml");
                     } else {
                         warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
                     }

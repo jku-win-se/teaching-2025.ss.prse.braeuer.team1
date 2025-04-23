@@ -14,6 +14,24 @@ public class InvoiceDAO {
     String username = "postgres.yxshntkgvmksefegyfhz";
     String DBpassword = "CaMaKe25!";
 
+    public boolean checkDateInPast(LocalDate date) {
+        return !date.isAfter(LocalDate.now());
+    }
+
+    public boolean checkInvoiceValueIsPositive(Double value) {
+        return value > 0;
+    }
+
+    public double getReimbursementValueFromInvoiceType(String type) {
+        if (type.equals("Restaurant")) {
+            return 3.0;
+        } else if (type.equals("Supermarkt")) {
+            return 2.5;
+        } else {
+            return 0;
+        }
+    }
+
     // Methode zum Abrufen aller Rechnungen
     public ObservableList<Invoice> getAllInvoices() {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
@@ -47,26 +65,29 @@ public class InvoiceDAO {
         return invoices;
     }
 
-    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String selectedInvoiceType) {
+    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String selectedInvoiceType) throws SQLException {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
+        if (email.equals("alle Benutzer")) email = null;
+        if (selectedInvoiceType.equals("alle Rechnungstypen")) selectedInvoiceType = null;
+        String sql = "SELECT * "+
+                "FROM \"Invoice\" " +
+                "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
+                "WHERE (? IS NULL OR email = ?) " +
+                "AND \"Invoice\".date BETWEEN ? AND ? " +
+                "AND (? IS NULL OR \"Invoice\".type = ?)";
 
-        String sql = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
-        String sqlAllInvoiceTypes = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = \'"+email+"\' AND \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
-        String sqlAllUsers = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\' AND \"Invoice\".type = \'"+selectedInvoiceType+"\';";
-        String sqlAllUsersAllTypes = "select \"Invoice\".invoicenumber,\"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status,\"Invoice\".isanomalous,\"Invoice\".userid, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where \"Invoice\".date BETWEEN \'"+dateFrom+"\' AND \'"+dateTo+"\';";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword))
-        {
-            PreparedStatement ps;
-            //alle Benutzer und alle Rechnungstypen
-            if (email.equals("alle Benutzer") && selectedInvoiceType.equals("alle Rechnungstypen")) ps = connection.prepareStatement(sqlAllUsersAllTypes);
-                //alle Rechnungstypen
-            else if (selectedInvoiceType.equals("alle Rechnungstypen")) ps = connection.prepareStatement(sqlAllInvoiceTypes);
-                //alle Benutzer
-            else if (email.equals("alle Benutzer")) ps = connection.prepareStatement(sqlAllUsers);
-                //Filter auf Benutzer und Rechnungstypen
-            else ps = connection.prepareStatement(sql);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);                    // IS NULL
+            ps.setString(2, email);                    // Vergleich
+            ps.setDate(3, dateFrom);                   // Von
+            ps.setDate(4, dateTo);                     // Bis
+            ps.setString(5, selectedInvoiceType);      // IS NULL
+            ps.setString(6, selectedInvoiceType);      // Vergleich
+
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
+                int selectedInvoiceid = resultSet.getInt("selectedInvoiceid");
                 String selectedInvoicenumber = resultSet.getString("invoicenumber");
                 Date selectedDate = resultSet.getDate("date");
                 double selectedAmount = resultSet.getDouble("amount");
@@ -75,7 +96,9 @@ public class InvoiceDAO {
                 String selectedStatus = resultSet.getString("status");
                 boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
                 int selectedUserid = resultSet.getInt("userid");
-                Invoice nextInvoice = new Invoice(selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount,selectedReimbursementAmount, selectedType, selectedIsAnomalous, null, 0);
+                byte[] selectedFile = resultSet.getBytes("file");
+                int selectedTimesChanged = resultSet.getInt("timesChanged");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
                 nextInvoice.setStatus(selectedStatus);
                 invoices.add(nextInvoice);
             }
@@ -85,19 +108,35 @@ public class InvoiceDAO {
         return invoices;
     }
 
-    public ObservableList<Invoice> getSelectedInvoices(User user) {
+    public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "select \"Invoice\".date, \"Invoice\".amount,, \"Invoice\".reimbursementamount, email from \"Invoice\" join \"User\" on \"Invoice\".userid = \"User\".userid where email = "+user.getEmail()+";";
+        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".invoicenumber, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".timeschanged, \"User\".userid, \"User\".surname, \"User\".firstname " +
+                "FROM \"Invoice\" " +
+                "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
+                "WHERE (? IS NULL OR \"User\".email = ? )" +
+                "AND \"Invoice\".status = ? " +
+                "AND \"Invoice\".isanomalous = ? " +
+                "AND \"Invoice\".userid <> ?"; //Admin kann seine eigenen Rechnungen nicht freigeben
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-             PreparedStatement sps = connection.prepareStatement(sql);
-             ResultSet resultSet = sps.executeQuery()) {
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, email);
+            ps.setString(3, status);
+            ps.setBoolean(4, anomalous);
+            ps.setInt(5, LoginController.currentUserId);
+            ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
+                int selectedInvoiceid = resultSet.getInt("invoiceid");
                 Date selectedDate = resultSet.getDate("date");
+                String selectedInvoicenumber = resultSet.getString("invoicenumber");
                 double selectedAmount = resultSet.getDouble("amount");
                 double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
-                Invoice nextInvoice = new Invoice(user.getUserid(), selectedDate, selectedAmount,selectedReimbursementAmount);
+                int selectedUserid = resultSet.getInt("userid");
+                String selectedType = resultSet.getString("type");
+                int selectedTimesChanged = resultSet.getInt("timeschanged");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, true, null, selectedTimesChanged);
                 invoices.add(nextInvoice);
                 connection.close();
             }
@@ -107,29 +146,53 @@ public class InvoiceDAO {
         return invoices;
     }
 
-    public boolean insertInvoice(Invoice invoice) {
-        String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);";
+    public Invoice getInvoiceById (int id) {
+        Invoice invoice = null;
+        String sql = "SELECT * FROM \"Invoice\" WHERE \"Invoice\".invoiceid = ?";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-             PreparedStatement sps = connection.prepareStatement(sql))
-        {
-            sps.setInt(1, invoice.getUserid());
-            sps.setString(2, invoice.getInvoicenumber());
-            sps.setDate(3, (Date) invoice.getDate());
-            sps.setDouble(4, invoice.getAmount());
-            sps.setDouble(5, invoice.getReimbursementAmount());
-            sps.setString(6, invoice.getType());
-            sps.setString(7, invoice.getStatus());
-            sps.setBoolean(8, invoice.isIsanomalous());
-            sps.setBytes(9, invoice.getFile());
-            sps.setInt(10, 0);
-            sps.executeUpdate();
-            sps.close();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    int selectedInvoiceid = resultSet.getInt("invoiceid");
+                    String selectedInvoicenumber = resultSet.getString("invoicenumber");
+                    int selectedUserid = resultSet.getInt("userid");
+                    Date selectedDate = resultSet.getDate("date");
+                    double selectedAmount = resultSet.getDouble("amount");
+                    double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
+                    String selectedType = resultSet.getString("type");
+                    String selectedStatus = resultSet.getString("status");
+                    boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
+                    int selectedTimesChanged = resultSet.getInt("timesChanged");
+                    byte[] selectedFile = resultSet.getBytes("file");
+                    connection.close();
+
+                    invoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return invoice;
+    }
+
+    public boolean setInvoiceStatus(int id, String newStatus) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+            PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET status = ? where invoiceid = ?;")) {
+            ps.setString(1, newStatus);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
             return true;
         }
-     catch (Exception e) {
-        e.printStackTrace();
-        return false;
-    }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean checkInvoicesByDateAndUser(int userid, LocalDate date) {
@@ -146,6 +209,65 @@ public class InvoiceDAO {
                 return false;
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean insertInvoice(Invoice invoice) {
+        String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+             PreparedStatement sp = connection.prepareStatement(sql))
+        {
+            sp.setInt(1, invoice.getUserid());
+            sp.setString(2, invoice.getInvoicenumber());
+            sp.setDate(3, (Date) invoice.getDate());
+            sp.setDouble(4, invoice.getAmount());
+            sp.setDouble(5, invoice.getReimbursementAmount());
+            sp.setString(6, invoice.getType());
+            sp.setString(7, invoice.getStatus());
+            sp.setBoolean(8, invoice.isIsanomalous());
+            sp.setBytes(9, invoice.getFile());
+            sp.setInt(10, 0);
+            sp.executeUpdate();
+            sp.close();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteInvoice(int id) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+            PreparedStatement ps = connection.prepareStatement("delete FROM \"Invoice\" where invoiceid = ?;")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
+            return true;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateInvoice(Invoice invoice) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET type = ?, invoicenumber = ?, date = ?, amount = ? where invoiceid = ?;")) {
+            ps.setString(1, invoice.getType());
+            ps.setString(2, invoice.getInvoicenumber());
+            ps.setDate(3, (Date) invoice.getDate());
+            ps.setDouble(4, invoice.getAmount());
+            ps.setInt(5, invoice.getInvoiceid());
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
+            return true;
+        }
+        catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
