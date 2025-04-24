@@ -140,7 +140,7 @@ public class UploadController {
     }
 
     //AI-Assisted
-    public void onInvoiceAttachmentButtonClick() {
+    public void onInvoiceAttachmentButtonClick() throws IOException {
         Stage stage = (Stage) invoiceAttachmentButton.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
 
@@ -160,8 +160,8 @@ public class UploadController {
         if (selectedFile != null) {
             fileName.setText(selectedFile.getAbsolutePath());
             lastUsedDirectory = selectedFile.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
-
-            // 1. Tesseract-Instanz erzeugen
+            //AI-assisted
+            //1. Tesseract-Instanz erzeugen
             Tesseract tesseract = new Tesseract();
             tesseract.setLanguage("deu");
 
