@@ -2,6 +2,7 @@ package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
 import at.jku.se.lunchify.models.InvoiceDAO;
+import at.jku.se.lunchify.models.InvoiceSettingService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -11,6 +12,7 @@ import javafx.stage.Stage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -25,7 +27,7 @@ public class InvoiceDetailController {
     @FXML
     protected Label reimbursementValue;
     @FXML
-    protected ChoiceBox<String> invoiceType;
+    protected ComboBox<String> invoiceType;
     @FXML
     protected DatePicker invoiceDate;
     @FXML
@@ -37,12 +39,30 @@ public class InvoiceDetailController {
 
     private Invoice invoice;
     private final InvoiceDAO invoiceDAO = new InvoiceDAO();
+    private final InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
 
     double invoiceValueDouble;
-    double reimbursementValueDouble;
+    String selectedType;
+
+    //AI-generated
+    public void initialize() {
+        invoiceDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+
+                if (date != null && (date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                        date.getDayOfWeek() == DayOfWeek.SUNDAY)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #EEEEEE;");
+                }
+            }
+        });
+    }
 
     public void setInvoice(Invoice invoice) throws IOException {
         this.invoice = invoice;
+        showAllInvoiceTypes();
         invoiceValue.setText(String.valueOf(invoice.getAmount()));
         reimbursementValue.setText(String.valueOf(invoice.getReimbursementAmount()));
         invoiceType.setValue(invoice.getType());
@@ -58,7 +78,10 @@ public class InvoiceDetailController {
                 invoice.openPDF();
             }
         }
-        else System.out.println("Rechnung ist nicht da");
+    }
+
+    public void showAllInvoiceTypes() {
+        invoiceType.setItems(invoiceSettingService.getAllInvoiceTypes());
     }
 
     public void onClearButtonClick() {
@@ -126,40 +149,40 @@ public class InvoiceDetailController {
             return;
         }
         if (invoiceDAO.checkDateInPast(invoiceDate.getValue())) {
-            reimbursementValueDouble = invoiceDAO.getReimbursementValueFromInvoiceType(invoiceType.getValue());
-            reimbursementValue.setText(reimbursementValueDouble+"");
             try{
                 invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
             } catch (NumberFormatException e) {
-                warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
+                warningText.setText("Der Rechnungsbetrag muss \neine Zahl sein!");
                 return;
             }
             if (invoiceDAO.checkInvoiceValueIsPositive(invoiceValueDouble)) {
                 if (!convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) && invoiceDAO.checkInvoicesByDateAndUser(invoice.getUserid(), invoiceDate.getValue())) {
                     // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
-                    warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
+                    warningText.setText("Es wurde schon eine Rechnung \nfür den ausgewählten Tag \nhochgeladen!");
 
                 } else {
                     invoice.setType(invoiceType.getValue());
                     invoice.setInvoicenumber(invoiceNumber.getText());
                     invoice.setAmount(invoiceValueDouble);
                     invoice.setDate(Date.valueOf(invoiceDate.getValue()));
+                    invoice.setReimbursementAmount(Double.parseDouble(reimbursementValue.getText()));
 
                     if (invoiceDAO.updateInvoice(invoice)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Rechnung geändert");
                         alert.setHeaderText("Rechnung erfolgreich geändert!"); // oder null
                         alert.setContentText("Rechnung wurde erfolgreich geändert!");
+                        warningText.setText("");
                         alert.showAndWait();
                     } else {
-                        warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
+                        warningText.setText("Es gab ein Problem \nmit der Datenbankverbindung!");
                     }
                 }
             } else {
-                warningText.setText("Rechnungsbetrag muss positiv sein!");
+                warningText.setText("Rechnungsbetrag muss positiv \nsein!");
             }
         } else {
-            warningText.setText("Rechnungsdatum liegt in der Zukunft!");
+            warningText.setText("Rechnungsdatum liegt in der \nZukunft!");
         }
     }
 
@@ -188,7 +211,7 @@ public class InvoiceDetailController {
         invoice.getType().equals(invoiceType.getValue()) &&
         convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) &&
         invoice.getAmount() == Double.parseDouble(invoiceValue.getText()) &&
-        invoice.getReimbursementAmount()== Double.parseDouble(reimbursementValue.getText()));
+        invoice.getReimbursementAmount() == Double.parseDouble(reimbursementValue.getText()));
     }
 
     private LocalDate convertDateToLocalDate(java.util.Date date) {
@@ -197,5 +220,13 @@ public class InvoiceDetailController {
         return calendar.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
+    }
+
+    public void invoiceTypeChanged() {
+        selectedType = invoiceType.getSelectionModel().getSelectedItem();
+        if (selectedType != null) {
+            if (selectedType.equals("Supermarkt")) reimbursementValue.setText(invoiceSettingService.getCurrentSupermarketValue()+"");
+            else if (selectedType.equals("Restaurant")) reimbursementValue.setText(invoiceSettingService.getCurrentRestaurantValue()+"");
+        }
     }
 }

@@ -67,7 +67,7 @@ public class InvoiceClearingController {
 
     private void setSelectedData () {
         selectedMail = allUsers.getSelectionModel().getSelectedItem();
-        if (selectedMail.equals("alle Benutzer")) selectedMail = null;
+        if (selectedMail!=null && selectedMail.equals("alle Benutzer")) selectedMail = null;
     }
 
     public void userSelectionChanged() {
