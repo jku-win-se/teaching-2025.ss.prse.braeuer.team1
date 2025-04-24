@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -42,6 +43,22 @@ public class InvoiceDetailController {
 
     double invoiceValueDouble;
     String selectedType;
+
+    //AI-generated
+    public void initialize() {
+        invoiceDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+
+                if (date != null && (date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                        date.getDayOfWeek() == DayOfWeek.SUNDAY)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #EEEEEE;");
+                }
+            }
+        });
+    }
 
     public void setInvoice(Invoice invoice) throws IOException {
         this.invoice = invoice;
@@ -135,13 +152,13 @@ public class InvoiceDetailController {
             try{
                 invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
             } catch (NumberFormatException e) {
-                warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
+                warningText.setText("Der Rechnungsbetrag muss \neine Zahl sein!");
                 return;
             }
             if (invoiceDAO.checkInvoiceValueIsPositive(invoiceValueDouble)) {
                 if (!convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) && invoiceDAO.checkInvoicesByDateAndUser(invoice.getUserid(), invoiceDate.getValue())) {
                     // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
-                    warningText.setText("Es wurde schon eine Rechnung für den ausgewählten Tag hochgeladen!");
+                    warningText.setText("Es wurde schon eine Rechnung \nfür den ausgewählten Tag \nhochgeladen!");
 
                 } else {
                     invoice.setType(invoiceType.getValue());
@@ -158,14 +175,14 @@ public class InvoiceDetailController {
                         warningText.setText("");
                         alert.showAndWait();
                     } else {
-                        warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
+                        warningText.setText("Es gab ein Problem \nmit der Datenbankverbindung!");
                     }
                 }
             } else {
-                warningText.setText("Rechnungsbetrag muss positiv sein!");
+                warningText.setText("Rechnungsbetrag muss positiv \nsein!");
             }
         } else {
-            warningText.setText("Rechnungsdatum liegt in der Zukunft!");
+            warningText.setText("Rechnungsdatum liegt in der \nZukunft!");
         }
     }
 

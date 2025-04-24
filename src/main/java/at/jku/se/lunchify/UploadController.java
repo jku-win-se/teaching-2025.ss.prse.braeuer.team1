@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import net.sourceforge.tess4j.Tesseract;
@@ -60,6 +61,19 @@ public class UploadController {
 
     public void initialize() {
         showAllInvoiceTypes();
+        //AI-generated
+        invoiceDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+
+                if (date != null && (date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                        date.getDayOfWeek() == DayOfWeek.SUNDAY)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #EEEEEE;");
+                }
+            }
+        });
     }
 
     public void showAllInvoiceTypes() {
