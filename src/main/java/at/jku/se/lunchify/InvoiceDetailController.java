@@ -43,6 +43,7 @@ public class InvoiceDetailController {
 
     double invoiceValueDouble;
     String selectedType;
+    double reimbursementValueDouble;
 
     //AI-generated
     public void initialize() {
@@ -167,7 +168,9 @@ public class InvoiceDetailController {
                     invoice.setInvoicenumber(invoiceNumber.getText());
                     invoice.setAmount(invoiceValueDouble);
                     invoice.setDate(Date.valueOf(invoiceDate.getValue()));
-                    invoice.setReimbursementAmount(Double.parseDouble(reimbursementValue.getText()));
+                    reimbursementValueDouble = Double.parseDouble(reimbursementValue.getText());
+                    if(invoiceValueDouble < reimbursementValueDouble) {reimbursementValueDouble = invoiceValueDouble;}
+                    invoice.setReimbursementAmount(reimbursementValueDouble);
 
                     if (invoiceDAO.updateInvoice(invoice)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -212,8 +215,7 @@ public class InvoiceDetailController {
         return (invoice.getInvoicenumber().equals(invoiceNumber.getText()) &&
         invoice.getType().equals(invoiceType.getValue()) &&
         convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) &&
-        invoice.getAmount() == Double.parseDouble(invoiceValue.getText()) &&
-        invoice.getReimbursementAmount() == Double.parseDouble(reimbursementValue.getText()));
+        invoice.getAmount() == Double.parseDouble(invoiceValue.getText()));
     }
 
     private LocalDate convertDateToLocalDate(java.util.Date date) {

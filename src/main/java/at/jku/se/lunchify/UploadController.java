@@ -59,6 +59,7 @@ public class UploadController {
     private File lastUsedDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
     boolean invoiceAnomalous = false;
     String selectedType;
+    double reimbursementValueDouble;
 
     private final InvoiceDAO invoiceDAO = new InvoiceDAO();
     private final InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
@@ -114,7 +115,9 @@ public class UploadController {
                     {
                         invoiceAnomalous = true;
                     }
-                    Invoice invoice = new Invoice(LoginController.currentUserId, invoiceNumber.getText(), Date.valueOf(invoiceDate.getValue()), invoiceValueDouble, Double.parseDouble(reimbursementValue.getText()), invoiceType.getValue(), invoiceAnomalous, FileUtils.readFileToByteArray(selectedFile), 0);
+                    reimbursementValueDouble = Double.parseDouble(reimbursementValue.getText());
+                    if(invoiceValueDouble < reimbursementValueDouble) {reimbursementValueDouble = invoiceValueDouble;}
+                    Invoice invoice = new Invoice(LoginController.currentUserId, invoiceNumber.getText(), Date.valueOf(invoiceDate.getValue()), invoiceValueDouble, reimbursementValueDouble, invoiceType.getValue(), invoiceAnomalous, FileUtils.readFileToByteArray(selectedFile), 0);
 
                     if (invoiceDAO.insertInvoice(invoice)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -124,7 +127,7 @@ public class UploadController {
                         alert.setContentText(
                                 "Ihre Rechnung vom " + invoiceDate.getValue().toString() + " wurde erfolgreich hochgeladen.\n" +
                                         "Eingereichter Rechnungsbetrag: " + invoiceValueDouble + " €\n" +
-                                        "Voraussichtlicher Rückerstattungsbetrag: " + Double.parseDouble(reimbursementValue.getText()) + " €"
+                                        "Voraussichtlicher Rückerstattungsbetrag: " + reimbursementValueDouble+ " €"
                         );
 
                         warningText.setText("");

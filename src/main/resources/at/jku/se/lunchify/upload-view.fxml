@@ -37,7 +37,7 @@
                   <Insets />
                </VBox.margin>
             </TextField>
-            <Label prefHeight="21.0" prefWidth="192.0" text="Rückerstattungsbetrag" />
+            <Label prefHeight="21.0" prefWidth="192.0" text="Maximaler Rückerstattungsbetrag" />
             <Label fx:id="reimbursementValue" prefHeight="21.0" prefWidth="192.0">
                <VBox.margin>
                   <Insets />
