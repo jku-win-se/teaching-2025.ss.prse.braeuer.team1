@@ -193,7 +193,7 @@ public class InvoiceDetailController {
         invoice.getType().equals(invoiceType.getValue()) &&
         convertDateToLocalDate(invoice.getDate()).equals(invoiceDate.getValue()) &&
         invoice.getAmount() == Double.parseDouble(invoiceValue.getText()) &&
-        invoice.getReimbursementAmount()== Double.parseDouble(reimbursementValue.getText()));
+        invoice.getReimbursementAmount() == Double.parseDouble(reimbursementValue.getText()));
     }
 
     private LocalDate convertDateToLocalDate(java.util.Date date) {
