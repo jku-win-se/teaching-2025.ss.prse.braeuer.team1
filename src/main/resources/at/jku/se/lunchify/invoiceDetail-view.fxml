@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -9,7 +10,7 @@
    <items>
       <VBox alignment="CENTER">
          <children>
-            <VBox alignment="CENTER" prefHeight="240.0" prefWidth="213.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+            <VBox alignment="CENTER" prefHeight="607.0" prefWidth="213.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
                <children>
                   <Label fx:id="warningText" style="-fx-text-fill: red;" />
                   <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungstyp" />

@@ -155,6 +155,7 @@ public class InvoiceDetailController {
                         alert.setTitle("Rechnung geändert");
                         alert.setHeaderText("Rechnung erfolgreich geändert!"); // oder null
                         alert.setContentText("Rechnung wurde erfolgreich geändert!");
+                        warningText.setText("");
                         alert.showAndWait();
                     } else {
                         warningText.setText("Es gab ein Problem mit der Datenbankverbindung!");
