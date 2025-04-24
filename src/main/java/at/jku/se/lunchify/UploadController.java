@@ -11,10 +11,12 @@ import org.apache.commons.io.FileUtils;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
-import java.util.regex.Pattern;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -149,14 +151,31 @@ public class UploadController {
         if (selectedFile != null) {
             fileName.setText(selectedFile.getAbsolutePath());
             lastUsedDirectory = selectedFile.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
-            // Hier kannst du mit der ausgewählten Datei weiterarbeiten
-            fileName.setText(selectedFile.getAbsoluteFile().toString());
+
+            // 1. Tesseract-Instanz erzeugen
             Tesseract tesseract = new Tesseract();
+            tesseract.setLanguage("deu");
 
-            // Setze Pfad zu den Sprachdaten im Projekt (relativ oder absolut)
-            tesseract.setDatapath("src/main/resources/tessdata");
-            tesseract.setLanguage("deu"); // oder "eng"
+            // 2. Temporäres Wurzelverzeichnis erstellen
+            Path tempRoot = Files.createTempDirectory("tessdata-temp");
+            Path tessdataDir = tempRoot.resolve("tessdata");
+            Files.createDirectories(tessdataDir);
+            tempRoot.toFile().deleteOnExit();
 
+            // 3. Traineddata-Datei aus den Ressourcen extrahieren
+            try (InputStream in = getClass().getResourceAsStream("/tessdata/deu.traineddata")) {
+                if (in == null) {
+                    throw new IOException("Resource /tessdata/deu.traineddata not found!");
+                }
+
+                Path trainedDataFile = tessdataDir.resolve("deu.traineddata");
+                Files.copy(in, trainedDataFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // 4. Tesseract konfigurieren (WICHTIG: parent directory von "tessdata")
+            tesseract.setDatapath(tessdataDir.toFile().getAbsolutePath());
+
+            // Beginne mit Auslesen der Datei
             try {
                 String text = tesseract.doOCR(selectedFile);
                 System.out.println("Erkannter Text:\n" + text);
