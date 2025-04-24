@@ -46,6 +46,8 @@ public class InvoiceDetailController {
 
     //AI-generated
     public void initialize() {
+        invoiceDate.getEditor().setDisable(true);
+        invoiceDate.setEditable(false);
         invoiceDate.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {

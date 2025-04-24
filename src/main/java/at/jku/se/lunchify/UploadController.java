@@ -66,6 +66,9 @@ public class UploadController {
     public void initialize() {
         showAllInvoiceTypes();
         //AI-generated
+        invoiceDate.getEditor().setDisable(true);
+        invoiceDate.setEditable(false);
+
         invoiceDate.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
