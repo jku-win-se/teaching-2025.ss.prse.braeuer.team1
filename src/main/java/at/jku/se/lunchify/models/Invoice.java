@@ -174,4 +174,19 @@ public class Invoice {
                 ", timesChanged=" + timesChanged +
                 '}';
     }
+    public String toStringWithoutFile() {
+        return "Invoice{" +
+                "invoiceid=" + invoiceid +
+                ", userid=" + userid +
+                ", invoicenumber=" + invoicenumber +
+                ", date=" + date +
+                ", amount=" + amount +
+                ", reimbursementAmount=" + reimbursementAmount +
+                ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
+                ", isanomalous=" + isanomalous +
+                ", timesChanged=" + timesChanged +
+                '}';
+    }
+
 }

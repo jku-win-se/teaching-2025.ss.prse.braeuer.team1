@@ -87,7 +87,7 @@ public class InvoiceDAO {
 
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
-                int selectedInvoiceid = resultSet.getInt("selectedInvoiceid");
+                int selectedInvoiceid = resultSet.getInt("invoiceid");
                 String selectedInvoicenumber = resultSet.getString("invoicenumber");
                 Date selectedDate = resultSet.getDate("date");
                 double selectedAmount = resultSet.getDouble("amount");

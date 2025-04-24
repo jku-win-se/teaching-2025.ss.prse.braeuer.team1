@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="612.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <TableView maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="534.0" prefWidth="838.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+<BorderPane prefHeight="612.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <TableView maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="381.0" prefWidth="838.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER" >
          <columns>
             <TableColumn prefWidth="152.0" resizable="false" text="Rechnungsdatum" />
             <TableColumn minWidth="0.0" prefWidth="141.0" resizable="false" text="Rechnungsbetrag" />
@@ -21,5 +18,7 @@
             <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
          </padding>
       </TableView>
-   </center>
+   </top>
+   <bottom>
+   </bottom>
 </BorderPane>
