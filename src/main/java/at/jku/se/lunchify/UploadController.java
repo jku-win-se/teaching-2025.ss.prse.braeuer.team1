@@ -98,6 +98,12 @@ public class UploadController {
             return;
         }
         if (invoiceDAO.checkDateInPast(invoiceDate.getValue())) {
+            try{
+                invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
+            } catch (NumberFormatException e) {
+                warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
+                return;
+            }
             if (invoiceDAO.checkInvoiceValueIsPositive(invoiceValueDouble)) {
                 if (invoiceDAO.checkInvoicesByDateAndUser(LoginController.currentUserId, invoiceDate.getValue())) {
                     // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
