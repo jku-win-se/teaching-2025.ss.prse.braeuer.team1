@@ -390,9 +390,12 @@ public class UploadController {
                 invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
             } catch (NumberFormatException e) {
                 warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
+                reimbursementValue.setText("");
                 return;
             }
-            reimbursementValue.setText(invoiceSettingService.getReimbursementValue(selectedType, invoiceValueDouble) + "");
+            reimbursementValue.setText(invoiceSettingService.getReimbursementValue(selectedType, invoiceValueDouble) + " €");
+            return;
         }
+        reimbursementValue.setText("");
     }
 }
