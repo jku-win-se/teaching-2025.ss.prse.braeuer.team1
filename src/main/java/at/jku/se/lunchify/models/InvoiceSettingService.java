@@ -1,5 +1,8 @@
 package at.jku.se.lunchify.models;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 
 //AI-Assisted
@@ -82,5 +85,12 @@ public class InvoiceSettingService {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    public ObservableList<String> getAllInvoiceTypes() {
+        ObservableList<String> invoiceTypes = FXCollections.observableArrayList();
+        invoiceTypes.add("Supermarkt");
+        invoiceTypes.add("Restaurant");
+        return invoiceTypes;
     }
 }

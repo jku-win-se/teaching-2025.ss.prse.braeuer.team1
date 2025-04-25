@@ -6,8 +6,6 @@ import at.jku.se.lunchify.security.PasswordService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.sql.*;
-
 public class UserCreationController {
 
     @FXML

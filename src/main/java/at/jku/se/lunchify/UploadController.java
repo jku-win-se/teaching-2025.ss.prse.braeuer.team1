@@ -2,6 +2,7 @@ package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
 import at.jku.se.lunchify.models.InvoiceDAO;
+import at.jku.se.lunchify.models.InvoiceSettingService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
@@ -11,22 +12,19 @@ import org.apache.commons.io.FileUtils;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
-import java.util.regex.Pattern;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
 
 public class UploadController {
-
-    // Datenbank-Zugangsdaten
-    private static final String JDBC_URL = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
-    private static final String DB_USER = "postgres.yxshntkgvmksefegyfhz";
-    private static final String DB_PASSWORD = "CaMaKe25!";
-
     @FXML
     protected Button invoiceUploadButton;
     @FXML
@@ -34,9 +32,9 @@ public class UploadController {
     @FXML
     protected TextField invoiceValue;
     @FXML
-    protected TextField reimbursementValue;
+    protected Label reimbursementValue;
     @FXML
-    protected ChoiceBox<String> invoiceType;
+    protected ComboBox<String> invoiceType;
     @FXML
     protected DatePicker invoiceDate;
     @FXML
@@ -57,29 +55,46 @@ public class UploadController {
     protected DatePicker invoiceDateOCR;
 
     double invoiceValueDouble;
-    double reimbursementValueDouble;
     File selectedFile;
     private File lastUsedDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
     boolean invoiceAnomalous = false;
+    String selectedType;
+    double reimbursementValueDouble;
 
-    private InvoiceDAO invoiceDAO = new InvoiceDAO();
+    private final InvoiceDAO invoiceDAO = new InvoiceDAO();
+    private final InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
 
-    public void onInvoiceUploadButtonClick() throws IOException, SQLException {
+    public void initialize() {
+        showAllInvoiceTypes();
+        //AI-generated
+        invoiceDate.getEditor().setDisable(true);
+        invoiceDate.setEditable(false);
+
+        invoiceDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+
+                if (date != null && (date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                        date.getDayOfWeek() == DayOfWeek.SUNDAY)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #EEEEEE;");
+                }
+            }
+        });
+    }
+
+    public void showAllInvoiceTypes() {
+        invoiceType.setItems(invoiceSettingService.getAllInvoiceTypes());
+    }
+
+    public void onInvoiceUploadButtonClick() throws IOException {
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
                 || invoiceNumber.getText().isEmpty() || selectedFile == null) {
             warningText.setText("Alle Felder ausfüllen!");
             return;
         }
         if (invoiceDAO.checkDateInPast(invoiceDate.getValue())) {
-            reimbursementValueDouble = invoiceDAO.getReimbursementValueFromInvoiceType(invoiceType.getValue());
-            if (reimbursementValueDouble == 3.0) {
-                reimbursementValue.setText("3.0");
-            } else if (reimbursementValueDouble == 2.5) {
-                reimbursementValue.setText("2.5");
-            } else {
-                warningText.setText("Es gab einen Fehler bei der Verarbeitung des Rechnungstyps!");
-                return;
-            }
             try{
                 invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
             } catch (NumberFormatException e) {
@@ -100,6 +115,8 @@ public class UploadController {
                     {
                         invoiceAnomalous = true;
                     }
+                    reimbursementValueDouble = Double.parseDouble(reimbursementValue.getText());
+                    if(invoiceValueDouble < reimbursementValueDouble) {reimbursementValueDouble = invoiceValueDouble;}
                     Invoice invoice = new Invoice(LoginController.currentUserId, invoiceNumber.getText(), Date.valueOf(invoiceDate.getValue()), invoiceValueDouble, reimbursementValueDouble, invoiceType.getValue(), invoiceAnomalous, FileUtils.readFileToByteArray(selectedFile), 0);
 
                     if (invoiceDAO.insertInvoice(invoice)) {
@@ -110,7 +127,7 @@ public class UploadController {
                         alert.setContentText(
                                 "Ihre Rechnung vom " + invoiceDate.getValue().toString() + " wurde erfolgreich hochgeladen.\n" +
                                         "Eingereichter Rechnungsbetrag: " + invoiceValueDouble + " €\n" +
-                                        "Voraussichtlicher Rückerstattungsbetrag: " + reimbursementValueDouble + " €"
+                                        "Voraussichtlicher Rückerstattungsbetrag: " + reimbursementValueDouble+ " €"
                         );
 
                         warningText.setText("");
@@ -129,7 +146,7 @@ public class UploadController {
     }
 
     //AI-Assisted
-    public void onInvoiceAttachmentButtonClick() throws IOException, SQLException {
+    public void onInvoiceAttachmentButtonClick() throws IOException {
         Stage stage = (Stage) invoiceAttachmentButton.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
 
@@ -149,14 +166,31 @@ public class UploadController {
         if (selectedFile != null) {
             fileName.setText(selectedFile.getAbsolutePath());
             lastUsedDirectory = selectedFile.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
-            // Hier kannst du mit der ausgewählten Datei weiterarbeiten
-            fileName.setText(selectedFile.getAbsoluteFile().toString());
+            //AI-assisted
+            //1. Tesseract-Instanz erzeugen
             Tesseract tesseract = new Tesseract();
+            tesseract.setLanguage("deu");
 
-            // Setze Pfad zu den Sprachdaten im Projekt (relativ oder absolut)
-            tesseract.setDatapath("src/main/resources/tessdata");
-            tesseract.setLanguage("deu"); // oder "eng"
+            // 2. Temporäres Wurzelverzeichnis erstellen
+            Path tempRoot = Files.createTempDirectory("tessdata-temp");
+            Path tessdataDir = tempRoot.resolve("tessdata");
+            Files.createDirectories(tessdataDir);
+            tempRoot.toFile().deleteOnExit();
 
+            // 3. Traineddata-Datei aus den Ressourcen extrahieren
+            try (InputStream in = getClass().getResourceAsStream("/tessdata/deu.traineddata")) {
+                if (in == null) {
+                    throw new IOException("Resource /tessdata/deu.traineddata not found!");
+                }
+
+                Path trainedDataFile = tessdataDir.resolve("deu.traineddata");
+                Files.copy(in, trainedDataFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // 4. Tesseract konfigurieren (WICHTIG: parent directory von "tessdata")
+            tesseract.setDatapath(tessdataDir.toFile().getAbsolutePath());
+
+            // Beginne mit Auslesen der Datei
             try {
                 String text = tesseract.doOCR(selectedFile);
                 System.out.println("Erkannter Text:\n" + text);
@@ -342,6 +376,14 @@ public class UploadController {
 
         } else {
             fileName.setText("Keine Datei ausgewählt.");
+        }
+    }
+
+    public void invoiceTypeChanged() {
+        selectedType = invoiceType.getSelectionModel().getSelectedItem();
+        if (selectedType != null) {
+            if (selectedType.equals("Supermarkt")) reimbursementValue.setText(invoiceSettingService.getCurrentSupermarketValue()+"");
+            else if (selectedType.equals("Restaurant")) reimbursementValue.setText(invoiceSettingService.getCurrentRestaurantValue()+"");
         }
     }
 }

@@ -3,8 +3,6 @@ package at.jku.se.lunchify.models;
 import at.jku.se.lunchify.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.apache.commons.io.FileUtils;
-import org.springframework.cglib.core.Local;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -14,22 +12,14 @@ public class InvoiceDAO {
     String username = "postgres.yxshntkgvmksefegyfhz";
     String DBpassword = "CaMaKe25!";
 
+    InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
+
     public boolean checkDateInPast(LocalDate date) {
         return !date.isAfter(LocalDate.now());
     }
 
     public boolean checkInvoiceValueIsPositive(Double value) {
         return value > 0;
-    }
-
-    public double getReimbursementValueFromInvoiceType(String type) {
-        if (type.equals("Restaurant")) {
-            return 3.0;
-        } else if (type.equals("Supermarkt")) {
-            return 2.5;
-        } else {
-            return 0;
-        }
     }
 
     // Methode zum Abrufen aller Rechnungen
@@ -256,12 +246,13 @@ public class InvoiceDAO {
 
     public boolean updateInvoice(Invoice invoice) {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET type = ?, invoicenumber = ?, date = ?, amount = ? where invoiceid = ?;")) {
+             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET type = ?, invoicenumber = ?, date = ?, amount = ? , reimbursementamount = ? where invoiceid = ?;")) {
             ps.setString(1, invoice.getType());
             ps.setString(2, invoice.getInvoicenumber());
             ps.setDate(3, (Date) invoice.getDate());
             ps.setDouble(4, invoice.getAmount());
-            ps.setInt(5, invoice.getInvoiceid());
+            ps.setDouble(5, invoice.getReimbursementAmount());
+            ps.setInt(6, invoice.getInvoiceid());
             ps.executeUpdate();
             ps.close();
             connection.close();
