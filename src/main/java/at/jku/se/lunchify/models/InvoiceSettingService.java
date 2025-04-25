@@ -93,4 +93,14 @@ public class InvoiceSettingService {
         invoiceTypes.add("Restaurant");
         return invoiceTypes;
     }
+
+    public double getReimbursementValue(String invoiceType, double value) {
+        if (invoiceType.equals("Supermarkt")) {
+            return Math.min(getCurrentSupermarketValue(), value);
+        }
+        else if (invoiceType.equals("Restaurant")) {
+            return Math.min(getCurrentRestaurantValue(), value);
+        }
+        else return 0;
+    }
 }

@@ -10,8 +10,11 @@
    <children>
       <Label fx:id="warningText" alignment="CENTER" textFill="RED">
          <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="15.0" />
          </font>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
       </Label>
       <VBox alignment="CENTER" prefHeight="240.0" prefWidth="213.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
          <children>
@@ -37,7 +40,7 @@
                   <Insets />
                </VBox.margin>
             </TextField>
-            <Label prefHeight="21.0" prefWidth="192.0" text="Maximaler Rückerstattungsbetrag" />
+            <Label prefHeight="21.0" prefWidth="192.0" text="berechneter Rückerstattungsbetrag" />
             <Label fx:id="reimbursementValue" prefHeight="21.0" prefWidth="192.0">
                <VBox.margin>
                   <Insets />

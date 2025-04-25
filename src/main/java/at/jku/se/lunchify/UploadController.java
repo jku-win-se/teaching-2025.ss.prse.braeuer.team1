@@ -82,6 +82,9 @@ public class UploadController {
                 }
             }
         });
+        invoiceValue.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (invoiceValue.getText()!=null) invoiceTypeChanged();
+        });
     }
 
     public void showAllInvoiceTypes() {
@@ -95,12 +98,6 @@ public class UploadController {
             return;
         }
         if (invoiceDAO.checkDateInPast(invoiceDate.getValue())) {
-            try{
-                invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
-            } catch (NumberFormatException e) {
-                warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
-                return;
-            }
             if (invoiceDAO.checkInvoiceValueIsPositive(invoiceValueDouble)) {
                 if (invoiceDAO.checkInvoicesByDateAndUser(LoginController.currentUserId, invoiceDate.getValue())) {
                     // Wenn es ein Ergebnis gibt, dann wurde für den ausgewählten Tag schon eine Rechnung hochgeladen
@@ -381,9 +378,15 @@ public class UploadController {
 
     public void invoiceTypeChanged() {
         selectedType = invoiceType.getSelectionModel().getSelectedItem();
-        if (selectedType != null) {
-            if (selectedType.equals("Supermarkt")) reimbursementValue.setText(invoiceSettingService.getCurrentSupermarketValue()+"");
-            else if (selectedType.equals("Restaurant")) reimbursementValue.setText(invoiceSettingService.getCurrentRestaurantValue()+"");
+        warningText.setText("");
+        if (selectedType!=null && invoiceValue.getText()!=null && !invoiceValue.getText().isEmpty()) {
+            try {
+                invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
+            } catch (NumberFormatException e) {
+                warningText.setText("Der Rechnungsbetrag muss eine Zahl sein!");
+                return;
+            }
+            reimbursementValue.setText(invoiceSettingService.getReimbursementValue(selectedType, invoiceValueDouble) + "");
         }
     }
 }

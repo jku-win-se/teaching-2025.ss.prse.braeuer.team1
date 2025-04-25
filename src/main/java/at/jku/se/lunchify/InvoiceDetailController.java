@@ -61,6 +61,10 @@ public class InvoiceDetailController {
                 }
             }
         });
+
+        invoiceValue.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (invoiceValue.getText()!=null) invoiceTypeChanged();
+        });
     }
 
     public void setInvoice(Invoice invoice) throws IOException {
@@ -228,9 +232,15 @@ public class InvoiceDetailController {
 
     public void invoiceTypeChanged() {
         selectedType = invoiceType.getSelectionModel().getSelectedItem();
-        if (selectedType != null) {
-            if (selectedType.equals("Supermarkt")) reimbursementValue.setText(invoiceSettingService.getCurrentSupermarketValue()+"");
-            else if (selectedType.equals("Restaurant")) reimbursementValue.setText(invoiceSettingService.getCurrentRestaurantValue()+"");
+        warningText.setText("");
+        if (selectedType!=null && invoiceValue.getText()!=null) {
+            try {
+                invoiceValueDouble = Double.parseDouble(invoiceValue.getText());
+            } catch (NumberFormatException e) {
+                warningText.setText("Der Rechnungsbetrag muss \neine Zahl sein!");
+                return;
+            }
+            reimbursementValue.setText(invoiceSettingService.getReimbursementValue(selectedType, invoiceValueDouble) + "");
         }
     }
 }

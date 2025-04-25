@@ -76,6 +76,14 @@ class InvoiceSettingServiceTest {
         assertEquals(originalRestaurantValue, service.getCurrentRestaurantValue(), 0.001);
     }
 
+    @Test
+    void testGetReimbursementValue() {
+        assertEquals(2, service.getReimbursementValue("Restaurant", 2));
+        assertEquals(2, service.getReimbursementValue("Supermarkt", 2));
+        assertEquals(service.getReimbursementValue("Restaurant", 10), service.getCurrentRestaurantValue());
+        assertEquals(service.getReimbursementValue("Supermarkt", 10), service.getCurrentSupermarketValue());
+    }
+
     @AfterAll
     static void restoreOriginalValues() {
         service.updateInvoiceSettings(
@@ -83,5 +91,4 @@ class InvoiceSettingServiceTest {
                 String.valueOf(originalRestaurantValue)
         );
     }
-
 }
