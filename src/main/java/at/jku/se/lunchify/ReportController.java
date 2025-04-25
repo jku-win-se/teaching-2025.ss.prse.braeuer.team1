@@ -153,11 +153,10 @@ public class ReportController {
         chosenDirectory = directoryChooser.showDialog(stage);
         if (chosenDirectory != null) {
             lastUsedDirectory = chosenDirectory.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
-            // Hier kannst du mit der ausgewählten Datei weiterarbeiten
             FileWriter output = new FileWriter(new File(chosenDirectory.getAbsolutePath() + "/Lunchify-Export-" + LocalDate.now().toString() + ".csv"));
-            output.write("Rechnungsdatum;Rechnungsbetrag;Rückzahlungsbetrag;Typ;Status" + System.lineSeparator());
+            output.write("Benutzer-ID/Personalnummer;Rechnungsdatum;Rechnungsbetrag;Rückzahlungsbetrag;Typ;Status" + System.lineSeparator());
             for (Invoice inv : invoiceTable.getItems()) {
-                output.write(inv.getDate().toString() + ";" + inv.getAmount() + ";" + inv.getReimbursementAmount() + ";" + inv.getType() + ";" + inv.getStatus() + System.lineSeparator());
+                output.write(String.valueOf(inv.getUserid())+";"+inv.getDate().toString() + ";" + inv.getAmount() + ";" + inv.getReimbursementAmount() + ";" + inv.getType() + ";" + inv.getStatus() + System.lineSeparator());
             }
             output.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -175,10 +174,10 @@ public class ReportController {
         chosenDirectory = directoryChooser.showDialog(stage);
         if (chosenDirectory != null) {
             lastUsedDirectory = chosenDirectory.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
-            // Hier kannst du mit der ausgewählten Datei weiterarbeiten
             Document document = new Document(new PdfDocument(new PdfWriter(chosenDirectory.getAbsolutePath() + "/Lunchify-Export-" + LocalDate.now().toString() + ".pdf")));
             document.add(new Paragraph("Lunchify-Export vom "+LocalDate.now().toString()));
             Table table = new Table(UnitValue.createPercentArray(8)).useAllAvailableWidth();
+            table.addHeaderCell("Benutzer-ID/Personalnummer");
             table.addHeaderCell("Rechnungsdatum");
             table.addHeaderCell("Rechnungsbetrag");
             table.addHeaderCell("Rückzahlungsbetrag");
@@ -186,6 +185,7 @@ public class ReportController {
             table.addHeaderCell("Status");
             for (Invoice inv : invoiceTable.getItems()) {
                 table.startNewRow();
+                table.addCell(String.valueOf(inv.getUserid()));
                 table.addCell(inv.getDate().toString());
                 table.addCell(Double.toString(inv.getAmount()));
                 table.addCell(Double.toString(inv.getReimbursementAmount()));
