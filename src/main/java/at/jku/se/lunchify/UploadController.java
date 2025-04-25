@@ -118,7 +118,7 @@ public class UploadController {
                     {
                         invoiceAnomalous = true;
                     }
-                    reimbursementValueDouble = Double.parseDouble(reimbursementValue.getText());
+                    reimbursementValueDouble = invoiceSettingService.getReimbursementValue(selectedType, invoiceValueDouble);
                     if(invoiceValueDouble < reimbursementValueDouble) {reimbursementValueDouble = invoiceValueDouble;}
                     Invoice invoice = new Invoice(LoginController.currentUserId, invoiceNumber.getText(), Date.valueOf(invoiceDate.getValue()), invoiceValueDouble, reimbursementValueDouble, invoiceType.getValue(), invoiceAnomalous, FileUtils.readFileToByteArray(selectedFile), 0);
 
