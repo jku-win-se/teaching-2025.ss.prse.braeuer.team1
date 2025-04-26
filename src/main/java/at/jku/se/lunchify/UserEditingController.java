@@ -25,6 +25,8 @@ public class UserEditingController {
     protected ChoiceBox<String> userType;
     @FXML
     protected CheckBox inactiveCheck;
+    @FXML
+    protected Label warningText;
 
     private User userToEdit;
     private UserDAO userDAO = new UserDAO();
@@ -36,6 +38,7 @@ public class UserEditingController {
     }
 
     public void onSelectUserButtonClick() throws Exception {
+        warningText.setText("");
         String selectedUserEmail = allUsers.getSelectionModel().getSelectedItem();
         if (selectedUserEmail != null) {
             userToEdit = userDAO.getUserByEmail(selectedUserEmail);
@@ -49,37 +52,40 @@ public class UserEditingController {
     }
 
     public void onSaveChangesButtonClick() throws Exception {
-        User editedUser = new User(userToEdit.getUserid(), email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), userToEdit.isIsanomalous(), userToEdit.getPassword());
-        //Passwort wurde geändert
-        if(!password.getText().equals(userToEdit.getPassword())) {
-            editedUser.setPassword(passwordService.hashPassword(password.getText()));
-        }
-
-        //Email-Adresse wurde geändert
-        if(!Objects.equals(email.getText(), userToEdit.getEmail())) {
-            //check ob neue Email schon exisitiert
-            if(userDAO.getUserByEmail(editedUser.getEmail()) != null) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Benutzeranlage");
-                alert.setHeaderText("Benutzer schon vorhanden"); // oder null
-                alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
-                alert.showAndWait();
-            }
-        }
-
-        else if (userDAO.updateUser(editedUser)) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Benutzeränderung");
-            alert.setHeaderText("Benutzer geändert"); // oder null
-            alert.setContentText("Benutzer wurde erfolgreich geändert!");
-            alert.showAndWait();
+        if(email.getText().isEmpty() || firstname.getText().isEmpty() || surname.getText().isEmpty() || password.getText().isEmpty()) {
+            warningText.setText("Alle Felder ausfüllen!");
         }
         else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Benutzeränderung");
-            alert.setHeaderText("Benutzer nicht geändert"); // oder null
-            alert.setContentText("Benutzer konnte nicht geändert werden!");
-            alert.showAndWait();
+            warningText.setText("");
+            User editedUser = new User(userToEdit.getUserid(), email.getText(), firstname.getText(), surname.getText(), userType.getValue(), (!(inactiveCheck.isSelected())), userToEdit.isIsanomalous(), userToEdit.getPassword());
+            //Passwort wurde geändert
+            if (!password.getText().equals(userToEdit.getPassword())) {
+                editedUser.setPassword(passwordService.hashPassword(password.getText()));
+            }
+
+            //Email-Adresse wurde geändert
+            if (!Objects.equals(email.getText(), userToEdit.getEmail())) {
+                //check ob neue Email schon exisitiert
+                if (userDAO.getUserByEmail(editedUser.getEmail()) != null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Benutzeranlage");
+                    alert.setHeaderText("Benutzer schon vorhanden"); // oder null
+                    alert.setContentText("Benutzer mit dieser E-Mail ist schon vorhanden");
+                    alert.showAndWait();
+                }
+            } else if (userDAO.updateUser(editedUser)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Benutzeränderung");
+                alert.setHeaderText("Benutzer geändert"); // oder null
+                alert.setContentText("Benutzer wurde erfolgreich geändert!");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Benutzeränderung");
+                alert.setHeaderText("Benutzer nicht geändert"); // oder null
+                alert.setContentText("Benutzer konnte nicht geändert werden!");
+                alert.showAndWait();
+            }
         }
     }
 }
