@@ -6,9 +6,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="userCreationPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="215.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserCreationController">
+<VBox fx:id="userCreationPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="215.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserCreationController">
    <children>
-      <Label fx:id="userPaneText" />
+      <Label fx:id="warningText" style="-fx-text-fill: red;" />
       <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
       <TextField fx:id="email" promptText="Email" />
       <Label prefHeight="21.0" prefWidth="192.0" text="Passwort" />
