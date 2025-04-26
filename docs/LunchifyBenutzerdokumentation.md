@@ -4,6 +4,7 @@ Willkommen bei **Lunchify**! Dieses Dokument hilft dir beim Einstieg und erklär
 **Lunchify** ist eine Desktopanwendung zur Verwaltung und Rückerstattung von Essensrechnungen (Restaurant/Supermarkt) in Organisationen. 
 Sie bietet Funktionen zur Rechnungserfassung, automatischen Auswertung der Belege und einer rollenbasierten Benutzeroberfläche. 
 Die Änderungen am System sowie eingegebenen und hochgeladenen Daten werden dabei online in einer Datenbank gespeichert.
+
 ---
 
 # Lunchify starten
