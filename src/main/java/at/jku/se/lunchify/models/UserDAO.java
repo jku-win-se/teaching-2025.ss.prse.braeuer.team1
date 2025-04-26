@@ -146,13 +146,14 @@ public class UserDAO {
 
     public boolean insertUser(User user) throws SQLException {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-        PreparedStatement ps = connection.prepareStatement("insert into \"User\" (email, firstname, surname, type, isactive, password) values (?,?,?,?,?,?);")){
+        PreparedStatement ps = connection.prepareStatement("insert into \"User\" (email, firstname, surname, type, isactive, password, isanomalous) values (?,?,?,?,?,?,?);")){
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getFirstname());
             ps.setString(3, user.getSurname());
             ps.setString(4, user.getType());
             ps.setBoolean(5, user.isIsactive());
             ps.setString(6, passwordService.hashPassword(user.getPassword().trim()));
+            ps.setBoolean(7, false);
             ps.executeUpdate();
             ps.close();
             connection.close();
