@@ -28,7 +28,7 @@ git clone https://github.com/jku-win-se/teaching-2025.ss.prse.braeuer.team1.git
 cd teaching-2025.ss.prse.braeuer.team1
 mvn clean javafx:run
 // oder
-java -jar target/luchify.jar
+mvn package
 ```
 
 ---
