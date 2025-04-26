@@ -45,7 +45,8 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>at.jku.se.lunchify.Main</mainClass>
                                 </transformer>
                             </transformers>
@@ -63,7 +64,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>at.jku.se.lunchify/at.jku.se.lunchify.HelloApplication</mainClass>
+                            <mainClass>at.jku.se.lunchify.Main</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
@@ -120,11 +121,11 @@
             <version>5.4.0</version>
         </dependency>
         <dependency>
-        <groupId>com.itextpdf</groupId>
-        <artifactId>itext-core</artifactId>
-        <version>8.0.3</version>
-        <type>pom</type>
-    </dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext-core</artifactId>
+            <version>8.0.3</version>
+            <type>pom</type>
+        </dependency>
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>

@@ -9,7 +9,7 @@
 - Login mit Benutzerrollen (Admin/User)
 - Admins sehen zusätzliche Auswertungen und Menüpunkte (z. B. Einstellungsansicht)
 - Upload & automatisierte Analyse von Essensrechnungen
-- Tesseract OCR zur Erkennung von Betrag, Restaurant, Rechnungnummer und Datum
+- Tesseract OCR zur Erkennung von Betrag, Restaurant, Rechnungsnummer und Datum
 - Rechnungshistorie und Verwaltung
 - PostgreSQL-Datenbankanbindung
 
@@ -18,7 +18,7 @@
 ## Schnellstart
 
 ### Voraussetzungen
-- Java 17+
+- Java 21
 - Maven 3.6 oder höher
 - Internetverbindung für Datenbankverbindung
 
@@ -43,7 +43,6 @@ java -jar target/luchify.jar
 | OCR              | Tess4J (Tesseract Wrapper)      |
 | Passwort-Hashing | Bcrypt (eigene Serviceklasse)   |
 | Testing          | JUnit 5                         |
-|------------------|---------------------------------|
 
 ---
 
@@ -62,7 +61,7 @@ src/
 │   └── resources/
 │       ├── fxml/                  → UI-Dateien für die JavaFX-Oberfläche
 │       └── tessdata/              → Tesseract-TrainedData für OCR
-└── test/java/at/jku/se/lunchify   → Tesklassen 
+└── test/java/at/jku/se/lunchify   → Testklassen 
 ```
 
 
@@ -93,7 +92,7 @@ graph TD
 - Passwort-Validierung über eigene `PasswordService` (BCrypt)
 - Rollen:
   - **Admin**: Zugriff auf Einstellungen & Auswertungen
-  - **User**: Rechnungem hochladen & verwalten
+  - **User**: Rechnungen hochladen & verwalten
 
 ---
 
@@ -101,10 +100,10 @@ graph TD
 
 - Upload als Bild oder PDF
 - Rechnungsanalyse per OCR (Tesseract) automatisiert:
--- Betrag
--- Restaurant/Supermarkt-Erkennung
--- Rechnungsnummer
--- Datum
+  - Betrag
+  - Restaurant/Supermarkt-Erkennung
+  - Rechnungsnummer
+  - Datum
 - Prüfung, ob für ein Datum bereits ein Upload existiert
 - Speicherung als Invoice in der DB
 - Anomalieerkennung bei Änderung von Daten
@@ -128,8 +127,8 @@ graph TD
 
 ## Autoren
 
-Projektteam: PRSE SoSe 2025 – Gruppe 1, betreut von Johannes Bräuer
-└── Mitwirkende: Kerim Ljutic, Carina Moßbauer, Martin Wallner
+- **Projekt:** PRSE SoSe 2025 – Gruppe 1, betreut von Johannes Bräuer
+- **Mitwirkende:** Kerim Ljutic, Carina Moßbauer, Martin Wallner
 
 ---
 
