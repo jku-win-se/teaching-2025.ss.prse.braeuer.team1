@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 public class UserDAO {
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
-    String DBpassword = "CaMaKe25!";
+    String dbPassword = "CaMaKe25!";
     PasswordService passwordService = new PasswordService();
 
     // Methode zum Abrufen aller Benutzer
@@ -17,7 +17,7 @@ public class UserDAO {
         ObservableList<User> users = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM \"User\"";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet resultSet = ps.executeQuery()) {
 
@@ -43,7 +43,7 @@ public class UserDAO {
         ObservableList<String> users = FXCollections.observableArrayList();
 
         String sql = "SELECT email FROM \"User\"";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet resultSet = ps.executeQuery()) {
 
@@ -66,8 +66,8 @@ public class UserDAO {
     public User getUserByEmail(String email) {
         User user = null;
         String sql = "SELECT * FROM \"User\" WHERE email = ?";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-            PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
 
             try (ResultSet resultSet = ps.executeQuery()) {
@@ -96,7 +96,7 @@ public class UserDAO {
     public User getUserByUserid(int userid) {
         User user = null;
         String sql = "SELECT * FROM \"User\" WHERE userid = ?";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userid);
 
@@ -124,8 +124,8 @@ public class UserDAO {
     }
 
     public boolean updateUser(User user) throws SQLException {
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-        PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;")) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
+             PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;")) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getFirstname());
             ps.setString(3, user.getSurname());
@@ -145,8 +145,8 @@ public class UserDAO {
     }
 
     public boolean insertUser(User user) throws SQLException {
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-        PreparedStatement ps = connection.prepareStatement("insert into \"User\" (email, firstname, surname, type, isactive, password, isanomalous) values (?,?,?,?,?,?,?);")){
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
+             PreparedStatement ps = connection.prepareStatement("insert into \"User\" (email, firstname, surname, type, isactive, password, isanomalous) values (?,?,?,?,?,?,?);")){
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getFirstname());
             ps.setString(3, user.getSurname());
