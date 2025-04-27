@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class InvoiceDAO {
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
-    String DBpassword = "CaMaKe25!";
+    String dbPassword = "CaMaKe25!";
 
     InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
 
@@ -27,7 +27,7 @@ public class InvoiceDAO {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM \"Invoice\"";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet resultSet = ps.executeQuery()) {
 
@@ -66,7 +66,7 @@ public class InvoiceDAO {
                 "AND \"Invoice\".date BETWEEN ? AND ? " +
                 "AND (? IS NULL OR \"Invoice\".type = ?)";
 
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword)) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);                    // IS NULL
             ps.setString(2, email);                    // Vergleich
@@ -108,8 +108,8 @@ public class InvoiceDAO {
                 "AND \"Invoice\".status = ? " +
                 "AND \"Invoice\".isanomalous = ? " +
                 "AND \"Invoice\".userid <> ?"; //Admin kann seine eigenen Rechnungen nicht freigeben
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-            PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, email);
             ps.setString(3, status);
@@ -139,7 +139,7 @@ public class InvoiceDAO {
     public Invoice getInvoiceById (int id) {
         Invoice invoice = null;
         String sql = "SELECT * FROM \"Invoice\" WHERE \"Invoice\".invoiceid = ?";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
 
@@ -170,8 +170,8 @@ public class InvoiceDAO {
     }
 
     public boolean setInvoiceStatus(int id, String newStatus) {
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-            PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET status = ? where invoiceid = ?;")) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
+             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET status = ? where invoiceid = ?;")) {
             ps.setString(1, newStatus);
             ps.setInt(2, id);
             ps.executeUpdate();
@@ -187,7 +187,7 @@ public class InvoiceDAO {
 
     public boolean checkInvoicesByDateAndUser(int userid, LocalDate date) {
         String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement sps = connection.prepareStatement(sql)) {
             sps.setInt(1,userid);
             sps.setDate(2,Date.valueOf(date));
@@ -206,7 +206,7 @@ public class InvoiceDAO {
 
     public boolean insertInvoice(Invoice invoice) {
         String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement sp = connection.prepareStatement(sql))
         {
             sp.setInt(1, invoice.getUserid());
@@ -230,8 +230,8 @@ public class InvoiceDAO {
     }
 
     public boolean deleteInvoice(int id) {
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
-            PreparedStatement ps = connection.prepareStatement("delete FROM \"Invoice\" where invoiceid = ?;")) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
+             PreparedStatement ps = connection.prepareStatement("delete FROM \"Invoice\" where invoiceid = ?;")) {
             ps.setInt(1, id);
             ps.executeUpdate();
             ps.close();
@@ -245,7 +245,7 @@ public class InvoiceDAO {
     }
 
     public boolean updateInvoice(Invoice invoice) {
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, DBpassword);
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET type = ?, invoicenumber = ?, date = ?, amount = ? , reimbursementamount = ? where invoiceid = ?;")) {
             ps.setString(1, invoice.getType());
             ps.setString(2, invoice.getInvoicenumber());

@@ -13,8 +13,6 @@ public class BaseController {
     @FXML
     protected BorderPane basePane;
 
-    public BaseController() {}
-
     //Lade FXML view zum setzen
     public Parent loadView(String fxml) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
