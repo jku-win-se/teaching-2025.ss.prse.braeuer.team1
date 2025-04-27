@@ -2,7 +2,6 @@ package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.User;
 import at.jku.se.lunchify.models.UserDAO;
-import at.jku.se.lunchify.security.PasswordService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 

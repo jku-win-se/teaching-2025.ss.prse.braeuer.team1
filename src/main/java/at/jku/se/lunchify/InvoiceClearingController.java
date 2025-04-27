@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Date;
 
+//Klasse zum Freigeben der Rechnungen
 public class InvoiceClearingController {
     @FXML
     protected ComboBox<String> allUsers;

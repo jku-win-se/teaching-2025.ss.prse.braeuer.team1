@@ -373,7 +373,10 @@ public class UploadController {
                     isAnomalous.setText("0");
                 }
             } catch (TesseractException | IndexOutOfBoundsException e) {
-                System.err.println("OCR-Fehler: " + e.getMessage());
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Fehler!");
+                alert.setHeaderText("Tesseract OCR-Fehler");
+                alert.setContentText(e.getMessage());
             }
 
 

@@ -1,5 +1,6 @@
 package at.jku.se.lunchify.models;
 
+import javafx.scene.control.Alert;
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,7 +16,7 @@ public class Invoice {
     private Date date;
     private double amount;
     private double reimbursementAmount;
-    enum invoicetype  {Supermarkt,Restaurant}
+    enum Invoicetype {SUPERMARKT, RESTAURANT}
     private String type;
     enum invoicestatus  {eingereicht,genehmigt,abgelehnt}
     private String status;
@@ -154,7 +155,9 @@ public class Invoice {
         if (Desktop.isDesktopSupported()) {
             Desktop.getDesktop().open(tempFile);
         } else {
-            System.out.println("PDF öffnen wird nicht unterstützt.");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fehler");
+            alert.setHeaderText("PDF kann nicht geöffnet werden!");
         }
     }
 

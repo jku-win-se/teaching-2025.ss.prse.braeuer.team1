@@ -1,6 +1,5 @@
 package at.jku.se.lunchify.models;
 
-import java.util.Arrays;
 
 public class User {
 

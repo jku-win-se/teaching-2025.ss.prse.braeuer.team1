@@ -42,6 +42,6 @@ public class UserDAOTest {
     @Test
     public void testGetUserByEmail() throws Exception {
         User testUser = userDAO.getUserByEmail("carina@lunchify.at");
-        assertEquals(testUser.getEmail(), "carina@lunchify.at");
+        assertEquals("carina@lunchify.at", testUser.getEmail());
     }
 }
