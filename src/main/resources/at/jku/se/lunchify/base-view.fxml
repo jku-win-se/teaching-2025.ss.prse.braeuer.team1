@@ -12,12 +12,10 @@
       <fx:include source="login-view.fxml" />
    </center>
    <bottom>
-      <BorderPane prefHeight="57.0" style="-fx-background-color: #a0e1c3;" styleClass="pane" BorderPane.alignment="CENTER">
+      <BorderPane prefHeight="57.0" style="-fx-background-color: #a0e1c3;" BorderPane.alignment="CENTER">
          <right>
             <ImageView fitHeight="42.0" fitWidth="107.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
-               <image>
-                  <Image url="@Logo-Lunchify.jpeg" />
-               </image>
+               <Image url="@Logo-Lunchify.jpeg" />
                <BorderPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </BorderPane.margin>

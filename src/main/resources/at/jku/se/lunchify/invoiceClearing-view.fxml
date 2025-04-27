@@ -22,10 +22,8 @@
    </padding>
    <top>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
-         <children>
-            <Label text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
-            <ComboBox fx:id="allUsers" onAction="#userSelectionChanged" onShowing="#showAllUsers" prefWidth="150.0" promptText="alle" />
-         </children>
+         <Label text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
+         <ComboBox fx:id="allUsers" onAction="#userSelectionChanged" onShowing="#showAllUsers" prefWidth="150.0" promptText="alle" />
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>

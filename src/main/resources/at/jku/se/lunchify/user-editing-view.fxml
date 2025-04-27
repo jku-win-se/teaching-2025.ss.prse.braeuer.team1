@@ -5,37 +5,34 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.collections.FXCollections?>
 
-<VBox fx:id="userEditingPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="217.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserEditingController">
-   <children>
-      <Label fx:id="warningText" style="-fx-text-fill: red;" />
-      <Label prefHeight="21.0" prefWidth="192.0" text="Benutzer auswählen" />
-      <ComboBox fx:id="allUsers" prefWidth="192.0" />
-      <Button fx:id="selectUserButton" mnemonicParsing="false" onAction="#onSelectUserButtonClick" prefWidth="192.0" text="Benutzer auswählen" />
-      <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
-      <TextField fx:id="email" promptText="Email" />
-      <Label prefHeight="21.0" prefWidth="192.0" text="Passwort" />
-      <PasswordField fx:id="password" promptText="Passwort" />
-      <Label prefHeight="21.0" prefWidth="192.0" text="Vorname" />
-      <TextField fx:id="firstname" promptText="Vorname" />
-      <Label prefHeight="21.0" prefWidth="192.0" text="Nachname" />
-      <TextField fx:id="surname" promptText="Nachname" />
-      <Label prefHeight="21.0" prefWidth="192.0" text="Rolle" />
-      <ChoiceBox fx:id="userType" prefHeight="21.0" prefWidth="192.0">
-         <items>
-            <FXCollections fx:factory="observableArrayList">
-               <String fx:value="User" />
-               <String fx:value="Admin" />
-            </FXCollections>
-         </items>
-      </ChoiceBox>
-      <CheckBox fx:id="inactiveCheck" mnemonicParsing="false" prefHeight="21.0" prefWidth="192.0" text="inaktiv setzen" />
-      <Button fx:id="saveChangesButton" maxWidth="192.0" mnemonicParsing="false" onAction="#onSaveChangesButtonClick" text="Änderungen speichern">
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin></Button>
-   </children>
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="217.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserEditingController">
+   <Label fx:id="warningText" style="-fx-text-fill: red;" />
+   <Label prefHeight="21.0" prefWidth="192.0" text="Benutzer auswählen" />
+   <ComboBox fx:id="allUsers" prefWidth="192.0" />
+   <Button mnemonicParsing="false" onAction="#onSelectUserButtonClick" prefWidth="192.0" text="Benutzer auswählen" />
+   <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
+   <TextField fx:id="email" promptText="Email" />
+   <Label prefHeight="21.0" prefWidth="192.0" text="Passwort" />
+   <PasswordField fx:id="password" promptText="Passwort" />
+   <Label prefHeight="21.0" prefWidth="192.0" text="Vorname" />
+   <TextField fx:id="firstname" promptText="Vorname" />
+   <Label prefHeight="21.0" prefWidth="192.0" text="Nachname" />
+   <TextField fx:id="surname" promptText="Nachname" />
+   <Label prefHeight="21.0" prefWidth="192.0" text="Rolle" />
+   <ChoiceBox fx:id="userType" prefHeight="21.0" prefWidth="192.0">
+      <items>
+         <FXCollections fx:factory="observableArrayList">
+            <String fx:value="User" />
+            <String fx:value="Admin" />
+         </FXCollections>
+      </items>
+   </ChoiceBox>
+   <CheckBox fx:id="inactiveCheck" mnemonicParsing="false" prefHeight="21.0" prefWidth="192.0" text="inaktiv setzen" />
+   <Button maxWidth="192.0" mnemonicParsing="false" onAction="#onSaveChangesButtonClick" text="Änderungen speichern">
+      <VBox.margin>
+         <Insets top="20.0" />
+      </VBox.margin></Button>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>

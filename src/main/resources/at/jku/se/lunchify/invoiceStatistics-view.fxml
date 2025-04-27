@@ -4,15 +4,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="612.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.ReportController" stylesheets="@lunchify-style.css">
+<BorderPane prefHeight="612.0" prefWidth="894.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.ReportController">
    <center>
-      <TableView maxWidth="900.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER" fx:id="invoiceTable">
+      <TableView fx:id="invoiceTable" maxWidth="850.0" prefWidth="850.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn prefWidth="174.0" resizable="false" text="Rechnungsdatum" fx:id="invoiceDate" />
-            <TableColumn minWidth="0.0" prefWidth="136.0" resizable="false" text="Rechnungsbetrag" fx:id="invoiceAmount"/>
-            <TableColumn minWidth="0.0" prefWidth="173.0" resizable="false" text="Rückzahlungsbetrag" fx:id="reimbursementAmount"/>
-            <TableColumn minWidth="0.0" prefWidth="121.0" resizable="false" text="Typ" fx:id="invType"/>
-            <TableColumn minWidth="0.0" prefWidth="134.0" resizable="false" text="Status" fx:id="invoiceStatus"/>
+            <TableColumn fx:id="invoiceDate" prefWidth="188.0" resizable="false" text="Rechnungsdatum" />
+            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="166.0" resizable="false" text="Rechnungsbetrag" />
+            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="206.0" resizable="false" text="Rückzahlungsbetrag" />
+            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="149.0" resizable="false" text="Typ" />
+            <TableColumn fx:id="invoiceStatus" minWidth="0.0" prefWidth="143.0" resizable="false" text="Status" />
          </columns>
       </TableView>
       </center>
@@ -24,10 +24,8 @@
       </top>
    <bottom>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-      <children>
-      <Button fx:id="exportCSVButton" mnemonicParsing="false" onAction="#onReportCSVExportButtonClick" prefHeight="50.0" prefWidth="100.0" text="CSV-Export" />
-      <Button fx:id="exportPDFButton" mnemonicParsing="false" onAction="#onReportPDFExportButtonClick" prefHeight="50.0" prefWidth="100.0" text="PDF-Export" />
-      </children>
+         <Button fx:id="exportCSVButton" mnemonicParsing="false" onAction="#onReportCSVExportButtonClick" prefHeight="50.0" prefWidth="100.0" text="CSV-Export" />
+         <Button fx:id="exportPDFButton" mnemonicParsing="false" onAction="#onReportPDFExportButtonClick" prefHeight="50.0" prefWidth="100.0" text="PDF-Export" />
       </HBox>
    </bottom>
    </BorderPane>
