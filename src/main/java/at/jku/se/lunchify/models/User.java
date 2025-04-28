@@ -7,7 +7,7 @@ public class User {
     private String email;
     private String firstname;
     private String surname;
-    enum userType {ADMIN,USER}
+    enum Usertype {ADMIN,USER}
     private String type;
     private boolean isactive;
     private boolean isanomalous;
