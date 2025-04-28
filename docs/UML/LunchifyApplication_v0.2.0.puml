@@ -1,0 +1,422 @@
+@startuml
+class at.jku.se.lunchify.InvoiceClearingController {
+# ComboBox<String> allUsers
+# TableView<Invoice> invoiceTable
+# TableColumn<Invoice,Date> invoiceDate
+# TableColumn<Invoice,Double> invoiceAmount
+# TableColumn<Invoice,Double> reimbursementAmount
+# TableColumn<Invoice,String> invType
+# TableColumn<Invoice,String> userid
+# TableColumn<Invoice,String> invoiceid
+# TableColumn<Invoice,Integer> timesChanged
+- InvoiceDAO invoiceDAO
+- UserDAO userDAO
+# String selectedMail
++ void initialize()
++ void showAllUsers()
+- void setSelectedData()
++ void userSelectionChanged()
+- void showInvoiceDetails(Invoice)
+}
+
+
+class at.jku.se.lunchify.InvoiceSettingController {
+# Label warningText
+# TextField valueInvoiceSupermarket
+# TextField valueInvoiceRestaurant
+# Button changeInvoiceValueButton
+~ InvoiceSettingService service
++ void initialize()
++ void onChangeInvoiceValueButtonClick()
+}
+
+
+class at.jku.se.lunchify.models.LoginService {
+- String jdbcUrl
+- String dbUsername
+- String dbPassword
+- PasswordService passwordService
+- int userId
++ int getUserId()
++ LoginResult login(String,String)
+}
+
+
+enum at.jku.se.lunchify.models.LoginResult {
++  SUCCESS_ADMIN
++  SUCCESS_USER
++  INVALID_USER
++  INVALID_PW
++  USER_INACTIVE
++  EMPTY_FIELDS
++  ERROR
+}
+
+class at.jku.se.lunchify.UserEditingController {
+# ComboBox<String> allUsers
+# TextField email
+# TextField firstname
+# TextField surname
+# PasswordField password
+# ChoiceBox<String> userType
+# CheckBox inactiveCheck
+# Label warningText
+- User userToEdit
+- UserDAO userDAO
+- PasswordService passwordService
++ void initialize()
++ void onSelectUserButtonClick()
++ void onSaveChangesButtonClick()
+}
+
+
+class at.jku.se.lunchify.LunchifyApplication {
++ {static} BaseController baseController
++ void start(Stage)
++ {static} void main(String[])
+}
+
+
+class at.jku.se.lunchify.models.User {
+- int userid
+- String email
+- String firstname
+- String surname
+- String type
+- boolean isactive
+- boolean isanomalous
+- String password
++ int getUserid()
++ void setUserid(int)
++ String getEmail()
++ void setEmail(String)
++ String getFirstname()
++ void setFirstname(String)
++ String getSurname()
++ void setSurname(String)
++ String getType()
++ void setType(String)
++ boolean isIsactive()
++ void setIsactive(boolean)
++ boolean isIsanomalous()
++ void setIsanomalous(boolean)
++ String getPassword()
++ void setPassword(String)
++ String toString()
+}
+
+
+enum at.jku.se.lunchify.models.usertype {
++  ADMIN
++  USER
+}
+
+class at.jku.se.lunchify.MenuController {
+- Button logout
++ void onLogoutButtonClick()
++ void onUploadButtonClick()
++ void onHistoryButtonClick()
++ void onUserManagementButtonClick()
++ void onInvoiceSettingButtonClick()
++ void onReportButtonClick()
++ void onInvoiceClearanceButtonClick()
+}
+
+
+class at.jku.se.lunchify.InvoiceDAOTest {
+- InvoiceDAO invoiceDAO
++ void setup()
++ void testCheckDateInPast2026()
++ void testCheckDateInPast2025()
++ void testCheckInvoiceValueIsPositiveNegative()
++ void testCheckInvoiceValueIsPositivePositive()
+}
+
+
+class at.jku.se.lunchify.models.InvoiceDAO {
+~ String jdbcUrl
+~ String username
+~ String dbPassword
+~ InvoiceSettingService invoiceSettingService
++ boolean checkDateInPast(LocalDate)
++ boolean checkInvoiceValueIsPositive(Double)
++ ObservableList<Invoice> getAllInvoices()
++ ObservableList<Invoice> getSelectedInvoices(String,Date,Date,String)
++ ObservableList<Invoice> getSelectedInvoicesToClear(String,String,boolean)
++ Invoice getInvoiceById(int)
++ boolean setInvoiceStatus(int,String)
++ boolean checkInvoicesByDateAndUser(int,LocalDate)
++ boolean insertInvoice(Invoice)
++ boolean deleteInvoice(int)
++ boolean updateInvoice(Invoice)
+}
+
+
+class at.jku.se.lunchify.models.UserDAO {
+~ String jdbcUrl
+~ String username
+~ String dbPassword
+~ PasswordService passwordService
++ ObservableList<User> getAllUsers()
++ ObservableList<String> getAllUserMails()
++ ObservableList<String> getAllUserMailsWithAll()
++ User getUserByEmail(String)
++ User getUserByUserid(int)
++ boolean updateUser(User)
++ boolean insertUser(User)
++ boolean checkUserAlreadyExists(User)
+}
+
+
+class at.jku.se.lunchify.UserCreationController {
++ Label warningText
+# TextField email
+# TextField firstname
+# TextField surname
+# PasswordField password
+# ChoiceBox<String> userType
+# CheckBox inactiveCheck
+- UserDAO userDAO
++ User onUserCreationButtonClick()
+}
+
+
+class at.jku.se.lunchify.LoginController {
+# Button loginButton
+# TextField email
+# PasswordField password
+# Label warningText
++ {static} int currentUserId
++ void onLoginButtonClick()
+}
+
+
+class at.jku.se.lunchify.InvoiceDetailController {
+# Button clearButton
+# Button declineButton
+# TextField invoiceValue
+# Label reimbursementValue
+# ComboBox<String> invoiceType
+# DatePicker invoiceDate
+# TextField invoiceNumber
+# ImageView invoiceImage
+# Label warningText
+- Invoice invoice
+- InvoiceDAO invoiceDAO
+- InvoiceSettingService invoiceSettingService
+~ double invoiceValueDouble
+~ String selectedType
+~ double reimbursementValueDouble
++ void initialize()
++ void setInvoice(Invoice)
++ void showAllInvoiceTypes()
++ void onClearButtonClick()
++ void onDeclineButtonClick()
++ void onSaveChangesButtonClick()
++ void onDeleteButtonClick()
++ boolean checkNoChanges()
+- LocalDate convertDateToLocalDate(java.util.Date)
++ void invoiceTypeChanged()
+}
+
+
+class at.jku.se.lunchify.UploadController {
+# Button invoiceUploadButton
+# Label warningText
+# TextField invoiceValue
+# Label reimbursementValue
+# ComboBox<String> invoiceType
+# DatePicker invoiceDate
+# Label fileName
+# Button invoiceAttachmentButton
+# TextField invoiceNumber
+# Label isAnomalous
+# Label invoiceTypeOCR
+# Label invoiceNumberOCR
+# Label invoiceValueOCR
+# DatePicker invoiceDateOCR
+~ double invoiceValueDouble
+~ File selectedFile
+- File lastUsedDirectory
+~ boolean invoiceAnomalous
+~ String selectedType
+~ double reimbursementValueDouble
+- InvoiceDAO invoiceDAO
+- InvoiceSettingService invoiceSettingService
++ void initialize()
++ void showAllInvoiceTypes()
++ void onInvoiceUploadButtonClick()
++ void onInvoiceAttachmentButtonClick()
++ void invoiceTypeChanged()
+}
+
+
+class at.jku.se.lunchify.security.PasswordService {
+- BCryptPasswordEncoder passwordEncoder
++ String hashPassword(String)
++ boolean verifyPassword(String,String)
+}
+
+
+class at.jku.se.lunchify.models.Invoice {
+- int invoiceid
+- int userid
+- String invoicenumber
+- Date date
+- double amount
+- double reimbursementAmount
+- String type
+- String status
+- boolean isanomalous
+- byte[] file
+- int timesChanged
++ int getInvoiceid()
++ void setInvoiceid(int)
++ int getUserid()
++ void setUserid(int)
++ String getInvoicenumber()
++ void setInvoicenumber(String)
++ Date getDate()
++ void setDate(Date)
++ double getAmount()
++ void setAmount(double)
++ String getType()
++ void setType(String)
++ String getStatus()
++ void setStatus(String)
++ boolean isIsanomalous()
++ void setIsanomalous(boolean)
++ byte[] getFile()
++ void setFile(byte[])
++ double getReimbursementAmount()
++ void setReimbursementAmount(double)
++ int getTimesChanged()
++ void setTimesChanged(int)
++ void openPDF()
++ String toString()
++ String toStringWithoutFile()
+}
+
+
+enum at.jku.se.lunchify.models.Invoicetype {
++  SUPERMARKT
++  RESTAURANT
+}
+
+enum at.jku.se.lunchify.models.Invoicestatus {
++  eingereicht
++  genehmigt
++  abgelehnt
+}
+
+class at.jku.se.lunchify.UserManagementController {
++ void onNewUserButtonClick()
++ void onEditUserButtonClick()
+}
+
+class at.jku.se.lunchify.Main {
++ {static} void main(String[])
+}
+
+class at.jku.se.lunchify.ReportController {
+# Label warningText
+# ComboBox<String> allUsers
+# ChoiceBox<String> invoiceType
+# DatePicker dateFrom
+# DatePicker dateTo
+# Label filterInfo
+# TableView<Invoice> invoiceTable
+# TableColumn<Invoice,Date> invoiceDate
+# TableColumn<Invoice,Double> invoiceAmount
+# TableColumn<Invoice,Double> reimbursementAmount
+# TableColumn<Invoice,String> invType
+# TableColumn<Invoice,String> invoiceStatus
+# Button exportCSVButton
+# Button exportPDFButton
+# String selectedMail
+# User selectedUser
+# java.sql.Date selectedDateFrom
+# java.sql.Date selectedDateTo
+# String selectedInvoiceType
+# boolean inputCorrect
+- InvoiceDAO invoiceDAO
+~ ObservableList<Invoice> invoiceList
+- File lastUsedDirectory
+- File chosenDirectory
+- File exportFile
+- UserDAO userDAO
+- Date today
+- LocalDate heuteVorEinemJahr
+- Date todayLastYear
++ void initialize()
++ void showAllUsers()
+- void setSelectedData()
+- void checkSelectedData()
++ void onInvoiceIndicatorsButtonClick()
++ void onInvoiceStatisticsButtonClick()
++ void onReportCSVExportButtonClick()
++ void onReportPDFExportButtonClick()
+}
+
+
+class at.jku.se.lunchify.LoginServiceTest {
+- LoginService loginService
++ void setup()
++ void testLoginWithEmptyFields()
++ void testLoginWithValidAdminCredentials()
++ void testLoginWithInvalidUsername()
+}
+
+
+class at.jku.se.lunchify.BaseController {
+# BorderPane basePane
++ Parent loadView(String)
++ void showCenterView(String)
++ void showMenu(String)
+}
+
+
+class at.jku.se.lunchify.UserDAOTest {
+- UserDAO userDAO
++ void setup()
++ void testCheckUserAlreadyExists()
++ void testInsertUser()
++ void testUpdateUser()
++ void testGetUserByEmail()
+}
+
+
+class at.jku.se.lunchify.models.InvoiceSettingService {
+- String jdbcUrl
+- String dbUsername
+- String dbPassword
++ boolean updateInvoiceSettings(String,String)
++ boolean isValidInput(String)
++ double getCurrentSupermarketValue()
++ double getCurrentRestaurantValue()
++ ObservableList<String> getAllInvoiceTypes()
++ double getReimbursementValue(String,double)
+}
+
+
+class at.jku.se.lunchify.InvoiceSettingServiceTest {
+~ {static} InvoiceSettingService service
+- {static} double originalSupermarketValue
+- {static} double originalRestaurantValue
+~ {static} void init()
+~ void testValidInput_withPositiveNumber()
+~ void testValidInput_withEmptyString()
+~ void testValidInput_withNegativeNumber()
+~ void testValidInput_withInvalidString()
+~ void testUpdateWithInvalidValues()
+~ void testUpdateBothInvoiceSettings()
+~ void testUpdateOnlySupermarketValue()
+~ void testGetReimbursementValue()
+~ {static} void restoreOriginalValues()
+}
+
+
+
+
+javafx.application.Application <|-- at.jku.se.lunchify.LunchifyApplication
+@enduml

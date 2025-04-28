@@ -109,7 +109,7 @@ public class InvoiceDAO {
                 "WHERE (? IS NULL OR \"User\".email = ? )" +
                 "AND \"Invoice\".status = ? " +
                 "AND \"Invoice\".isanomalous = ? " +
-                "AND \"Invoice\".userid <> ?"; //Admin kann seine eigenen Rechnungen nicht freigeben
+                "AND \"Invoice\".userid <> ?"; //ADMIN kann seine eigenen Rechnungen nicht freigeben
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
