@@ -113,32 +113,32 @@ graph TD
 ## Datenbank
 
 ### Invoice
-- `invoiceid`
-- `userid`
-- `invoicenumber`
-- `date`
-- `amount`
-- `type`
-- `status`
-- `isanomalous`
-- `file`
-- `reimbursementamount`
-- `timeschanged`
+- `invoiceid` (ID; integer, autoincrement)
+- `userid`  (integer)
+- `invoicenumber` (varchar)
+- `date` (date)
+- `amount` (double precision)
+- `type` (varchar (Supermarkt/Restaurant))
+- `status` (varchar(eingereicht/genehmigt))
+- `isanomalous` (boolean)
+- `file` (bytea)
+- `reimbursementamount` (double precision)
+- `timeschanged` (integer)
 
 ### InvoiceSetting
-- `settingid`
-- `valueinvoicesupermarket`
-- `valueinvoicerestaurant`
+- `settingid` (ID; integer)
+- `valueinvoicesupermarket` (double precision)
+- `valueinvoicerestaurant` (double precision)
 
 ### User
-- `userid`
-- `email`
-- `firstname`
-- `surname`
-- `type`
-- `isactive`
-- `isanomalous`
-- `password`
+- `userid` (ID; integer, autoincrement)
+- `email` (varchar)
+- `firstname` (varchar)
+- `surname`(varchar)
+- `type` (varchar)
+- `isactive` (boolean)
+- `isanomalous` (boolean)
+- `password` (varchar)
 
 
 ## Entwicklerhinweise
