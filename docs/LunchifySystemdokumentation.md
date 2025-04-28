@@ -110,6 +110,37 @@ graph TD
 
 ---
 
+## Datenbank
+
+### Invoice
+- `invoiceid`
+- `userid`
+- `invoicenumber`
+- `date`
+- `amount`
+- `type`
+- `status`
+- `isanomalous`
+- `file`
+- `reimbursementamount`
+- `timeschanged`
+
+### InvoiceSetting
+- `settingid`
+- `valueinvoicesupermarket`
+- `valueinvoicerestaurant`
+
+### User
+- `userid`
+- `email`
+- `firstname`
+- `surname`
+- `type`
+- `isactive`
+- `isanomalous`
+- `password`
+
+
 ## Entwicklerhinweise
 
 - **Datenbankverbindung**: Zugangsdaten sind aktuell im Code hardcodiert (InvoiceDAO, LoginController etc.)
