@@ -196,7 +196,6 @@ public class UploadController {
             // Beginne mit Auslesen der Datei
             try {
                 String text = tesseract.doOCR(selectedFile);
-                System.out.println("Erkannter Text:\n" + text);
                 //Rechnungstyp ermitteln
                 if(text.toLowerCase().contains("billa") || text.toLowerCase().contains("billa plus") || text.toLowerCase().contains("hofer") || text.toLowerCase().contains("spar") || text.toLowerCase().contains("eurospar") || text.toLowerCase().contains("interspar") || text.toLowerCase().contains("supermarkt"))
                 {
