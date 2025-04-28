@@ -93,7 +93,7 @@ public class InvoiceDetailController {
 
     public void onClearButtonClick() {
         if (checkNoChanges()) {
-            if (invoiceDAO.setInvoiceStatus(invoice.getInvoiceid(),"genehmigt")) {
+            if (invoiceDAO.setInvoiceStatus(invoice.getInvoiceid(),"GENEHMIGT")) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Rechnungsfreigabe");
                 alert.setHeaderText("Rechnung freigegeben");
@@ -122,7 +122,7 @@ public class InvoiceDetailController {
 
     public void onDeclineButtonClick() {
         if (checkNoChanges()) {
-            if (invoiceDAO.setInvoiceStatus(invoice.getInvoiceid(),"abgelehnt")) {
+            if (invoiceDAO.setInvoiceStatus(invoice.getInvoiceid(),"ABGELEHNT")) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Rechnungsablehnung");
                 alert.setHeaderText("Rechnung abgelehnt");

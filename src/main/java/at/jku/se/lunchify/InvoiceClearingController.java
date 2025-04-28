@@ -39,7 +39,6 @@ public class InvoiceClearingController {
 
     private InvoiceDAO invoiceDAO;
     private UserDAO userDAO;
-
     protected String selectedMail;
 
     public void initialize() {
@@ -83,7 +82,7 @@ public class InvoiceClearingController {
         timesChanged.setCellValueFactory(new PropertyValueFactory<>("timesChanged"));
 
 
-        ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToClear(selectedMail, "eingereicht", true);
+        ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToClear(selectedMail, "EINGEREICHT", true);
         invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
     }
 
