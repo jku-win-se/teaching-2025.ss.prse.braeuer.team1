@@ -6,45 +6,39 @@
 <?import javafx.scene.layout.*?>
 
 <SplitPane dividerPositions="0.5" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceDetailController">
-   <items>
-      <VBox alignment="CENTER">
-         <children>
-            <VBox alignment="CENTER" prefHeight="607.0" prefWidth="213.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
-               <children>
-                  <Label fx:id="warningText" style="-fx-text-fill: red;" />
-                  <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungstyp" />
-                  <ComboBox fx:id="invoiceType" onAction="#invoiceTypeChanged" onShowing="#showAllInvoiceTypes" prefHeight="21.0" prefWidth="192.0" />
-                  <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsnummer (laut Rechnung)" />
-                  <TextField fx:id="invoiceNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </TextField>
-                  <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsdatum" />
-                  <DatePicker fx:id="invoiceDate" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" />
-                  <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsbetrag" />
-                  <TextField fx:id="invoiceValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" />
-                  <Label prefHeight="21.0" prefWidth="192.0" text="Rückerstattungsbetrag" />
-                  <Label fx:id="reimbursementValue" prefHeight="21.0" prefWidth="192.0" />
-                  <Button fx:id="saveChangesButton" mnemonicParsing="false" onAction="#onSaveChangesButtonClick" prefHeight="31.0" prefWidth="170.0" text="Änderungen speichern" textAlignment="CENTER">
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="31.0" prefWidth="170.0" text="freigeben" textAlignment="CENTER">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="declineButton" mnemonicParsing="false" onAction="#onDeclineButtonClick" prefHeight="31.0" prefWidth="170.0" text="ablehnen" textAlignment="CENTER" />
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="31.0" prefWidth="170.0" text="löschen" textAlignment="CENTER" />
-               </children>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </VBox>
-         </children>
+   <VBox alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="654.0" prefWidth="213.0" spacing="10.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+         <Label fx:id="warningText" style="-fx-text-fill: red;" />
+         <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungstyp" />
+         <ComboBox fx:id="invoiceType" onAction="#invoiceTypeChanged" onShowing="#showAllInvoiceTypes" prefHeight="21.0" prefWidth="192.0" />
+         <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsnummer (laut Rechnung)" />
+         <TextField fx:id="invoiceNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0">
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+         </TextField>
+         <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsdatum" />
+         <DatePicker fx:id="invoiceDate" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" />
+         <Label prefHeight="21.0" prefWidth="192.0" text="Rechnungsbetrag" />
+         <TextField fx:id="invoiceValue" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="21.0" prefWidth="192.0" />
+         <Label prefHeight="21.0" prefWidth="192.0" text="Rückerstattungsbetrag" />
+         <Label fx:id="reimbursementValue" prefHeight="21.0" prefWidth="192.0" />
+         <Button mnemonicParsing="false" onAction="#onSaveChangesButtonClick" prefHeight="31.0" prefWidth="170.0" text="Änderungen speichern" textAlignment="CENTER">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+         </Button>
+         <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="31.0" prefWidth="170.0" text="freigeben" textAlignment="CENTER">
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+         </Button>
+         <Button fx:id="declineButton" mnemonicParsing="false" onAction="#onDeclineButtonClick" prefHeight="31.0" prefWidth="170.0" text="ablehnen" textAlignment="CENTER" />
+         <Button mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="31.0" prefWidth="170.0" text="löschen" textAlignment="CENTER" />
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
       </VBox>
-      <ImageView fx:id="invoiceImage" fitHeight="600.0" pickOnBounds="true" preserveRatio="true" />
-   </items>
+   </VBox>
+   <ImageView fx:id="invoiceImage" fitHeight="600.0" pickOnBounds="true" preserveRatio="true" />
 </SplitPane>

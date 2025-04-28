@@ -55,9 +55,11 @@ public class InvoiceDAO {
         return invoices;
     }
 
-    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String selectedInvoiceType) throws SQLException {
+    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String invoiceType) throws SQLException {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
-        if (email.equals("alle Benutzer")) email = null;
+        String selectedEmail = email;
+        String selectedInvoiceType = invoiceType;
+        if (selectedEmail.equals("alle Benutzer")) selectedEmail = null;
         if (selectedInvoiceType.equals("alle Rechnungstypen")) selectedInvoiceType = null;
         String sql = "SELECT * "+
                 "FROM \"Invoice\" " +
@@ -68,8 +70,8 @@ public class InvoiceDAO {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, email);                    // IS NULL
-            ps.setString(2, email);                    // Vergleich
+            ps.setString(1, selectedEmail);                    // IS NULL
+            ps.setString(2, selectedEmail);            // Vergleich
             ps.setDate(3, dateFrom);                   // Von
             ps.setDate(4, dateTo);                     // Bis
             ps.setString(5, selectedInvoiceType);      // IS NULL
