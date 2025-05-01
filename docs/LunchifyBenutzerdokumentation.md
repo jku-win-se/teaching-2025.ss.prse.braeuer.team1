@@ -39,7 +39,7 @@ Beim Start von Lunchify erscheint der **Login-Screen**:
 
 ## Rechnung hochladen
 
-- Sichbar für Admin und User
+- Sichtbar für Admin und User
 
 Nach dem Einloggen kannst du direkt eine Rechnung hochladen.
 Klicke dazu zuerst auf Rechnung anhängen und wähle deine Rechnung aus, nach dem Auswählen
@@ -54,7 +54,7 @@ Wenn alles funktioniert hat, bekommst du eine Erfolgsmeldung.
 
 ## Meine Rechnungen
 
-- Sichbar für Admin und User
+- Sichtbar für Admin und User
 
 Hier erhältst du einen Überblick über deine eingereichten Rechnungen, ihren Status und kannst sie bis ans Ende
 des Abrechnungsmonats bearbeiten.
