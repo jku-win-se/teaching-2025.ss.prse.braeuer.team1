@@ -100,6 +100,52 @@ public class InvoiceDAO {
         return invoices;
     }
 
+    public ObservableList<Invoice> getAnomalousSelectedInvoices(String email, Date dateFrom, Date dateTo, String invoiceType) throws SQLException {
+        ObservableList<Invoice> invoices = FXCollections.observableArrayList();
+        String selectedEmail = email;
+        String selectedInvoiceType = invoiceType;
+        if (selectedEmail.equals("alle Benutzer")) selectedEmail = null;
+        if (selectedInvoiceType.equals("alle Rechnungstypen")) selectedInvoiceType = null;
+        String sql = "SELECT * "+
+                "FROM \"Invoice\" " +
+                "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
+                "WHERE (? IS NULL OR email = ?) " +
+                "AND \"Invoice\".date BETWEEN ? AND ? " +
+                "AND (? IS NULL OR \"Invoice\".type = ?)" +
+                "AND \"Invoice\".isanomalous = TRUE";
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, selectedEmail);                    // IS NULL
+            ps.setString(2, selectedEmail);            // Vergleich
+            ps.setDate(3, dateFrom);                   // Von
+            ps.setDate(4, dateTo);                     // Bis
+            ps.setString(5, selectedInvoiceType);      // IS NULL
+            ps.setString(6, selectedInvoiceType);      // Vergleich
+
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                int selectedInvoiceid = resultSet.getInt("invoiceid");
+                String selectedInvoicenumber = resultSet.getString("invoicenumber");
+                Date selectedDate = resultSet.getDate("date");
+                double selectedAmount = resultSet.getDouble("amount");
+                double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
+                String selectedType = resultSet.getString("type");
+                String selectedStatus = resultSet.getString("status");
+                boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
+                int selectedUserid = resultSet.getInt("userid");
+                byte[] selectedFile = resultSet.getBytes("file");
+                int selectedTimesChanged = resultSet.getInt("timesChanged");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                nextInvoice.setStatus(selectedStatus);
+                invoices.add(nextInvoice);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return invoices;
+    }
+
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 

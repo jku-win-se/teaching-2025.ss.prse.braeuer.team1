@@ -60,6 +60,11 @@ public class ReportController {
     protected Button exportCSVButton;
     @FXML
     protected Button exportPDFButton;
+    @FXML
+    protected CheckBox isAnomalous;
+    @FXML
+    protected CheckBox isAnomalousSelected;
+
 
     protected String selectedMail;
     protected User selectedUser;
@@ -125,7 +130,15 @@ public class ReportController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceStatistics-view.fxml"));
             Parent root = loader.load();
             ReportController controller = loader.getController();
-            controller.filterInfo.setText("Rechnungen (" + selectedInvoiceType + ") von " + selectedMail + " (Zeitraum: " + selectedDateFrom.toString() + " bis " + selectedDateTo.toString() + ")");
+            if (isAnomalous.isSelected()) {
+                controller.isAnomalousSelected.setSelected(true);
+                controller.filterInfo.setText("Anomalische Rechnungen (" + selectedInvoiceType + ") von " + selectedMail + " (Zeitraum: " + selectedDateFrom.toString() + " bis " + selectedDateTo.toString() + ")");
+                invoiceList = invoiceDAO.getAnomalousSelectedInvoices(selectedMail, selectedDateFrom, selectedDateTo, selectedInvoiceType);
+            }
+            else {
+                controller.filterInfo.setText("Rechnungen (" + selectedInvoiceType + ") von " + selectedMail + " (Zeitraum: " + selectedDateFrom.toString() + " bis " + selectedDateTo.toString() + ")");
+                invoiceList = invoiceDAO.getSelectedInvoices(selectedMail, selectedDateFrom, selectedDateTo, selectedInvoiceType);
+            }
             LunchifyApplication.baseController.basePane.setCenter(root);
 
             //controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -135,7 +148,7 @@ public class ReportController {
             controller.invType.setCellValueFactory(new PropertyValueFactory<>("type"));
             controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-            invoiceList = invoiceDAO.getSelectedInvoices(selectedMail, selectedDateFrom, selectedDateTo, selectedInvoiceType);
+
             controller.invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
         }
     }
@@ -147,15 +160,17 @@ public class ReportController {
         chosenDirectory = directoryChooser.showDialog(stage);
         if (chosenDirectory != null) {
             lastUsedDirectory = chosenDirectory.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
-            FileWriter output = new FileWriter(new File(chosenDirectory.getAbsolutePath() + "/Lunchify-Export-" + LocalDate.now().toString() + ".csv"));
-            output.write("Benutzer-ID/Personalnummer;Rechnungsdatum;Rechnungsbetrag;Rückzahlungsbetrag;Typ;Status" + System.lineSeparator());
+            FileWriter output = new FileWriter(new File(chosenDirectory.getAbsolutePath() + "/Lunchify-Rechnungs-Export-" + LocalDate.now().toString() + ".csv"));
+            output.write("Benutzer-ID/Personalnummer;Rechnungsdatum;Rechnungsbetrag;Rückzahlungsbetrag;Typ;Status;Anomalisch?" + System.lineSeparator());
             for (Invoice inv : invoiceTable.getItems()) {
-                output.write(String.valueOf(inv.getUserid())+";"+inv.getDate().toString() + ";" + inv.getAmount() + ";" + inv.getReimbursementAmount() + ";" + inv.getType() + ";" + inv.getStatus() + System.lineSeparator());
+                output.write(String.valueOf(inv.getUserid())+";"+inv.getDate().toString() + ";" +
+                        inv.getAmount() + ";" + inv.getReimbursementAmount() + ";" + inv.getType() + ";" +
+                        inv.getStatus() + ";"+String.valueOf(inv.isIsanomalous())+System.lineSeparator());
             }
             output.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("CSV-Export");
-            alert.setHeaderText("CSV-Export");
+            alert.setHeaderText("Lunchify-Rechnungs-Export-" + LocalDate.now().toString() + ".csv\nwurde in "+chosenDirectory.getPath()+" gespeichert");
             alert.setContentText("Ihre Datei wurde gespeichert!");
             alert.showAndWait();
         }
@@ -168,8 +183,13 @@ public class ReportController {
         chosenDirectory = directoryChooser.showDialog(stage);
         if (chosenDirectory != null) {
             lastUsedDirectory = chosenDirectory.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
-            Document document = new Document(new PdfDocument(new PdfWriter(chosenDirectory.getAbsolutePath() + "/Lunchify-Export-" + LocalDate.now().toString() + ".pdf")));
-            document.add(new Paragraph("Lunchify-Export vom "+LocalDate.now().toString()));
+            Document document = new Document(new PdfDocument(new PdfWriter(chosenDirectory.getAbsolutePath() + "/Lunchify-Rechnungs-Export-" + LocalDate.now().toString() + ".pdf")));
+            if (isAnomalousSelected.isSelected()) {
+                document.add(new Paragraph("Lunchify-Export für anomalische Rechnungen vom " + LocalDate.now().toString()));
+            }
+            else{
+                document.add(new Paragraph("Lunchify-Export für Rechnungen vom " + LocalDate.now().toString()));
+            }
             Table table = new Table(UnitValue.createPercentArray(8)).useAllAvailableWidth();
             table.addHeaderCell("Benutzer-ID/Personalnummer");
             table.addHeaderCell("Rechnungsdatum");
@@ -191,7 +211,7 @@ public class ReportController {
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("PDF-Export");
-            alert.setHeaderText("PDF-Export");
+            alert.setHeaderText("Lunchify-Rechnungs-Export-" + LocalDate.now().toString() + ".pdf\nwurde in "+chosenDirectory.getPath()+" gespeichert");
             alert.setContentText("Ihre Datei wurde gespeichert!");
             alert.showAndWait();
         }
