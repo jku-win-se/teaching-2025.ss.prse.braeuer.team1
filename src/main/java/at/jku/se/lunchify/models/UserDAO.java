@@ -123,6 +123,32 @@ public class UserDAO {
         return user;
     }
 
+    public ObservableList<User> getAnomalousUsers() {
+        ObservableList<User> users = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM \"User\" WHERE isanomalous = TRUE";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet resultSet = ps.executeQuery()) {
+
+            while (resultSet.next()) {
+                int userid = resultSet.getInt("userid");
+                String emailToEdit = resultSet.getString("email");
+                String firstNameToEdit = resultSet.getString("firstname");
+                String surnameToEdit = resultSet.getString("surname");
+                String passwordToEdit = "";
+                String typeToEdit = resultSet.getString("type");
+                boolean isActive = resultSet.getBoolean("isactive");
+                boolean isAnomalous = resultSet.getBoolean("isanomalous");
+
+                users.add(new User(userid, emailToEdit, firstNameToEdit, surnameToEdit, typeToEdit, isActive, isAnomalous, passwordToEdit));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     public boolean updateUser(User user) throws SQLException {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;")) {
