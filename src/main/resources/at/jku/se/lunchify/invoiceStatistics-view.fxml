@@ -21,6 +21,7 @@
    </padding>
    <top>
       <Label fx:id="filterInfo" BorderPane.alignment="CENTER_LEFT" />
+      <CheckBox fx:id="isAnomalousSelected" mnemonicParsing="false" prefHeight="21.0" prefWidth="192.0" visible="false" selected="false"/>
       </top>
    <bottom>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">

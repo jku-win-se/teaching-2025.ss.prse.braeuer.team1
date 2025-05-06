@@ -33,6 +33,7 @@
             </FXCollections>
         </items>
    </ChoiceBox>
+   <CheckBox fx:id="isAnomalous" mnemonicParsing="false" prefHeight="21.0" prefWidth="192.0" text="anomalische Rechnungen?" />
    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
       <Button mnemonicParsing="false" onAction="#onInvoiceIndicatorsButtonClick" prefHeight="50.0" prefWidth="100.0" text="Kennzahlen" />
       <Button mnemonicParsing="false" onAction="#onInvoiceStatisticsButtonClick" prefHeight="50.0" prefWidth="100.0" text="Rechnungs-&#10;statistik" textAlignment="CENTER" />
