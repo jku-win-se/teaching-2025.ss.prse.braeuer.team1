@@ -184,6 +184,34 @@ public class InvoiceDAO {
         return invoices;
     }
 
+    public ObservableList<Invoice> getSelectedInvoicesToEdit() {
+        ObservableList<Invoice> invoices = FXCollections.observableArrayList();
+        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status " +
+                "FROM \"Invoice\" " +
+                "WHERE \"Invoice\".userid = ? " +
+                "ORDER BY \"Invoice\".date DESC";
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, LoginController.currentUserId);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                int selectedInvoiceid = resultSet.getInt("invoiceid");
+                Date selectedDate = resultSet.getDate("date");
+                double selectedAmount = resultSet.getDouble("amount");
+                double selectedReimbursementAmount = resultSet.getDouble("reimbursementamount");
+                String selectedType = resultSet.getString("type");
+                String selectedStatus = resultSet.getString("status");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedStatus);
+                invoices.add(nextInvoice);
+                connection.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return invoices;
+    }
+
     public Invoice getInvoiceById (int id) {
         Invoice invoice = null;
         String sql = "SELECT * FROM \"Invoice\" WHERE \"Invoice\".invoiceid = ?";

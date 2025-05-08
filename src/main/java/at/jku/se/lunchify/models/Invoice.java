@@ -57,6 +57,15 @@ public class Invoice {
         this.reimbursementAmount = reimbursementAmount;
     }
 
+    public Invoice(int invoiceid, Date date, double amount, double reimbursementAmount, String type, String status){
+        this.invoiceid = invoiceid;
+        this.date = date;
+        this.amount = amount;
+        this.reimbursementAmount = reimbursementAmount;
+        this.type = type;
+        this.status = status;
+    }
+
     public int getInvoiceid() {
         return invoiceid;
     }
