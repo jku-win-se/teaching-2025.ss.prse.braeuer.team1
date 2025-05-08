@@ -6,6 +6,9 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InvoiceDAO {
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
@@ -144,6 +147,27 @@ public class InvoiceDAO {
             e.printStackTrace();
         }
         return invoices;
+    }
+
+    public Map<Integer, Double> getReimbursementSumPerUser() {
+        int userid;
+        double amount;
+        Map<Integer, Double> reimbursementPerUser = new HashMap<>();
+        String sql = "select userid, sum(reimbursementamount) as \"risum\" from \"Invoice\" where date >= date_trunc('month', current_date)\n" +
+                "  AND date < date_trunc('month', current_date + interval '1 month') group by userid";
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
+
+            ResultSet resultSet = connection.createStatement().executeQuery(sql);
+            while (resultSet.next()) {
+                userid = resultSet.getInt("userid");
+                amount = resultSet.getDouble("risum");
+                reimbursementPerUser.put(userid, amount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reimbursementPerUser;
     }
 
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {

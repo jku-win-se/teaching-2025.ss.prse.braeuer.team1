@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 
 //Klasse zum Freigeben der Rechnungen
 public class InvoiceClearingController {
@@ -36,6 +37,10 @@ public class InvoiceClearingController {
     protected TableColumn<Invoice, String> invoiceid;
     @FXML
     protected TableColumn<Invoice, Integer> timesChanged;
+    @FXML
+    protected Button exportPayrollDataJSONButton;
+    @FXML
+    protected Button exportPayrollDataXMLButton;
 
     private InvoiceDAO invoiceDAO;
     private UserDAO userDAO;
@@ -108,4 +113,13 @@ public class InvoiceClearingController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void onExportPayrollDataJSONButtonClick(){
+        Map<Integer, Double> reimbursementPerUser = invoiceDAO.getReimbursementSumPerUser();
+        return;
+    }
+
+    @FXML
+    private void onExportPayrollDataXMLButtonClick(){}
 }
