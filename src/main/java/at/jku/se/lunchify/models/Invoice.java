@@ -50,6 +50,20 @@ public class Invoice {
         this.timesChanged = timesChanged;
     }
 
+    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, String status, boolean isanomalous, byte[] file, int timesChanged){
+        this.invoiceid = invoiceid;
+        this.userid = userid;
+        this.invoicenumber = invoicenumber;
+        this.date = date;
+        this.amount = amount;
+        this.reimbursementAmount = reimbursementAmount;
+        this.type = type;
+        this.status = status;
+        this.isanomalous = isanomalous;
+        this.file = file;
+        this.timesChanged = timesChanged;
+    }
+
     public Invoice(int userid, Date date, double amount, double reimbursementAmount){
         this.userid = userid;
         this.date = date;

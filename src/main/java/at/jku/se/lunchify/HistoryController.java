@@ -58,7 +58,7 @@ public class HistoryController {
                 if (!row.isEmpty() && row.getItem().getDate().getMonth() == LocalDate.now().getMonthValue()-1) {
                     Invoice invoice = row.getItem();
                     Invoice selectedInvoice = invoiceDAO.getInvoiceById(invoice.getInvoiceid());
-                    //showInvoiceDetails(selectedInvoice);
+                    showInvoiceDetails(selectedInvoice);
                 }
             });
 
@@ -76,14 +76,13 @@ public class HistoryController {
         });
     }
 
-    /* Anlage view offen!!
     private void showInvoiceDetails(Invoice invoice) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("myInvoiceDetail-view.fxml"));
             Parent root = loader.load();
 
             // AI-generated: Detail-Controller holen und Daten übergeben
-            InvoiceDetailController controller = loader.getController();
+            MyInvoiceDetailController controller = loader.getController();
             controller.setInvoice(invoice); // Übergabe-Methode im Detail-Controller
             Stage stage = new Stage();
             stage.setTitle("Rechnungsdetails");
@@ -98,5 +97,5 @@ public class HistoryController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }

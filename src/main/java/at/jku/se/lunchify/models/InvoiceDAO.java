@@ -146,6 +146,7 @@ public class InvoiceDAO {
         return invoices;
     }
 
+
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
@@ -234,7 +235,7 @@ public class InvoiceDAO {
                     byte[] selectedFile = resultSet.getBytes("file");
                     connection.close();
 
-                    invoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                    invoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedStatus, selectedIsAnomalous, selectedFile, selectedTimesChanged);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -321,14 +322,17 @@ public class InvoiceDAO {
     }
 
     public boolean updateInvoice(Invoice invoice) {
+        //wenn aktueller User -> timesChanged wird erhöht (nicht, wenn Admin ändert)
+        if(LoginController.currentUserId == invoice.getUserid()) invoice.setTimesChanged(invoice.getTimesChanged()+1);
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
-             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET type = ?, invoicenumber = ?, date = ?, amount = ? , reimbursementamount = ? where invoiceid = ?;")) {
+             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET type = ?, invoicenumber = ?, date = ?, amount = ? , reimbursementamount = ?, timeschanged = ? where invoiceid = ?;")) {
             ps.setString(1, invoice.getType());
             ps.setString(2, invoice.getInvoicenumber());
             ps.setDate(3, (Date) invoice.getDate());
             ps.setDouble(4, invoice.getAmount());
             ps.setDouble(5, invoice.getReimbursementAmount());
-            ps.setInt(6, invoice.getInvoiceid());
+            ps.setInt(6, invoice.getTimesChanged());
+            ps.setInt(7, invoice.getInvoiceid());
             ps.executeUpdate();
             ps.close();
             connection.close();
