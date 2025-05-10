@@ -324,15 +324,19 @@ public class InvoiceDAO {
     public boolean updateInvoice(Invoice invoice) {
         //wenn aktueller User -> timesChanged wird erhöht (nicht, wenn Admin ändert)
         if(LoginController.currentUserId == invoice.getUserid()) invoice.setTimesChanged(invoice.getTimesChanged()+1);
+        //Status wird wieder auf eingereicht gesetzt
+        invoice.setStatus(String.valueOf(Invoice.Invoicestatus.EINGEREICHT));
+
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
-             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET type = ?, invoicenumber = ?, date = ?, amount = ? , reimbursementamount = ?, timeschanged = ? where invoiceid = ?;")) {
+             PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET type = ?, invoicenumber = ?, date = ?, amount = ? , reimbursementamount = ?, timeschanged = ?, status = ? where invoiceid = ?;")) {
             ps.setString(1, invoice.getType());
             ps.setString(2, invoice.getInvoicenumber());
             ps.setDate(3, (Date) invoice.getDate());
             ps.setDouble(4, invoice.getAmount());
             ps.setDouble(5, invoice.getReimbursementAmount());
             ps.setInt(6, invoice.getTimesChanged());
-            ps.setInt(7, invoice.getInvoiceid());
+            ps.setString(7, invoice.getStatus());
+            ps.setInt(8, invoice.getInvoiceid());
             ps.executeUpdate();
             ps.close();
             connection.close();
