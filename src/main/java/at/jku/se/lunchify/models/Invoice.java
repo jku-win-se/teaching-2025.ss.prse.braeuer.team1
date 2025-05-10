@@ -18,7 +18,7 @@ public class Invoice {
     private double reimbursementAmount;
     enum Invoicetype {SUPERMARKT, RESTAURANT}
     private String type;
-    enum Invoicestatus {EINGEREICHT, GENEHMIGT, ABGELEHNT}
+    public enum Invoicestatus {EINGEREICHT, GENEHMIGT, ABGELEHNT}
     private String status;
     private boolean isanomalous;
     private byte[] file;
