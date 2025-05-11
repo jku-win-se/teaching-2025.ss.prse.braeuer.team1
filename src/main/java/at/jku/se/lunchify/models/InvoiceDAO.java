@@ -315,7 +315,14 @@ public class InvoiceDAO {
             sp.setDouble(4, invoice.getAmount());
             sp.setDouble(5, invoice.getReimbursementAmount());
             sp.setString(6, invoice.getType());
-            sp.setString(7, invoice.getStatus());
+            if(invoice.isIsanomalous())
+            {
+                sp.setString(7, invoice.getStatus());
+            }
+            else
+            {
+                sp.setString(7, "GENEHMIGT");
+            }
             sp.setBoolean(8, invoice.isIsanomalous());
             sp.setBytes(9, invoice.getFile());
             sp.setInt(10, 0);

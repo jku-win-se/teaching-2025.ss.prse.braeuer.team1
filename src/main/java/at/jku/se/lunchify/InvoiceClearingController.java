@@ -3,6 +3,13 @@ package at.jku.se.lunchify;
 import at.jku.se.lunchify.models.Invoice;
 import at.jku.se.lunchify.models.InvoiceDAO;
 import at.jku.se.lunchify.models.UserDAO;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.UnitValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,12 +17,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 //Klasse zum Freigeben der Rechnungen
 public class InvoiceClearingController {
@@ -45,6 +58,9 @@ public class InvoiceClearingController {
     private InvoiceDAO invoiceDAO;
     private UserDAO userDAO;
     protected String selectedMail;
+
+    private File lastUsedDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
+    private File chosenDirectory;
 
     public void initialize() {
         invoiceDAO = new InvoiceDAO();
@@ -115,11 +131,55 @@ public class InvoiceClearingController {
     }
 
     @FXML
-    private void onExportPayrollDataJSONButtonClick(){
+    private void onExportPayrollDataJSONButtonClick() throws IOException {
         Map<Integer, Double> reimbursementPerUser = invoiceDAO.getReimbursementSumPerUser();
-        return;
+        Stage stage = (Stage) exportPayrollDataJSONButton.getScene().getWindow();
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setInitialDirectory(lastUsedDirectory);
+        chosenDirectory = directoryChooser.showDialog(stage);
+        if (chosenDirectory != null) {
+            lastUsedDirectory = chosenDirectory.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
+            FileWriter output = new FileWriter(new File(chosenDirectory.getAbsolutePath() + "/Lunchify-Lohnverrechnungs-Export-" + LocalDate.now().toString() + ".json"));
+            JSONArray filedata = new JSONArray();
+            reimbursementPerUser.forEach((userid, amount) -> {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("Benutzer-ID|Personalnummer", userid);
+                jsonObject.put("Monats-Rueckzahlungsbetrag", amount);
+                filedata.add(jsonObject);
+
+            });
+            System.out.println(filedata);
+            output.write(filedata.toJSONString());
+            output.close();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("JSON-Lohnverrechnungs-Export");
+            alert.setHeaderText("Lunchify-Lohnverrechnungs-Export-" + LocalDate.now().toString() + ".json\nwurde in " + chosenDirectory.getPath() + " gespeichert");
+            alert.setContentText("Ihre Datei wurde gespeichert!");
+            alert.showAndWait();
+        }
     }
 
     @FXML
-    private void onExportPayrollDataXMLButtonClick(){}
+    private void onExportPayrollDataXMLButtonClick() throws IOException {
+        Map<Integer, Double> reimbursementPerUser = invoiceDAO.getReimbursementSumPerUser();
+        Stage stage = (Stage) exportPayrollDataJSONButton.getScene().getWindow();
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setInitialDirectory(lastUsedDirectory);
+        chosenDirectory = directoryChooser.showDialog(stage);
+        if (chosenDirectory != null) {
+            lastUsedDirectory = chosenDirectory.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
+            List<Map<String, String>> outputData = new ArrayList<>();
+            reimbursementPerUser.forEach((userid, amount) -> {
+                outputData.add(Map.of("Benutzer-ID-Personalnummer",userid.toString(),"Monats-Rueckzahlungsbetrag",amount.toString()));
+            });
+            System.out.println(outputData);
+            XmlMapper mapper = new XmlMapper();
+            mapper.writer().withRootName("Lunchify-Rueckerstattungsbetraege").writeValue(new File(chosenDirectory.getAbsolutePath() + "/Lunchify-Lohnverrechnungs-Export-" + LocalDate.now().toString() + ".xml"), outputData);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("XML-Lohnverrechnungs-Export");
+            alert.setHeaderText("Lunchify-Lohnverrechnungs-Export-" + LocalDate.now().toString() + ".xml\nwurde in " + chosenDirectory.getPath() + " gespeichert");
+            alert.setContentText("Ihre Datei wurde gespeichert!");
+            alert.showAndWait();
+        }
+    }
 }
