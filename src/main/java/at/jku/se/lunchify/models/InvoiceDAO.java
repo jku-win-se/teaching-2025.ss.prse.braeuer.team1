@@ -5,27 +5,55 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class InvoiceDAO {
+
+    /**
+     * Database credentals for the Supabase PostgreSQL-Database
+     */
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
     String dbPassword = "CaMaKe25!";
 
     InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
 
+    /**
+     * Compares if the given date is in the past
+     * <p>
+     * This function returns a booolean in regard to a comparison to the current date
+     * <p>
+     * @param date  checks if date is in the past, comparing to current date
+     * @return true if date is in the past, false if the date is in the future
+     */
     public boolean checkDateInPast(LocalDate date) {
         return !date.isAfter(LocalDate.now());
     }
 
+    /**
+     * Compares if the given value is positive
+     * <p>
+     * This function returns a booolean in regard to if the value is positive
+     * <p>
+     * @param value  checks if value is positive or negative
+     * @return true if value is positive, false if value is negative
+     */
     public boolean checkInvoiceValueIsPositive(Double value) {
         return value > 0;
     }
 
-    // Methode zum Abrufen aller Rechnungen
+    /**
+     * Returns a list of all invoices in the database
+     * <p>
+     * This method return an ObservableList<Invoice> of all invoices in the database
+     * <p>
+     * @return ObservableList<Invoice> if successful, stacktrace if an Exception emerges
+     */
     public ObservableList<Invoice> getAllInvoices() {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
