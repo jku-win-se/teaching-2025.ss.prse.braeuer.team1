@@ -148,7 +148,6 @@ public class InvoiceClearingController {
                 filedata.add(jsonObject);
 
             });
-            System.out.println(filedata);
             output.write(filedata.toJSONString());
             output.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -172,7 +171,6 @@ public class InvoiceClearingController {
             reimbursementPerUser.forEach((userid, amount) -> {
                 outputData.add(Map.of("Benutzer-ID-Personalnummer",userid.toString(),"Monats-Rueckzahlungsbetrag",amount.toString()));
             });
-            System.out.println(outputData);
             XmlMapper mapper = new XmlMapper();
             mapper.writer().withRootName("Lunchify-Rueckerstattungsbetraege").writeValue(new File(chosenDirectory.getAbsolutePath() + "/Lunchify-Lohnverrechnungs-Export-" + LocalDate.now().toString() + ".xml"), outputData);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
