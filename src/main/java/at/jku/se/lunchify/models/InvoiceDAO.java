@@ -5,24 +5,55 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InvoiceDAO {
+
+    /**
+     * Database credentals for the Supabase PostgreSQL-Database
+     */
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
     String dbPassword = "CaMaKe25!";
 
     InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
 
+    /**
+     * Compares if the given date is in the past
+     * <p>
+     * This function returns a booolean in regard to a comparison to the current date
+     * <p>
+     * @param date  checks if date is in the past, comparing to current date
+     * @return true if date is in the past, false if the date is in the future
+     */
     public boolean checkDateInPast(LocalDate date) {
         return !date.isAfter(LocalDate.now());
     }
 
+    /**
+     * Compares if the given value is positive
+     * <p>
+     * This function returns a booolean in regard to if the value is positive
+     * <p>
+     * @param value  checks if value is positive or negative
+     * @return true if value is positive, false if value is negative
+     */
     public boolean checkInvoiceValueIsPositive(Double value) {
         return value > 0;
     }
 
-    // Methode zum Abrufen aller Rechnungen
+    /**
+     * Returns a list of all invoices in the database
+     * <p>
+     * This method return an ObservableList<Invoice> of all invoices in the database
+     * <p>
+     * @return ObservableList<Invoice> if successful, stacktrace if an Exception emerges
+     */
     public ObservableList<Invoice> getAllInvoices() {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
@@ -144,6 +175,27 @@ public class InvoiceDAO {
             e.printStackTrace();
         }
         return invoices;
+    }
+
+    public Map<Integer, Double> getReimbursementSumPerUser() {
+        int userid;
+        double amount;
+        Map<Integer, Double> reimbursementPerUser = new HashMap<>();
+        String sql = "select userid, sum(reimbursementamount) as \"risum\" from \"Invoice\" where date >= date_trunc('month', current_date)\n" +
+                "  AND date < date_trunc('month', current_date + interval '1 month') group by userid";
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
+
+            ResultSet resultSet = connection.createStatement().executeQuery(sql);
+            while (resultSet.next()) {
+                userid = resultSet.getInt("userid");
+                amount = resultSet.getDouble("risum");
+                reimbursementPerUser.put(userid, amount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reimbursementPerUser;
     }
 
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
@@ -291,7 +343,14 @@ public class InvoiceDAO {
             sp.setDouble(4, invoice.getAmount());
             sp.setDouble(5, invoice.getReimbursementAmount());
             sp.setString(6, invoice.getType());
-            sp.setString(7, invoice.getStatus());
+            if(invoice.isIsanomalous())
+            {
+                sp.setString(7, invoice.getStatus());
+            }
+            else
+            {
+                sp.setString(7, "GENEHMIGT");
+            }
             sp.setBoolean(8, invoice.isIsanomalous());
             sp.setBytes(9, invoice.getFile());
             sp.setInt(10, 0);
