@@ -15,6 +15,30 @@
     -fx-text-fill: white;
 }
 
+/*AI-assisted*/
+.menu-button {
+    -fx-background-color: #a0e1c3;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0.1, 0, 1);
+}
+
+/*AI-assisted*/
+.menu-button:hover {
+    -fx-background-color: #183748;
+    -fx-text-fill: white;
+}
+
+/*AI-assisted*/
+.menu-button-active {
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 6px;
+}
+
 .menu {
     -fx-background-color: #a0e1c3;
     -fx-text-fill: black;

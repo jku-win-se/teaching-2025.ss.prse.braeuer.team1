@@ -8,13 +8,30 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class MenuController {
 
     @FXML
     private Button logout;
+    @FXML
+    private Button uploadButton;
+    @FXML
+    private Button historyButton;
+    @FXML
+    private Button userManagementButton;
+    @FXML
+    private Button invoiceClearanceButton;
+    @FXML
+    private Button invoiceSettingButton;
+    @FXML
+    private Button reportButton;
 
+
+    public void initialize() {
+        setActiveMenuButton(uploadButton);
+    }
 
     public void onLogoutButtonClick() throws IOException {
         // Aktuelle Stage holen
@@ -35,25 +52,40 @@ public class MenuController {
 
     public void onUploadButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("upload-view.fxml");
+        setActiveMenuButton(uploadButton);
     }
 
     public void onHistoryButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("history-view.fxml");
+        setActiveMenuButton(historyButton);
     }
 
     public void onUserManagementButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("user-management-view.fxml");
+        setActiveMenuButton(userManagementButton);
     }
 
     public void onInvoiceSettingButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("invoice-setting-view.fxml");
+        setActiveMenuButton(invoiceSettingButton);
     }
 
     public void onReportButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("report-view.fxml");
+        setActiveMenuButton(reportButton);
     }
 
     public void onInvoiceClearanceButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("invoiceClearing-view.fxml");
+        setActiveMenuButton(invoiceClearanceButton);
+    }
+
+    //AI-generated
+    private void setActiveMenuButton(Button activeButton) {
+        List<Button> allButtons = List.of(uploadButton, historyButton, userManagementButton, invoiceClearanceButton, invoiceSettingButton);
+        for (Button btn : allButtons) {
+            btn.getStyleClass().remove("menu-button-active");
+        }
+        activeButton.getStyleClass().add("menu-button-active");
     }
 }
