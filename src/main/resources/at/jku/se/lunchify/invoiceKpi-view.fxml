@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.PieChart?>
+
+<AnchorPane prefHeight="634.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceKpiController">
+   <children>
+      <Label layoutX="360.0" layoutY="1.0" text="Kennzahlen für erstattete Rechnungen">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+
+      <!-- Beschriftungen und Werte -->
+      <Label layoutX="8.0" layoutY="28.0" text="Ausgewählter Benutzer:" />
+      <Label fx:id="labelUser" layoutX="207.0" layoutY="28.0" text="-" />
+
+      <Label layoutX="8.0" layoutY="55.0" text="Zeitraum:" />
+      <Label fx:id="labelSelectedDateRange" layoutX="96.0" layoutY="55.0" text="-" />
+
+      <Label layoutX="8.0" layoutY="82.0" text="Rechnungstyp:" />
+      <Label fx:id="labelInvoiceType" layoutX="140.0" layoutY="82.0" text="-" />
+
+      <Label layoutX="8.0" layoutY="109.0" text="Anzahl Monate:" />
+      <Label fx:id="labelMonths" layoutX="140.0" layoutY="109.0" text="-" />
+
+      <Label layoutX="8.0" layoutY="136.0" text="Anzahl Benutzer:" />
+      <Label fx:id="labelUserCount" layoutX="149.0" layoutY="136.0" text="-" />
+
+      <Label layoutX="8.0" layoutY="164.0" text="Anzahl erstattete Rechnungen:" />
+      <Label fx:id="labelInvoiceCount" layoutX="264.0" layoutY="164.0" prefHeight="27.0" prefWidth="8.0" text="-" />
+
+      <Label layoutX="8.0" layoutY="190.0" text="Gesamter Erstattungsbetrag:" />
+      <Label fx:id="labelSumReimbursement" layoutX="250.0" layoutY="190.0" text="-" />
+
+      <Label layoutX="8.0" layoutY="217.0" text="Eingereichte Rechnungen pro Benutzer:" />
+      <Label fx:id="labelInvoicesPerUser" layoutX="352.0" layoutY="217.0" text="-" />
+
+      <Label layoutX="8.0" layoutY="244.0" text="Eingereichte Rechnungen pro Benutzer, pro Monat:" />
+      <Label fx:id="labelInvoicesPerUserPerMonth" layoutX="429.0" layoutY="244.0" text="-" />
+
+      <!-- Diagramme -->
+      <Label layoutX="650.0" layoutY="27.0" text="Verhältnis Supermarkt zu Restaurant" />
+      <PieChart fx:id="chartTypeDistribution" layoutX="600.0" layoutY="50.0" prefHeight="200.0" prefWidth="400.0" />
+
+      <Label layoutX="67.0" layoutY="284.0" text="Rechnungen und Erstattungen pro Monat" />
+      <BarChart fx:id="chartMonthlyData" layoutX="67.0" layoutY="310.0" prefHeight="300.0" prefWidth="920.0">
+         <xAxis>
+            <CategoryAxis label="Monat" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis label="Anzahl / Betrag" />
+         </yAxis>
+      </BarChart>
+   </children>
+</AnchorPane>

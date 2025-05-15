@@ -114,14 +114,20 @@ public class ReportController {
     }
 
     public void onInvoiceIndicatorsButtonClick() throws IOException {
+        setSelectedData();
         checkSelectedData();
         if(inputCorrect) {
-            setSelectedData();
-            InvoiceKpiService invoiceKpi = new InvoiceKpiService(selectedMail, selectedInvoiceType, selectedDateFrom, selectedDateTo);
-        }
 
-        //Implementierung offen
-        LunchifyApplication.baseController.showCenterView("invoiceKPI-view.fxml");
+            // Übergabe der Parameter an neuen Controller
+            InvoiceKpiController.initData(
+                    selectedMail,
+                    selectedInvoiceType,
+                    selectedDateFrom,
+                    selectedDateTo
+            );
+
+            LunchifyApplication.baseController.showCenterView("invoiceKpi-view.fxml");
+        }
     }
 
     public void onInvoiceStatisticsButtonClick() throws IOException, SQLException {
