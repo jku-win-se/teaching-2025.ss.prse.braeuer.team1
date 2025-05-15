@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="634.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.ReportController">
+   <children>
+      <Label layoutX="360.0" layoutY="1.0" text="Kennzahlen für erstattete Rechnungen">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="8.0" layoutY="28.0" text="Ausgewählter Benutzer:" />
+      <Label layoutX="8.0" layoutY="55.0" text="Zeitraum:" />
+      <Label layoutX="8.0" layoutY="82.0" text="Rechnungstyp:" />
+      <Label layoutX="8.0" layoutY="109.0" text="Anzahl Monate:" />
+      <Label layoutX="8.0" layoutY="136.0" text="Anzahl Benutzer:" />
+      <Label layoutX="8.0" layoutY="163.0" text="Anzahl erstattete Rechnungen:" />
+      <Label layoutX="8.0" layoutY="190.0" text="Gesamter Erstattungsbetrag:" />
+      <Label layoutX="8.0" layoutY="217.0" text="Eingereichte Rechnungen pro Benutzer:" />
+      <Label layoutX="8.0" layoutY="244.0" text="Eingereichte Rechnungen pro Benutzer, pro Monat:" />
+      <Label layoutX="659.0" layoutY="42.0" text="Verhältnis Supermarkt zu Restaurant" />
+      <Label layoutX="67.0" layoutY="290.0" text="Rechnungen pro Monat" />
+      <Label layoutX="659.0" layoutY="290.0" text="Erstattungsbetrag pro Monat" />
+   </children>
+</AnchorPane>
