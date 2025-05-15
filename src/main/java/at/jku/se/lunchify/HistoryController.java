@@ -52,20 +52,23 @@ public class HistoryController {
 
         //AI assisted
         invoiceTable.setRowFactory(tableView -> {
-            //nur klickbar, wenn Rechnung im aktuellen Monat liegt
+            //nur klickbar, wenn Rechnung im aktuellen Monat liegt und nicht genehmigt ist
             TableRow<Invoice> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && row.getItem().getDate().getMonth() == LocalDate.now().getMonthValue()-1) {
+                if (!row.isEmpty() && row.getItem().getDate().getMonth() == LocalDate.now().getMonthValue()-1 && !row.getItem().getStatus().equals(String.valueOf(Invoice.Invoicestatus.GENEHMIGT))) {
                     Invoice invoice = row.getItem();
                     Invoice selectedInvoice = invoiceDAO.getInvoiceById(invoice.getInvoiceid());
-                    //showInvoiceDetails(selectedInvoice);
+                    showInvoiceDetails(selectedInvoice);
                 }
             });
 
-            //grau einfärben, wenn nicht im aktuellen Monat
+            //grau einfärben, wenn nicht im aktuellen Monat und wenn bereits genehmigt
             row.itemProperty().addListener((observable, oldValue, newValue) -> {
                 if (row.getItem() != null) {
                     if (row.getItem().getDate().getMonth() != LocalDate.now().getMonthValue() - 1) {
+                        row.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: gray");
+                    }
+                    else if (row.getItem().getStatus().equals(String.valueOf(Invoice.Invoicestatus.GENEHMIGT))) {
                         row.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: gray");
                     } else {
                         row.setStyle("");
@@ -76,14 +79,13 @@ public class HistoryController {
         });
     }
 
-    /* Anlage view offen!!
     private void showInvoiceDetails(Invoice invoice) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("myInvoiceDetail-view.fxml"));
             Parent root = loader.load();
 
             // AI-generated: Detail-Controller holen und Daten übergeben
-            InvoiceDetailController controller = loader.getController();
+            MyInvoiceDetailController controller = loader.getController();
             controller.setInvoice(invoice); // Übergabe-Methode im Detail-Controller
             Stage stage = new Stage();
             stage.setTitle("Rechnungsdetails");
@@ -98,5 +100,5 @@ public class HistoryController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }

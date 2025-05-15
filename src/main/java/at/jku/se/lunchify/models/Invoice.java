@@ -18,7 +18,7 @@ public class Invoice {
     private double reimbursementAmount;
     enum Invoicetype {SUPERMARKT, RESTAURANT}
     private String type;
-    enum Invoicestatus {EINGEREICHT, GENEHMIGT, ABGELEHNT}
+    public enum Invoicestatus {EINGEREICHT, GENEHMIGT, ABGELEHNT}
     private String status;
     private boolean isanomalous;
     private byte[] file;
@@ -45,6 +45,20 @@ public class Invoice {
         this.reimbursementAmount = reimbursementAmount;
         this.type = type;
         this.status = String.valueOf(Invoicestatus.EINGEREICHT);
+        this.isanomalous = isanomalous;
+        this.file = file;
+        this.timesChanged = timesChanged;
+    }
+
+    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, String status, boolean isanomalous, byte[] file, int timesChanged){
+        this.invoiceid = invoiceid;
+        this.userid = userid;
+        this.invoicenumber = invoicenumber;
+        this.date = date;
+        this.amount = amount;
+        this.reimbursementAmount = reimbursementAmount;
+        this.type = type;
+        this.status = status;
         this.isanomalous = isanomalous;
         this.file = file;
         this.timesChanged = timesChanged;
