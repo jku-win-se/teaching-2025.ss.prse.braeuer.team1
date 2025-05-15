@@ -2,7 +2,10 @@ package at.jku.se.lunchify.models;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class InvoiceKpiService {
 
@@ -128,4 +131,67 @@ public class InvoiceKpiService {
     public double getSumReimbursements() { return sumReimbursements; }
     public int getInvoiceCountSupermarket() { return invoiceCountSupermarket; }
     public int getInvoiceCountRestaurant() { return invoiceCountRestaurant; }
+
+    public Map<YearMonth, InvoiceMonthlyStats> getMonthlyInvoiceStats() {
+        Map<YearMonth, InvoiceMonthlyStats> stats = new LinkedHashMap<>();
+
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
+            String sql = """
+            SELECT 
+                DATE_TRUNC('month', date) AS month,
+                COUNT(*) AS invoice_count,
+                SUM(reimbursementamount) AS total_reimbursement
+            FROM "Invoice" i
+            JOIN "User" u ON i.userid = u.userid
+            WHERE i.status = 'GENEHMIGT'
+              AND i.date >= ? AND i.date <= ?
+              AND (? = 'alle Benutzer' OR u.email = ?)
+              AND (? = 'alle Rechnungstypen' OR i.type = ?)
+            GROUP BY month
+            ORDER BY month
+        """;
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setDate(1, fromDate);
+                stmt.setDate(2, toDate);
+                stmt.setString(3, userEmail);
+                stmt.setString(4, userEmail);
+                stmt.setString(5, invoiceType);
+                stmt.setString(6, invoiceType);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        Date monthDate = rs.getDate("month");
+                        int invoiceCount = rs.getInt("invoice_count");
+                        double totalReimbursement = rs.getDouble("total_reimbursement");
+
+                        YearMonth ym = YearMonth.from(monthDate.toLocalDate());
+                        stats.put(ym, new InvoiceMonthlyStats(invoiceCount, totalReimbursement));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return stats;
+    }
+
+    public class InvoiceMonthlyStats {
+        private int invoiceCount;
+        private double reimbursementTotal;
+
+        public InvoiceMonthlyStats(int invoiceCount, double reimbursementTotal) {
+            this.invoiceCount = invoiceCount;
+            this.reimbursementTotal = reimbursementTotal;
+        }
+
+        public int getInvoiceCount() {
+            return invoiceCount;
+        }
+
+        public double getReimbursementTotal() {
+            return reimbursementTotal;
+        }
+    }
 }

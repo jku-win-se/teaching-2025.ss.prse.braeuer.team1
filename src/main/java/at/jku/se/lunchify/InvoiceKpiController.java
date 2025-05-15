@@ -3,10 +3,13 @@ package at.jku.se.lunchify;
 import at.jku.se.lunchify.models.InvoiceKpiService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.chart.PieChart;
 
 import java.sql.Date;
+import java.time.YearMonth;
+import java.util.Map;
 
 public class InvoiceKpiController {
 
@@ -29,7 +32,7 @@ public class InvoiceKpiController {
     @FXML
     private Label labelSelectedDateRange;
     @FXML
-    private BarChart<String, Number> chartMonthlyData;
+    private BarChart<String, Number> monthlyBarChart;
     @FXML
     private PieChart chartTypeDistribution;
 
@@ -64,5 +67,29 @@ public class InvoiceKpiController {
         PieChart.Data supermarket = new PieChart.Data("Supermarkt", service.getInvoiceCountSupermarket());
         PieChart.Data restaurant = new PieChart.Data("Restaurant", service.getInvoiceCountRestaurant());
         chartTypeDistribution.getData().addAll(supermarket, restaurant);
+
+        //Bar-Chart
+        populateMonthlyStatsChart(service);
+    }
+
+    private void populateMonthlyStatsChart(InvoiceKpiService invoiceKpi) {
+        Map<YearMonth, InvoiceKpiService.InvoiceMonthlyStats> stats = invoiceKpi.getMonthlyInvoiceStats();
+
+        XYChart.Series<String, Number> invoiceCountSeries = new XYChart.Series<>();
+        invoiceCountSeries.setName("Anzahl Rechnungen");
+
+        XYChart.Series<String, Number> reimbursementSeries = new XYChart.Series<>();
+        reimbursementSeries.setName("Erstattungsbetrag (€)");
+
+        for (Map.Entry<YearMonth, InvoiceKpiService.InvoiceMonthlyStats> entry : stats.entrySet()) {
+            String monthLabel = entry.getKey().toString(); // z. B. "2024-05"
+            InvoiceKpiService.InvoiceMonthlyStats data = entry.getValue();
+
+            invoiceCountSeries.getData().add(new XYChart.Data<>(monthLabel, data.getInvoiceCount()));
+            reimbursementSeries.getData().add(new XYChart.Data<>(monthLabel, data.getReimbursementTotal()));
+        }
+
+        monthlyBarChart.getData().clear();
+        monthlyBarChart.getData().addAll(invoiceCountSeries, reimbursementSeries);
     }
 }

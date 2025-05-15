@@ -53,12 +53,12 @@
       <PieChart fx:id="chartTypeDistribution" layoutX="600.0" layoutY="50.0" prefHeight="200.0" prefWidth="400.0" />
 
       <Label layoutX="67.0" layoutY="284.0" text="Rechnungen und Erstattungen pro Monat" />
-      <BarChart fx:id="chartMonthlyData" layoutX="67.0" layoutY="310.0" prefHeight="300.0" prefWidth="920.0">
+      <BarChart fx:id="monthlyBarChart" layoutX="50.0" layoutY="320.0" prefWidth="900.0" prefHeight="250.0">
          <xAxis>
-            <CategoryAxis label="Monat" />
+            <CategoryAxis label="Monat"/>
          </xAxis>
          <yAxis>
-            <NumberAxis label="Anzahl / Betrag" />
+            <NumberAxis label="Anzahl / Betrag (€)"/>
          </yAxis>
       </BarChart>
    </children>
