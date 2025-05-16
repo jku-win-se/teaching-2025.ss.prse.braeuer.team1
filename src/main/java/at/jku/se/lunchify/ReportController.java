@@ -1,9 +1,6 @@
 package at.jku.se.lunchify;
 
-import at.jku.se.lunchify.models.Invoice;
-import at.jku.se.lunchify.models.InvoiceDAO;
-import at.jku.se.lunchify.models.User;
-import at.jku.se.lunchify.models.UserDAO;
+import at.jku.se.lunchify.models.*;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.UnitValue;
 import javafx.collections.ObservableList;
@@ -116,11 +113,21 @@ public class ReportController {
         }
     }
 
-    public void onInvoiceIndicatorsButtonClick() {
+    public void onInvoiceIndicatorsButtonClick() throws IOException {
         setSelectedData();
         checkSelectedData();
-        //Implementierung offen
-        LunchifyApplication.baseController.basePane.setRight(null);
+        if(inputCorrect) {
+
+            // Übergabe der Parameter an neuen Controller
+            InvoiceKpiController.initData(
+                    selectedMail,
+                    selectedInvoiceType,
+                    selectedDateFrom,
+                    selectedDateTo
+            );
+
+            LunchifyApplication.baseController.showCenterView("invoiceKpi-view.fxml");
+        }
     }
 
     public void onInvoiceStatisticsButtonClick() throws IOException, SQLException {
