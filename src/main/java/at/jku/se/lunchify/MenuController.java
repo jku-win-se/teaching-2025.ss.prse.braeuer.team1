@@ -1,11 +1,13 @@
 package at.jku.se.lunchify;
 
+import at.jku.se.lunchify.models.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import at.jku.se.lunchify.models.UserDAO;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,9 +30,17 @@ public class MenuController {
     @FXML
     private Button reportButton;
 
+    UserDAO userDAO = new UserDAO();
+    String type = userDAO.getUserByUserid(LoginController.currentUserId).getType();
 
     public void initialize() {
         setActiveMenuButton(uploadButton);
+        if (type.equals("USER")) {
+            userManagementButton.setVisible(false);
+            invoiceClearanceButton.setVisible(false);
+            invoiceSettingButton.setVisible(false);
+            reportButton.setVisible(false);
+        }
     }
 
     public void onLogoutButtonClick() throws IOException {
@@ -83,6 +93,7 @@ public class MenuController {
     //AI-generated
     private void setActiveMenuButton(Button activeButton) {
         List<Button> allButtons = List.of(uploadButton, historyButton, userManagementButton, invoiceClearanceButton, invoiceSettingButton);
+
         for (Button btn : allButtons) {
             btn.getStyleClass().remove("menu-button-active");
         }

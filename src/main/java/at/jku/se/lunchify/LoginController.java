@@ -36,15 +36,17 @@ public class LoginController {
                 case INVALID_USER -> warningText.setText("Kein gültiger User!");
                 case ERROR -> warningText.setText("Fehler bei der Anmeldung!");
                 case SUCCESS_ADMIN -> {
+                    currentUserId = loginService.getUserId();
                     LunchifyApplication.baseController.showMenu("menu-admin-view.fxml");
                     LunchifyApplication.baseController.showCenterView("upload-view.fxml");
                 }
                 case SUCCESS_USER -> {
-                    LunchifyApplication.baseController.showMenu("menu-user-view.fxml");
+                    currentUserId = loginService.getUserId();
+                    LunchifyApplication.baseController.showMenu("menu-admin-view.fxml");
                     LunchifyApplication.baseController.showCenterView("upload-view.fxml");
                 }
             }
-            currentUserId = loginService.getUserId();
+
         } catch (Exception e) {
             e.printStackTrace();
             warningText.setText("Fehler bei der Anwendung!");

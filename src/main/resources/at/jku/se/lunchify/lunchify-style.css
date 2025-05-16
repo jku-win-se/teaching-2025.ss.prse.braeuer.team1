@@ -13,11 +13,16 @@
 .button {
     -fx-background-color: #183748;
     -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
 }
 
 /*AI-assisted*/
 .menu-button {
     -fx-background-color: #a0e1c3;
+    -fx-border-width: 2;
+    -fx-border-radius: 6px;
+    -fx-border-color: #a0e1c3;
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-background-radius: 6px;
@@ -28,8 +33,9 @@
 
 /*AI-assisted*/
 .menu-button:hover {
-    -fx-background-color: #183748;
-    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 6px;
 }
 
 /*AI-assisted*/
