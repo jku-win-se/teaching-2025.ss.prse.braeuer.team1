@@ -19,6 +19,7 @@ public class LoginController {
     protected Label warningText;
 
     public static int currentUserId;
+    public static LoginService.LoginResult currentUserType;
 
     //AI-Assisted
     public void onLoginButtonClick() {
@@ -35,16 +36,13 @@ public class LoginController {
                 case INVALID_PW -> warningText.setText("Falsches Passwort!");
                 case INVALID_USER -> warningText.setText("Kein gültiger User!");
                 case ERROR -> warningText.setText("Fehler bei der Anmeldung!");
-                case SUCCESS_ADMIN -> {
-                    currentUserId = loginService.getUserId();
+                case SUCCESS_ADMIN, SUCCESS_USER -> {
+                    currentUserType = result;
                     LunchifyApplication.baseController.showMenu("menu-admin-view.fxml");
                     LunchifyApplication.baseController.showCenterView("upload-view.fxml");
-                }
-                case SUCCESS_USER -> {
                     currentUserId = loginService.getUserId();
-                    LunchifyApplication.baseController.showMenu("menu-admin-view.fxml");
-                    LunchifyApplication.baseController.showCenterView("upload-view.fxml");
                 }
+
             }
 
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package at.jku.se.lunchify;
 
+import at.jku.se.lunchify.models.LoginService;
 import at.jku.se.lunchify.models.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,12 +31,9 @@ public class MenuController {
     @FXML
     private Button reportButton;
 
-    UserDAO userDAO = new UserDAO();
-    String type = userDAO.getUserByUserid(LoginController.currentUserId).getType();
-
     public void initialize() {
         setActiveMenuButton(uploadButton);
-        if (type.equals("USER")) {
+        if (LoginController.currentUserType == LoginService.LoginResult.SUCCESS_USER) {
             userManagementButton.setVisible(false);
             invoiceClearanceButton.setVisible(false);
             invoiceSettingButton.setVisible(false);
