@@ -9,7 +9,6 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -32,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Map;
 import java.util.Objects;
@@ -66,10 +66,8 @@ public class InvoiceKpiController {
     private static Date fromDate;
     private static Date toDate;
 
-    InvoiceKpiService invoiceKpiService;
-
-    private File lastUsedDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
-    private File chosenDirectory;
+    private InvoiceKpiService invoiceKpiService;
+    private final File homeDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
 
     public static void initData(String email, String type, Date from, Date to) {
         userEmail = email;
@@ -90,7 +88,7 @@ public class InvoiceKpiController {
         labelInvoicesPerUserPerMonth.setText(String.format("%.2f", (double) service.getInvoiceCount() / service.getUserCount() / service.getMonths()));
         labelInvoicesPerUser.setText(String.format("%.2f", (double) service.getInvoiceCount() / service.getUserCount()));
         labelInvoiceType.setText(Objects.equals(invoiceType, "alle Rechnungstypen") ? "Alle Rechnungstypen" : invoiceType);
-        labelSelectedDateRange.setText(String.valueOf(fromDate + " bis " + String.valueOf(toDate)));
+        labelSelectedDateRange.setText(fromDate + " bis " + toDate);
 
 
         // Pie Chart
@@ -188,10 +186,16 @@ public class InvoiceKpiController {
         //});
     }
 
-    public void onExportPdfButtonClick(ActionEvent actionEvent) {
+    public void onExportPdfButtonClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("PDF speichern");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF-Dateien", "*.pdf"));
+        // Standardverzeichnis: Desktop
+        fileChooser.setInitialDirectory(homeDirectory);
+        // Vorgeschlagener Dateiname mit aktuellem Datum
+        String date = LocalDate.now().toString(); // z.B. 2025-05-16
+        fileChooser.setInitialFileName("Lunchify_Kennzahlenreport_" + date + ".pdf");
+        // Dialog öffnen
         File file = fileChooser.showSaveDialog(null);
         if (file == null) return;
 
@@ -219,6 +223,7 @@ public class InvoiceKpiController {
 
             // Diagramm einfügen
             BufferedImage pieImage = chartToImage(chartTypeDistribution);
+            document.add(new Paragraph(""));//Zeilenumbruch
             BufferedImage barImage = chartToImage(monthlyBarChart);
 
             ByteArrayOutputStream pieOut = new ByteArrayOutputStream();
@@ -242,10 +247,16 @@ public class InvoiceKpiController {
         return SwingFXUtils.fromFXImage(fxImage, null);
     }
 
-    public void onExportCsvButtonClick(ActionEvent actionEvent) {
+    public void onExportCsvButtonClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("CSV speichern");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV-Dateien", "*.csv"));
+        // Standardverzeichnis: Desktop
+        fileChooser.setInitialDirectory(homeDirectory);
+        // Vorgeschlagener Dateiname mit aktuellem Datum
+        String date = LocalDate.now().toString(); // z.B. 2025-05-16
+        fileChooser.setInitialFileName("Lunchify_Kennzahlenreport_" + date + ".csv");
+        // Dialog öffnen
         File file = fileChooser.showSaveDialog(null);
         if (file == null) return;
 
