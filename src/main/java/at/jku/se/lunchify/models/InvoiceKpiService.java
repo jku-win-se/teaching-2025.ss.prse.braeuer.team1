@@ -6,7 +6,7 @@ import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
+//AI-Assisted
 public class InvoiceKpiService {
 
     private final String jdbcUrl;
