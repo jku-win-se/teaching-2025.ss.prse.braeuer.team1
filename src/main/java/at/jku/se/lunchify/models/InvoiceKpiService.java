@@ -64,16 +64,28 @@ public class InvoiceKpiService {
 
             // Benutzer zählen
             if (userId == null) {
-                try (PreparedStatement stmt = conn.prepareStatement("""
-                    SELECT COUNT(DISTINCT u.userid)
-                    FROM "User" u
-                    JOIN "Invoice" i ON u.userid = i.userid
-                    WHERE i.date BETWEEN ? AND ?
-                """)) {
+                String sql = """
+                            SELECT COUNT(DISTINCT u.userid)
+                            FROM "User" u
+                            JOIN "Invoice" i ON u.userid = i.userid
+                            WHERE i.status = 'GENEHMIGT' AND i.date BETWEEN ? AND ?
+                        """;
+
+                if (!invoiceType.equalsIgnoreCase("alle Rechnungstypen")) {
+                    sql += " AND i.type = ?";
+                }
+
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setDate(1, fromDate);
                     stmt.setDate(2, toDate);
+                    if (!invoiceType.equalsIgnoreCase("alle Rechnungstypen")) {
+                        stmt.setString(3, invoiceType);
+                    }
+
                     try (ResultSet rs = stmt.executeQuery()) {
-                        if (rs.next()) userCount = rs.getInt(1);
+                        if (rs.next()) {
+                            userCount = rs.getInt(1);
+                        }
                     }
                 }
             } else {
