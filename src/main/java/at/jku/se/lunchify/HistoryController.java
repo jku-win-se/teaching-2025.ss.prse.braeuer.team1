@@ -6,9 +6,11 @@ import at.jku.se.lunchify.models.InvoiceKpiService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -38,6 +40,8 @@ public class HistoryController {
     protected PieChart chartTypeDistribution;
 
     private InvoiceDAO invoiceDAO;
+    int restaurantCount;
+    int supermarketCount;
 
     public void initialize() {
         showMyInvoices();
@@ -54,6 +58,15 @@ public class HistoryController {
 
         ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToEdit();
         invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
+
+        //AI-assisted
+        supermarketCount = (int) invoiceList.stream()
+                .filter(inv -> "Supermarkt".equalsIgnoreCase(inv.getType()))
+                .count();
+
+        restaurantCount = (int) invoiceList.stream()
+                .filter(inv -> "Restaurant".equalsIgnoreCase(inv.getType()))
+                .count();
 
         //AI assisted
         invoiceTable.setRowFactory(tableView -> {
@@ -84,14 +97,6 @@ public class HistoryController {
     }
 
     public void loadPieChart() {
-        InvoiceKpiService service = new InvoiceKpiService("carina@lunchify.at", "alle Rechnungstypen", new java.sql.Date(2025, 1, 1), new java.sql.Date(2025, 5, 16));
-        // Pie Chart
-        // Werte aus dem Service
-        //System.out.println(service.getInvoiceCountRestaurant());
-        int supermarketCount = service.getInvoiceCountSupermarket();
-        supermarketCount = 1;
-        int restaurantCount = service.getInvoiceCountRestaurant();
-        restaurantCount = 1;
         int total = supermarketCount + restaurantCount;
         // PieChart.Data mit Anzahl und Prozent
         PieChart.Data supermarket = new PieChart.Data(
@@ -102,16 +107,24 @@ public class HistoryController {
                 String.format("Restaurant: %d (%.1f%%)", restaurantCount, 100.0 * restaurantCount / total),
                 restaurantCount
         );
+
         // Hinzufügen zum Chart
         chartTypeDistribution.getData().clear();
         chartTypeDistribution.getData().addAll(supermarket, restaurant);
 
         //Farbe für Pie-Chart
-        //Platform.runLater(() -> {
         supermarket.getNode().setStyle("-fx-pie-color: #10e1c3;");
         restaurant.getNode().setStyle("-fx-pie-color: #a0e196;");
 
-        chartTypeDistribution.setLegendVisible(false); // Pie-Chart ist selbsterklärend
+        for (Node legend : chartTypeDistribution.lookupAll(".chart-legend-item")) {
+            if (legend instanceof Label label) {
+                if (label.getText().startsWith("Supermarkt")) {
+                    label.getGraphic().setStyle("-fx-background-color: #10e1c3;");
+                } else if (label.getText().startsWith("Restaurant")) {
+                    label.getGraphic().setStyle("-fx-background-color: #a0e196;");
+                }
+            }
+        }
     }
 
     private void showInvoiceDetails (Invoice invoice){
