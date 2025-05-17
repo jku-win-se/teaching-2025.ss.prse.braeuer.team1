@@ -27,6 +27,7 @@
                   <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="151.0" resizable="false" text="Rückzahlungsbetrag" />
                   <TableColumn fx:id="invType" minWidth="0.0" prefWidth="118.0" resizable="false" text="Typ" />
                   <TableColumn fx:id="status" minWidth="0.0" prefWidth="109.0" resizable="false" text="Status" />
+                  <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="143.0" resizable="false" text="Einmeldedatum" />
                </columns>
             </TableView>
          </center>

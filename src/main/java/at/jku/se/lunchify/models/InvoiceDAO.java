@@ -201,7 +201,7 @@ public class InvoiceDAO {
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
-        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".invoicenumber, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".timeschanged, \"User\".userid, \"User\".surname, \"User\".firstname " +
+        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".invoicenumber, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".timeschanged, \"Invoice\".requestdate, \"User\".userid, \"User\".surname, \"User\".firstname " +
                 "FROM \"Invoice\" " +
                 "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
                 "WHERE (? IS NULL OR \"User\".email = ? )" +
@@ -239,7 +239,7 @@ public class InvoiceDAO {
 
     public ObservableList<Invoice> getSelectedInvoicesToEdit() {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
-        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status " +
+        String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status, \"Invoice\".requestdate " +
                 "FROM \"Invoice\" " +
                 "WHERE \"Invoice\".userid = ? " +
                 "ORDER BY \"Invoice\".date DESC";
@@ -336,7 +336,7 @@ public class InvoiceDAO {
     }
 
     public boolean insertInvoice(Invoice invoice) {
-        String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged) values(?,?,?,?,?,?,?,?,?,?);";
+        String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged, requestdate) values(?,?,?,?,?,?,?,?,?,?,?);";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement sp = connection.prepareStatement(sql))
         {
@@ -357,6 +357,7 @@ public class InvoiceDAO {
             sp.setBoolean(8, invoice.isIsanomalous());
             sp.setBytes(9, invoice.getFile());
             sp.setInt(10, 0);
+            sp.setDate(11, (Date) invoice.getRequestDate());
             sp.executeUpdate();
             sp.close();
             return true;

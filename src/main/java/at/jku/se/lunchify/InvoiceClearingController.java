@@ -103,7 +103,7 @@ public class InvoiceClearingController {
         reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
         invType.setCellValueFactory(new PropertyValueFactory<>("type"));
         timesChanged.setCellValueFactory(new PropertyValueFactory<>("timesChanged"));
-        invoiceRequestDate.setCellValueFactory(new PropertyValueFactory<>("Einmeldedatum"));
+        invoiceRequestDate.setCellValueFactory(new PropertyValueFactory<>("requestDate"));
 
 
         ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToClear(selectedMail, "EINGEREICHT", true);

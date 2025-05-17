@@ -156,7 +156,7 @@ public class ReportController {
             controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
             controller.invType.setCellValueFactory(new PropertyValueFactory<>("type"));
             controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-            controller.invoiceRequestDate.setCellValueFactory(new PropertyValueFactory<>("Einmeldedatum"));
+            controller.invoiceRequestDate.setCellValueFactory(new PropertyValueFactory<>("requestDate"));
 
 
             controller.invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
