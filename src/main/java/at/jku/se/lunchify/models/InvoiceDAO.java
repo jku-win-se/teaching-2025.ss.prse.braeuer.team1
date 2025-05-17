@@ -5,11 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class InvoiceDAO {
@@ -74,8 +71,9 @@ public class InvoiceDAO {
                 boolean isAnomalous = resultSet.getBoolean("isanomalous");
                 byte[] file = resultSet.getBytes("file");
                 int timesChanged = resultSet.getInt("timesChanged");
+                Date requestDate = resultSet.getDate("requestDate");
 
-                Invoice nextInvoice = new Invoice(invoiceid, userid, invoicenumber, date, amount, reimbursementAmount, type, isAnomalous, file, timesChanged);
+                Invoice nextInvoice = new Invoice(invoiceid, userid, invoicenumber, date, amount, reimbursementAmount, type, isAnomalous, file, timesChanged, requestDate);
                 nextInvoice.setStatus(status);
                 invoices.add(nextInvoice);
                 connection.close();
@@ -121,7 +119,8 @@ public class InvoiceDAO {
                 int selectedUserid = resultSet.getInt("userid");
                 byte[] selectedFile = resultSet.getBytes("file");
                 int selectedTimesChanged = resultSet.getInt("timesChanged");
-                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                Date selectedRequestDate = resultSet.getDate("requestDate");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged, selectedRequestDate);
                 nextInvoice.setStatus(selectedStatus);
                 invoices.add(nextInvoice);
             }
@@ -167,7 +166,8 @@ public class InvoiceDAO {
                 int selectedUserid = resultSet.getInt("userid");
                 byte[] selectedFile = resultSet.getBytes("file");
                 int selectedTimesChanged = resultSet.getInt("timesChanged");
-                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                Date selectedRequestDate = resultSet.getDate("requestDate");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged, selectedRequestDate);
                 nextInvoice.setStatus(selectedStatus);
                 invoices.add(nextInvoice);
             }
@@ -226,7 +226,8 @@ public class InvoiceDAO {
                 int selectedUserid = resultSet.getInt("userid");
                 String selectedType = resultSet.getString("type");
                 int selectedTimesChanged = resultSet.getInt("timeschanged");
-                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, true, null, selectedTimesChanged);
+                Date selectedRequestDate = resultSet.getDate("requestDate");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, true, null, selectedTimesChanged, selectedRequestDate);
                 invoices.add(nextInvoice);
                 connection.close();
             }
@@ -254,7 +255,8 @@ public class InvoiceDAO {
                 double selectedReimbursementAmount = resultSet.getDouble("reimbursementamount");
                 String selectedType = resultSet.getString("type");
                 String selectedStatus = resultSet.getString("status");
-                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedStatus);
+                Date selectedRequestDate = resultSet.getDate("requestDate");
+                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedStatus,selectedRequestDate);
                 invoices.add(nextInvoice);
                 connection.close();
             }
@@ -284,9 +286,10 @@ public class InvoiceDAO {
                     boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
                     int selectedTimesChanged = resultSet.getInt("timesChanged");
                     byte[] selectedFile = resultSet.getBytes("file");
+                    Date selectedRequestDate = resultSet.getDate("requestDate");
                     connection.close();
 
-                    invoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedStatus, selectedIsAnomalous, selectedFile, selectedTimesChanged);
+                    invoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedStatus, selectedIsAnomalous, selectedFile, selectedTimesChanged,selectedRequestDate);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
