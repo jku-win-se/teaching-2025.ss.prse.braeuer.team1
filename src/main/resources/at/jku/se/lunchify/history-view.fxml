@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -7,14 +10,29 @@
    <bottom>
    </bottom>
    <center>
-      <TableView fx:id="invoiceTable" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="381.0" prefHeight="381.0" prefWidth="838.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
-         <columns>
-            <TableColumn fx:id="invoiceDate" prefWidth="152.0" resizable="false" text="Rechnungsdatum" />
-            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="156.0" resizable="false" text="Rechnungsbetrag" />
-            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="181.0" resizable="false" text="Rückzahlungsbetrag" />
-            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="195.0" resizable="false" text="Typ" />
-            <TableColumn fx:id="status" minWidth="0.0" prefWidth="152.0" resizable="false" text="Status" />
-         </columns>
-      </TableView>
+      <BorderPane BorderPane.alignment="CENTER">
+         <right>
+            <VBox alignment="CENTER">
+               <children>
+                  <Label text="Verhältnis Supermarkt &#10;zu Restaurant" textAlignment="CENTER" />
+                  <PieChart fx:id="chartTypeDistribution" labelsVisible="false" layoutX="584.0" layoutY="36.0" legendVisible="true" prefHeight="249.0" prefWidth="250.0" BorderPane.alignment="CENTER" />
+               </children>
+            </VBox>
+         </right>
+         <center>
+            <TableView fx:id="invoiceTable" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="650.0" prefHeight="381.0" prefWidth="650.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+               <columns>
+                  <TableColumn fx:id="invoiceDate" prefWidth="131.0" resizable="false" text="Rechnungsdatum" />
+                  <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="139.0" resizable="false" text="Rechnungsbetrag" />
+                  <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="151.0" resizable="false" text="Rückzahlungsbetrag" />
+                  <TableColumn fx:id="invType" minWidth="0.0" prefWidth="118.0" resizable="false" text="Typ" />
+                  <TableColumn fx:id="status" minWidth="0.0" prefWidth="109.0" resizable="false" text="Status" />
+               </columns>
+            </TableView>
+         </center>
+      </BorderPane>
    </center>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
 </BorderPane>
