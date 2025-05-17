@@ -6,8 +6,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
+import java.sql.Date;
 
 public class Invoice {
 
@@ -76,7 +77,7 @@ public class Invoice {
         this.isanomalous = isanomalous;
         this.file = file;
         this.timesChanged = timesChanged;
-        this.requestDate = Date.from(Instant.now());
+        this.requestDate = Date.valueOf(LocalDate.now());
     }
 
     public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, String status, boolean isanomalous, byte[] file, int timesChanged,Date requestDate){
