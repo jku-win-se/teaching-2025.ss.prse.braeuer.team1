@@ -5,6 +5,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -23,8 +24,14 @@ public class Invoice {
     private boolean isanomalous;
     private byte[] file;
     private int timesChanged;
+    private Date requestDate;
 
-    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged){
+    /**
+     * Constructor for new Invoices
+     * <p>
+     * Constructor for new Invoices which are being updated or displayed (requestDate is the date of the upload), not to be used for initial upload/commit
+     */
+    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged,Date requestDate){
         this.invoiceid = invoiceid;
         this.userid = userid;
         this.invoicenumber = invoicenumber;
@@ -36,7 +43,28 @@ public class Invoice {
         this.isanomalous = isanomalous;
         this.file = file;
         this.timesChanged = timesChanged;
+        this.requestDate = requestDate;
     }
+/*
+    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged,Date requestDate){
+        this.invoiceid = invoiceid;
+        this.userid = userid;
+        this.invoicenumber = invoicenumber;
+        this.date = date;
+        this.amount = amount;
+        this.reimbursementAmount = reimbursementAmount;
+        this.type = type;
+        this.status = String.valueOf(Invoicestatus.EINGEREICHT);
+        this.isanomalous = isanomalous;
+        this.file = file;
+        this.timesChanged = timesChanged;
+        this.requestDate = requestDate;
+    }*/
+    /**
+     * Constructor for new Invoices
+     * <p>
+     * Constructor for new Invoices which are being uploaded (initial upload)
+     */
     public Invoice(int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged){
         this.userid = userid;
         this.invoicenumber = invoicenumber;
@@ -48,9 +76,10 @@ public class Invoice {
         this.isanomalous = isanomalous;
         this.file = file;
         this.timesChanged = timesChanged;
+        this.requestDate = Date.from(Instant.now());
     }
 
-    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, String status, boolean isanomalous, byte[] file, int timesChanged){
+    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, String status, boolean isanomalous, byte[] file, int timesChanged,Date requestDate){
         this.invoiceid = invoiceid;
         this.userid = userid;
         this.invoicenumber = invoicenumber;
@@ -62,22 +91,25 @@ public class Invoice {
         this.isanomalous = isanomalous;
         this.file = file;
         this.timesChanged = timesChanged;
+        this.requestDate = requestDate;
     }
 
-    public Invoice(int userid, Date date, double amount, double reimbursementAmount){
+    public Invoice(int userid, Date date, double amount, double reimbursementAmount,Date requestDate){
         this.userid = userid;
         this.date = date;
         this.amount = amount;
         this.reimbursementAmount = reimbursementAmount;
+        this.requestDate = requestDate;
     }
 
-    public Invoice(int invoiceid, Date date, double amount, double reimbursementAmount, String type, String status){
+    public Invoice(int invoiceid, Date date, double amount, double reimbursementAmount, String type, String status,Date requestDate){
         this.invoiceid = invoiceid;
         this.date = date;
         this.amount = amount;
         this.reimbursementAmount = reimbursementAmount;
         this.type = type;
         this.status = status;
+        this.requestDate = requestDate;
     }
 
     public int getInvoiceid() {
@@ -168,6 +200,14 @@ public class Invoice {
         this.timesChanged = timesChanged;
     }
 
+    public Date getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
+
     //AI-generated
     public void openPDF() throws IOException {
         File tempFile = File.createTempFile("invoice_", ".pdf");
@@ -198,6 +238,7 @@ public class Invoice {
                 ", isanomalous=" + isanomalous +
                 ", file=" + Arrays.toString(file) +
                 ", timesChanged=" + timesChanged +
+                ", requestDate=" + requestDate +
                 '}';
     }
     public String toStringWithoutFile() {
@@ -212,6 +253,7 @@ public class Invoice {
                 ", status='" + status + '\'' +
                 ", isanomalous=" + isanomalous +
                 ", timesChanged=" + timesChanged +
+                ", requestDate=" + requestDate +
                 '}';
     }
 

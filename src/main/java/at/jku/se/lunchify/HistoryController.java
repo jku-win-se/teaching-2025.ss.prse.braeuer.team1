@@ -37,6 +37,8 @@ public class HistoryController {
     @FXML
     protected TableColumn<Invoice, String> status;
     @FXML
+    protected TableColumn<Invoice, String> invoiceRequestDate;
+    @FXML
     protected PieChart chartTypeDistribution;
 
     private InvoiceDAO invoiceDAO;
@@ -55,6 +57,8 @@ public class HistoryController {
         reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
         invType.setCellValueFactory(new PropertyValueFactory<>("type"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        invoiceRequestDate.setCellValueFactory(new PropertyValueFactory<>("requestDate"));
+
 
         ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToEdit();
         invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView

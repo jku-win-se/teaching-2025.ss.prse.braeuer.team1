@@ -51,6 +51,8 @@ public class InvoiceClearingController {
     @FXML
     protected TableColumn<Invoice, Integer> timesChanged;
     @FXML
+    protected TableColumn<Invoice, String> invoiceRequestDate;
+    @FXML
     protected Button exportPayrollDataJSONButton;
     @FXML
     protected Button exportPayrollDataXMLButton;
@@ -101,6 +103,7 @@ public class InvoiceClearingController {
         reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
         invType.setCellValueFactory(new PropertyValueFactory<>("type"));
         timesChanged.setCellValueFactory(new PropertyValueFactory<>("timesChanged"));
+        invoiceRequestDate.setCellValueFactory(new PropertyValueFactory<>("requestDate"));
 
 
         ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToClear(selectedMail, "EINGEREICHT", true);
