@@ -57,7 +57,7 @@ Wenn alles funktioniert hat, bekommst du eine Erfolgsmeldung.
 - Sichtbar für Admin und User
 
 Hier erhältst du einen Überblick über deine eingereichten Rechnungen, ihren Status und kannst sie bis ans Ende
-des Abrechnungsmonats bearbeiten.
+des Abrechnungsmonats bearbeiten. Klicke hierzu einfach auf die zu bearbeitende Rechnung und es öffnet sich ein neues Fenster.
 
 ![MeineRechnungen](./screenshots/MeineRechnungen.png)
 
@@ -65,6 +65,7 @@ des Abrechnungsmonats bearbeiten.
 - Sichtbar für Admin
 ####
 Hier kann zuerst zwischen **Benutzer anlegen** und **Benutzer bearbeiten** entschieden werden.
+Beim Klick auf **Auffällige Benutzer exportieren** wird eine `.csv` exportiert.
 
 ![Benutzerverwaltung](./screenshots/Benutzerverwaltung.png)
 
@@ -93,6 +94,8 @@ worden sind und eine manuelle Freigabe benötigen.
 Beim Klick auf eine Rechnung öffnet sich das Fenster Rechnungsdetails.
 Dort können Änderungen vorgenommen, die Rechnung freigegeben oder abgelehnt und diese auch gelöscht werden.
 Der angemeldete Admin kann seine eigenen Rechnungen hier aus Sicherheitsgründen nicht einsehen und bearbeiten.
+Beim Klick auf **Daten für Lohnverrechnung exportieren** wird je nachdem eine `.xml` oder `.json` Datei exportiert,
+die alle Benutzer und deren Rückerstattungssummen für das aktuelle Monat liefert.
 Sollte etwas nicht stimmen, gibt dir die Anwendung eine Fehlermeldung.
 Wenn alles funktioniert hat, bekommst du eine Erfolgsmeldung.
 
@@ -113,20 +116,22 @@ Wenn alles funktioniert hat, bekommst du eine Erfolgsmeldung.
 - Sichtbar für Admin
 
 Hier können die **Rechnungsstatistik** und **Kennzahlen** zu den ausgewählten Benutzern, Zeiträumen und Rechnungstypen
-angefordert werden.
+angefordert werden. Zusätzlich können bei der Rechnungsstatistik auch nur **anomalische Rechnungen** angezeigt werden.
+Bei den Kennzahlen hat diese Auswahl keinen Einfluss.
 
 ![Auswertungen](./screenshots/Auswertungen.png)
 
 ### Rechnungsstatistik
-Nach dem Kick auf **Rechnungstatistik** wird hier eine Übersicht angezeigt.
+Nach dem Kick auf **Rechnungstatistik** wird hier eine Übersicht der Rechnungen zu den ausgewählten Parametern angezeigt.
 Diese kann als `.csv` und `.pdf` exportiert werden.
 
 ![AuswertungenRechnungsstatistik](./screenshots/AuswertungenRechnungsstatistik.png)
 
-### Kennzahlen NOT FINISHED
-TO BE MADE
+### Kennzahlen
+Nach dem Kick auf **Kennzahlen** wird hier eine grafische Übersicht der Rechnungen zu den ausgewählten Parametern angezeigt.
+Diese kann als `.csv` und `.pdf` exportiert werden.
 
-![AuswertungenKennzahlen](./screenshots/AuswertungenRechnungsstatistik.png)
+![AuswertungenKennzahlen](./screenshots/AuswertungenKennzahlen.png)
 
 
 ## Wichtige Hinweise
