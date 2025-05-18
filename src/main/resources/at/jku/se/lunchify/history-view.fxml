@@ -20,14 +20,14 @@
             </VBox>
          </right>
          <center>
-            <TableView fx:id="invoiceTable" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="650.0" prefHeight="381.0" prefWidth="650.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+            <TableView fx:id="invoiceTable" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="660.0" prefHeight="381.0" prefWidth="669.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
                <columns>
-                  <TableColumn fx:id="invoiceDate" prefWidth="131.0" resizable="false" text="Rechnungsdatum" />
-                  <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="139.0" resizable="false" text="Rechnungsbetrag" />
-                  <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="151.0" resizable="false" text="Rückzahlungsbetrag" />
-                  <TableColumn fx:id="invType" minWidth="0.0" prefWidth="118.0" resizable="false" text="Typ" />
-                  <TableColumn fx:id="status" minWidth="0.0" prefWidth="109.0" resizable="false" text="Status" />
-                  <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="143.0" resizable="false" text="Einmeldedatum" />
+                  <TableColumn fx:id="invoiceDate" prefWidth="118.0" resizable="false" text="Rechnungsdatum" />
+                  <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="123.0" resizable="false" text="Rechnungsbetrag" />
+                  <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="126.0" resizable="false" text="Rückzahlungsbetrag" />
+                  <TableColumn fx:id="invType" minWidth="0.0" prefWidth="87.0" resizable="false" text="Typ" />
+                  <TableColumn fx:id="status" minWidth="0.0" prefWidth="94.0" resizable="false" text="Status" />
+                  <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="110.0" resizable="false" text="Einmeldedatum" />
                </columns>
             </TableView>
          </center>
