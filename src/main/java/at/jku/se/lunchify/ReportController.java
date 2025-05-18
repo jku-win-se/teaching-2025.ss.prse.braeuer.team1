@@ -1,9 +1,6 @@
 package at.jku.se.lunchify;
 
-import at.jku.se.lunchify.models.Invoice;
-import at.jku.se.lunchify.models.InvoiceDAO;
-import at.jku.se.lunchify.models.User;
-import at.jku.se.lunchify.models.UserDAO;
+import at.jku.se.lunchify.models.*;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.UnitValue;
 import javafx.collections.ObservableList;
@@ -56,6 +53,8 @@ public class ReportController {
     protected TableColumn<Invoice, String> invType;
     @FXML
     protected TableColumn<Invoice, String> invoiceStatus;
+    @FXML
+    protected TableColumn<Invoice, String> invoiceRequestDate;
     @FXML
     protected Button exportCSVButton;
     @FXML
@@ -116,11 +115,21 @@ public class ReportController {
         }
     }
 
-    public void onInvoiceIndicatorsButtonClick() {
+    public void onInvoiceIndicatorsButtonClick() throws IOException {
         setSelectedData();
         checkSelectedData();
-        //Implementierung offen
-        LunchifyApplication.baseController.basePane.setRight(null);
+        if(inputCorrect) {
+
+            // Übergabe der Parameter an neuen Controller
+            InvoiceKpiController.initData(
+                    selectedMail,
+                    selectedInvoiceType,
+                    selectedDateFrom,
+                    selectedDateTo
+            );
+
+            LunchifyApplication.baseController.showCenterView("invoiceKpi-view.fxml");
+        }
     }
 
     public void onInvoiceStatisticsButtonClick() throws IOException, SQLException {
@@ -147,6 +156,7 @@ public class ReportController {
             controller.reimbursementAmount.setCellValueFactory(new PropertyValueFactory<>("reimbursementAmount"));
             controller.invType.setCellValueFactory(new PropertyValueFactory<>("type"));
             controller.invoiceStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+            controller.invoiceRequestDate.setCellValueFactory(new PropertyValueFactory<>("requestDate"));
 
 
             controller.invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
@@ -161,11 +171,11 @@ public class ReportController {
         if (chosenDirectory != null) {
             lastUsedDirectory = chosenDirectory.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
             FileWriter output = new FileWriter(new File(chosenDirectory.getAbsolutePath() + "/Lunchify-Rechnungs-Export-" + LocalDate.now().toString() + ".csv"));
-            output.write("Benutzer-ID/Personalnummer;Rechnungsdatum;Rechnungsbetrag;Rückzahlungsbetrag;Typ;Status;Anomalisch?" + System.lineSeparator());
+            output.write("Benutzer-ID/Personalnummer;Rechnungsdatum;Rechnungsbetrag;Rückzahlungsbetrag;Typ;Status;Anomalisch?;Einmeldedatum" + System.lineSeparator());
             for (Invoice inv : invoiceTable.getItems()) {
                 output.write(String.valueOf(inv.getUserid())+";"+inv.getDate().toString() + ";" +
                         inv.getAmount() + ";" + inv.getReimbursementAmount() + ";" + inv.getType() + ";" +
-                        inv.getStatus() + ";"+String.valueOf(inv.isIsanomalous())+System.lineSeparator());
+                        inv.getStatus() + ";"+String.valueOf(inv.isIsanomalous())+";"+inv.getRequestDate()+System.lineSeparator());
             }
             output.close();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -197,6 +207,7 @@ public class ReportController {
             table.addHeaderCell("Rückzahlungsbetrag");
             table.addHeaderCell("Typ");
             table.addHeaderCell("Status");
+            table.addHeaderCell("Einmeldedatum");
             for (Invoice inv : invoiceTable.getItems()) {
                 table.startNewRow();
                 table.addCell(String.valueOf(inv.getUserid()));
@@ -205,6 +216,7 @@ public class ReportController {
                 table.addCell(Double.toString(inv.getReimbursementAmount()));
                 table.addCell(inv.getType());
                 table.addCell(inv.getStatus());
+                table.addCell(inv.getRequestDate().toString());
             }
             document.add(table);
             document.close();
