@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefWidth="894.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@lunchify-style.css" fx:controller="at.jku.se.lunchify.InvoiceClearingController">
+<BorderPane prefWidth="894.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceClearingController">
    <center>
       <TableView fx:id="invoiceTable" maxWidth="984.0" minWidth="984.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
          <columns>
             <TableColumn fx:id="invoiceid" minWidth="0.0" prefWidth="42.0" resizable="false" text="ID" />
-            <TableColumn fx:id="userid" minWidth="0.0" prefWidth="155.0" resizable="false" text="Benutzer" />
-            <TableColumn fx:id="invoiceDate" prefWidth="149.0" resizable="false" text="Rechnungsdatum" />
-            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="143.0" resizable="false" text="Rechnungsbetrag" />
-            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="162.0" resizable="false" text="Rückzahlungsbetrag" />
-            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="171.0" resizable="false" text="Typ" />
-            <TableColumn fx:id="timesChanged" minWidth="0.0" prefWidth="160.0" resizable="false" text="Anzahl Änderungen" />
-            <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="143.0" resizable="false" text="Einmeldedatum" />
+            <TableColumn fx:id="userid" minWidth="0.0" prefWidth="76.0" resizable="false" text="Benutzer" />
+            <TableColumn fx:id="invoiceDate" prefWidth="135.0" resizable="false" text="Rechnungsdatum" />
+            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="133.0" resizable="false" text="Rechnungsbetrag" />
+            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="156.0" resizable="false" text="Rückzahlungsbetrag" />
+            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="140.0" resizable="false" text="Typ" />
+            <TableColumn fx:id="timesChanged" minWidth="0.0" prefWidth="152.0" resizable="false" text="Anzahl Änderungen" />
+            <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="148.0" resizable="false" text="Einmeldedatum" />
          </columns>
       </TableView>
    </center>
@@ -24,10 +25,12 @@
    </padding>
    <top>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
-         <Label text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
-         <ComboBox fx:id="allUsers" onAction="#userSelectionChanged" onShowing="#showAllUsers" prefWidth="150.0" promptText="alle" />
-         <Button fx:id="exportPayrollDataJSONButton" mnemonicParsing="false" onAction="#onExportPayrollDataJSONButtonClick" prefHeight="50.0" prefWidth="300.0" text="Daten für Lohnverrechnung exportieren (JSON)" textAlignment="CENTER" />
-         <Button fx:id="exportPayrollDataXMLButton" alignment="CENTER" mnemonicParsing="false" onAction="#onExportPayrollDataXMLButtonClick" prefHeight="50.0" prefWidth="300.0" text="Daten für Lohnverrechnung exportieren (XML)" textAlignment="CENTER" />
+         <children>
+            <Label text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
+            <ComboBox fx:id="allUsers" onAction="#userSelectionChanged" onShowing="#showAllUsers" prefWidth="150.0" promptText="alle" />
+            <Button fx:id="exportPayrollDataJSONButton" mnemonicParsing="false" onAction="#onExportPayrollDataJSONButtonClick" prefHeight="50.0" prefWidth="300.0" text="Daten für Lohnverrechnung exportieren (JSON)" textAlignment="CENTER" />
+            <Button fx:id="exportPayrollDataXMLButton" alignment="CENTER" mnemonicParsing="false" onAction="#onExportPayrollDataXMLButtonClick" prefHeight="50.0" prefWidth="300.0" text="Daten für Lohnverrechnung exportieren (XML)" textAlignment="CENTER" />
+         </children>
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>
