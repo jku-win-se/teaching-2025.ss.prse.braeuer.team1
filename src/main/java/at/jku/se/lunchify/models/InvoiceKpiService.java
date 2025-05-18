@@ -6,7 +6,12 @@ import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
-//AI-Assisted
+
+/**
+ * AI Assisted//
+ * Wird verwendet, um alle Daten für die Kennzahlen-Auswertung aus der Datenbank zu holen und dem InvoiceKpi zu übergeben.
+ * Durchführen von Tests gestaltet sich aufgrund der grafischen Darstellung und den wechselnden Daten in der Datenbank schwierig und wurde deshalb nicht gemacht.
+ */
 public class InvoiceKpiService {
 
     private final String jdbcUrl;
