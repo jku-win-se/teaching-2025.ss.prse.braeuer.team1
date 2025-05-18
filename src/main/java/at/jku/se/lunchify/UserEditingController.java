@@ -51,8 +51,12 @@ public class UserEditingController {
         }
     }
 
+    public boolean checkValidInput () {
+        return !email.getText().isEmpty() && !firstname.getText().isEmpty() && !surname.getText().isEmpty() && !password.getText().isEmpty() && userType.getValue() != null;
+    }
+
     public void onSaveChangesButtonClick() throws Exception {
-        if(email.getText().isEmpty() || firstname.getText().isEmpty() || surname.getText().isEmpty() || password.getText().isEmpty()) {
+        if(!checkValidInput()) {
             warningText.setText("Alle Felder ausfüllen!");
         }
         else {
