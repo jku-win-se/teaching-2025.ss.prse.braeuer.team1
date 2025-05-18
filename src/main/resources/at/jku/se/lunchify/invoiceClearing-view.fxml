@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -16,7 +15,7 @@
             <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="156.0" resizable="false" text="Rückzahlungsbetrag" />
             <TableColumn fx:id="invType" minWidth="0.0" prefWidth="140.0" resizable="false" text="Typ" />
             <TableColumn fx:id="timesChanged" minWidth="0.0" prefWidth="152.0" resizable="false" text="Anzahl Änderungen" />
-            <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="148.0" resizable="false" text="Einmeldedatum" />
+            <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="135.0" resizable="false" text="Einmeldedatum" />
          </columns>
       </TableView>
    </center>
