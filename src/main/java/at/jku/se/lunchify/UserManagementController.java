@@ -1,6 +1,5 @@
 package at.jku.se.lunchify;
 
-import at.jku.se.lunchify.models.Invoice;
 import at.jku.se.lunchify.models.User;
 import at.jku.se.lunchify.models.UserDAO;
 import javafx.fxml.FXML;
@@ -14,6 +13,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+
+//Klasse ruft "nur" andere Views auf bzw. erstellt Export-File, daher nicht sinnvoll testbar (ohne Mocking)
 
 public class UserManagementController {
 

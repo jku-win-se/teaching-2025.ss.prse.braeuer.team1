@@ -7,6 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+/**
+ * Testing nicht sinnvoll, da LoginService getestet wird
+ */
+
 public class LoginController {
 
     @FXML

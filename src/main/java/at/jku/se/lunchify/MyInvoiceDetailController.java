@@ -17,6 +17,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 
+/**
+ * Testing nicht sinnvoll, Statusänderungen über InvoiceDAO aufgrund DB-Zugriff nicht sinnvoll testbar
+ * Möglichkeit wäre, RE mit Setup erstellen und RE danach wieder löschen? Soll das umgesetzt werden?
+ *
+ * Klasse zum Bearbeiten und Löschen der eigenen Rechnungen als User (nur eigene Rechnungen)
+ */
+
 public class MyInvoiceDetailController {
     @FXML
     protected TextField invoiceValue;

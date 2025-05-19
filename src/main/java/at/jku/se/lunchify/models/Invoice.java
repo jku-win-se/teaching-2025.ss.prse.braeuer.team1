@@ -10,6 +10,11 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.sql.Date;
 
+
+/**
+ * Testing nicht sinnvoll, weil Entitätsklasse
+ */
+
 public class Invoice {
 
     private int invoiceid;
@@ -46,21 +51,7 @@ public class Invoice {
         this.timesChanged = timesChanged;
         this.requestDate = requestDate;
     }
-/*
-    public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, boolean isanomalous, byte[] file, int timesChanged,Date requestDate){
-        this.invoiceid = invoiceid;
-        this.userid = userid;
-        this.invoicenumber = invoicenumber;
-        this.date = date;
-        this.amount = amount;
-        this.reimbursementAmount = reimbursementAmount;
-        this.type = type;
-        this.status = String.valueOf(Invoicestatus.EINGEREICHT);
-        this.isanomalous = isanomalous;
-        this.file = file;
-        this.timesChanged = timesChanged;
-        this.requestDate = requestDate;
-    }*/
+
     /**
      * Constructor for new Invoices
      * <p>

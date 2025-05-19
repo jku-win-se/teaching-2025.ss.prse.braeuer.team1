@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * AI Assisted//
- * Wird verwendet, um alle Daten für die Kennzahlen-Auswertung aus der Datenbank zu holen und dem InvoiceKpi zu übergeben.
+ * Wird verwendet, um alle Daten für die Kennzahlen-Auswertung aus der Datenbank zu holen und dem InvoiceKpiController zu übergeben.
  * Durchführen von Tests gestaltet sich aufgrund der grafischen Darstellung und den wechselnden Daten in der Datenbank schwierig und wurde deshalb nicht gemacht.
  */
 public class InvoiceKpiService {

@@ -11,6 +11,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Testing nicht sinnvoll, weil Klasse Menuview steuert (Aufruf anderer Views)
+ */
 
 public class MenuController {
 

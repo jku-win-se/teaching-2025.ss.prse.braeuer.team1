@@ -30,7 +30,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
-//Klasse zum Freigeben der Rechnungen
+
+/**
+ * Testing nicht sinnvoll, befüllt Tabelle mit Werten aus dem InvoiceDAO
+ * Klasse zum Freigeben der Rechnungen
+ */
+
 public class InvoiceClearingController {
     @FXML
     protected ComboBox<String> allUsers;

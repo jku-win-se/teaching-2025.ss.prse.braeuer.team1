@@ -35,6 +35,10 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Map;
 import java.util.Objects;
+/**
+ * Testing nicht sinnvoll, nur einfache Berechnungen - muss das getestet werden?
+ * z.B. Rechnungen/User/Monat -> neue Methode wäre notwendig
+ */
 //AI-Assisted
 public class InvoiceKpiController {
 
@@ -272,7 +276,7 @@ public class InvoiceKpiController {
             writer.printf("Eingereichte Rechnungen pro Benutzer,%s%n", labelInvoicesPerUser.getText());
             writer.printf("Eingereichte Rechnungen pro Benutzer pro Monat,%s%n", labelInvoicesPerUserPerMonth.getText());
 
-            // 1. Exportiere Bar-Chart Daten (monatliche Stats)
+            // Exportiere Bar-Chart Daten (monatliche Stats)
             writer.println("Monat;Anzahl Rechnungen;Erstattungsbetrag (€)");
             Map<YearMonth, InvoiceKpiService.InvoiceMonthlyStats> stats = invoiceKpiService.getMonthlyInvoiceStats();
             for (Map.Entry<YearMonth, InvoiceKpiService.InvoiceMonthlyStats> entry : stats.entrySet()) {
@@ -282,12 +286,10 @@ public class InvoiceKpiController {
             }
             writer.println(); // Leerzeile
 
-            // 2. Exportiere Pie-Chart Daten (Supermarkt vs Restaurant)
+            // Exportiere Pie-Chart Daten (Supermarkt vs Restaurant)
             writer.println("Rechnungstyp;Anzahl");
             writer.printf("Supermarkt;%d%n", invoiceKpiService.getInvoiceCountSupermarket());
             writer.printf("Restaurant;%d%n", invoiceKpiService.getInvoiceCountRestaurant());
-
-            // Falls du noch andere Daten mit exportieren willst, hier ergänzen
 
             writer.flush();
 
