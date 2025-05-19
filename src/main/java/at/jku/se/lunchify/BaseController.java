@@ -7,7 +7,10 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
-//Klasse zum Steuern des Hauptviews
+/**
+ * Testing nicht sinnvoll, weil Klasse Hauptview steuert (Aufruf anderer Views)
+ */
+
 public class BaseController {
 
     @FXML

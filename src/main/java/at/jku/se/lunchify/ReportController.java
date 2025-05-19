@@ -28,6 +28,12 @@ import java.util.Date;
 
 import static java.sql.Date.valueOf;
 
+/**
+ * Testing nicht sinnvoll - wenn dann können nur Eingabewerte auf leer überprüft werden - notwendig?
+ *
+ * Klasse zum Setzen der Filter für Auswertungen
+ */
+
 public class ReportController {
     @FXML
     protected Label warningText;
@@ -63,7 +69,6 @@ public class ReportController {
     protected CheckBox isAnomalous;
     @FXML
     protected CheckBox isAnomalousSelected;
-
 
     protected String selectedMail;
     protected User selectedUser;

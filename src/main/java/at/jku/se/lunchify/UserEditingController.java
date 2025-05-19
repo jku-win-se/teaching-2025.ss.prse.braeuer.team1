@@ -29,15 +29,15 @@ public class UserEditingController {
     protected Label warningText;
 
     private User userToEdit;
-    private UserDAO userDAO = new UserDAO();
-    private PasswordService passwordService = new PasswordService();
+    private final UserDAO userDAO = new UserDAO();
+    private final PasswordService passwordService = new PasswordService();
 
     public void initialize() {
         ObservableList<String> userList = userDAO.getAllUserMails();
         allUsers.setItems(userList);
     }
 
-    public void onSelectUserButtonClick() throws Exception {
+    public void onSelectUserButtonClick() {
         warningText.setText("");
         String selectedUserEmail = allUsers.getSelectionModel().getSelectedItem();
         if (selectedUserEmail != null) {
@@ -51,8 +51,12 @@ public class UserEditingController {
         }
     }
 
+    public boolean checkValidInput () {
+        return !email.getText().isEmpty() && !firstname.getText().isEmpty() && !surname.getText().isEmpty() && !password.getText().isEmpty() && userType.getValue() != null;
+    }
+
     public void onSaveChangesButtonClick() throws Exception {
-        if(email.getText().isEmpty() || firstname.getText().isEmpty() || surname.getText().isEmpty() || password.getText().isEmpty()) {
+        if(!checkValidInput()) {
             warningText.setText("Alle Felder ausfüllen!");
         }
         else {

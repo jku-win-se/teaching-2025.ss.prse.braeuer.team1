@@ -23,8 +23,12 @@ public class UserCreationController {
 
     private final UserDAO userDAO = new UserDAO();
 
+    public boolean checkValidInput () {
+        return !email.getText().isEmpty() && !firstname.getText().isEmpty() && !surname.getText().isEmpty() && !password.getText().isEmpty() && userType.getValue() != null;
+    }
+
     public User onUserCreationButtonClick() throws Exception {
-        if(email.getText().isEmpty() || firstname.getText().isEmpty() || surname.getText().isEmpty() || password.getText().isEmpty() || userType.getValue()==null) {
+        if(!checkValidInput()) {
             warningText.setText("Alle Felder ausfüllen!");
             return null;
         }

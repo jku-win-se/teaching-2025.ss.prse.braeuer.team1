@@ -23,6 +23,10 @@ import java.time.LocalDate;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
+/**
+ * Testing nicht sinnvoll, Insert über InvoiceDAO aufgrund DB-Zugriff nicht sinnvoll testbar
+ * Klasse zum Hochladen der Rechnungen
+ */
 
 public class UploadController {
     @FXML

@@ -22,7 +22,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
 
-//Klasse zum Bearbeiten der eigenen Rechnungen
+/**
+ * Testing nicht sinnvoll, befüllt Tabelle mit Werten aus dem InvoiceDAO
+ * Klasse zum Bearbeiten der eigenen Rechnungen
+ */
+
 public class HistoryController {
     @FXML
     protected TableView<Invoice> invoiceTable;

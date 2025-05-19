@@ -9,6 +9,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Testing nicht sinnvoll bei DB-Zugriffen, welche Mengen zurückgeben
+ */
+
 public class InvoiceDAO {
 
     /**
@@ -17,8 +21,6 @@ public class InvoiceDAO {
     String jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
     String username = "postgres.yxshntkgvmksefegyfhz";
     String dbPassword = "CaMaKe25!";
-
-    InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
 
     /**
      * Compares if the given date is in the past
