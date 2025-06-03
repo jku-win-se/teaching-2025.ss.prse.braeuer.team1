@@ -88,10 +88,16 @@ public class ReportController {
     private final Date today = new Date();
     private final LocalDate heuteVorEinemJahr = LocalDate.now().minusYears(1);
     private final Date todayLastYear = Date.from(heuteVorEinemJahr.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    private final LocalDate monatsersterVormonat = LocalDate.now().minusMonths(1).withDayOfMonth(1);
+    private final LocalDate monatsletzterVormonat = LocalDate.now().withDayOfMonth(1).minusDays(1);
 
     public void initialize() {
         invoiceDAO = new InvoiceDAO();
         userDAO = new UserDAO();
+        allUsers.setValue("alle Benutzer");
+        dateFrom.setValue(monatsersterVormonat);
+        dateTo.setValue(monatsletzterVormonat);
+        invoiceType.setValue("alle Rechnungstypen");
     }
 
     public void showAllUsers() {
