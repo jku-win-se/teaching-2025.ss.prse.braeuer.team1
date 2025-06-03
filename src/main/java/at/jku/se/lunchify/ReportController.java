@@ -94,10 +94,10 @@ public class ReportController {
     public void initialize() {
         invoiceDAO = new InvoiceDAO();
         userDAO = new UserDAO();
-        allUsers.setValue("alle Benutzer");
+        /*allUsers.setValue("alle Benutzer");
         dateFrom.setValue(monatsersterVormonat);
         dateTo.setValue(monatsletzterVormonat);
-        invoiceType.setValue("alle Rechnungstypen");
+        invoiceType.setValue("alle Rechnungstypen");*/
     }
 
     public void showAllUsers() {
@@ -105,17 +105,20 @@ public class ReportController {
     }
 
     private void setSelectedData() {
-        selectedMail = allUsers.getSelectionModel().getSelectedItem();
-        selectedUser = userDAO.getUserByEmail(selectedMail);
-        selectedDateFrom = valueOf(dateFrom.getValue());
-        selectedDateTo = valueOf(dateTo.getValue());
-        selectedInvoiceType = invoiceType.getValue();
+        if (dateFrom.getValue()==null || dateTo.getValue()==null) {
+            warningText.setText("Alle Filter setzen!");
+        }
+        else {
+            selectedMail = allUsers.getSelectionModel().getSelectedItem();
+            selectedUser = userDAO.getUserByEmail(selectedMail);
+            selectedDateFrom = valueOf(dateFrom.getValue());
+            selectedDateTo = valueOf(dateTo.getValue());
+            selectedInvoiceType = invoiceType.getValue();
+        }
     }
 
     private void checkSelectedData() {
-        if (selectedMail == null || selectedDateFrom == null || selectedDateTo == null || selectedInvoiceType == null) {
-            warningText.setText("Alle Filter setzen!");
-        } else if (selectedDateTo.before(selectedDateFrom)) {
+         if (selectedDateTo.before(selectedDateFrom)) {
             warningText.setText("Bis-Datum darf nicht vor dem Von-Datum liegen!");
         } else if (selectedDateTo.after(today)) {
             warningText.setText("Bis-Datum darf nicht in der Zukunft liegen!");
