@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="612.0" prefWidth="894.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.ReportController">
+<BorderPane prefHeight="612.0" prefWidth="894.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceStatisticsController">
    <center>
       <TableView fx:id="invoiceTable" maxWidth="850.0" prefWidth="850.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
          <columns>
