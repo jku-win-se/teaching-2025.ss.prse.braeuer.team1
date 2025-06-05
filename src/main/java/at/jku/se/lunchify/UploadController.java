@@ -69,6 +69,7 @@ public class UploadController {
     private final InvoiceSettingService invoiceSettingService = new InvoiceSettingService();
 
     public void initialize() {
+        invoiceDate.setValue(LocalDate.now());
         showAllInvoiceTypes();
         //AI-generated
         invoiceDate.getEditor().setDisable(true);
