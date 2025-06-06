@@ -73,11 +73,11 @@ public class InvoiceStatisticsController {
         if (selectedIsAnomalous) {
             isAnomalousSelected.setSelected(true);
             filterInfo.setText("Anomalische Rechnungen (" + selectedInvoiceType + ") von " + selectedMail + " (Zeitraum: " + selectedDateFrom.toString() + " bis " + selectedDateTo.toString() + ")");
-            invoiceList = invoiceDAO.getAnomalousSelectedInvoices(selectedMail, selectedDateFrom, selectedDateTo, selectedInvoiceType);
+            invoiceList = invoiceDAO.getSelectedInvoices(selectedMail, selectedDateFrom, selectedDateTo, selectedInvoiceType, true);
         }
         else {
             filterInfo.setText("Rechnungen (" + selectedInvoiceType + ") von " + selectedMail + " (Zeitraum: " + selectedDateFrom.toString() + " bis " + selectedDateTo.toString() + ")");
-            invoiceList = invoiceDAO.getSelectedInvoices(selectedMail, selectedDateFrom, selectedDateTo, selectedInvoiceType);
+            invoiceList = invoiceDAO.getSelectedInvoices(selectedMail, selectedDateFrom, selectedDateTo, selectedInvoiceType, false);
         }
 
         //controller.userEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
