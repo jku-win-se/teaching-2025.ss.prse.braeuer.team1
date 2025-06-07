@@ -80,7 +80,7 @@ public class HistoryController {
             //nur klickbar, wenn Rechnung im aktuellen Monat liegt und nicht genehmigt ist
             TableRow<Invoice> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && row.getItem().getDate().getMonth() == LocalDate.now().getMonthValue() - 1 && !row.getItem().getStatus().equals(String.valueOf(Invoice.Invoicestatus.GENEHMIGT))) {
+                if (event.getClickCount() == 2 && !row.isEmpty() && row.getItem().getDate().getMonth() == LocalDate.now().getMonthValue() - 1 && !row.getItem().getStatus().equals(String.valueOf(Invoice.Invoicestatus.GENEHMIGT))) {
                     Invoice invoice = row.getItem();
                     Invoice selectedInvoice = invoiceDAO.getInvoiceById(invoice.getInvoiceid());
                     showInvoiceDetails(selectedInvoice);

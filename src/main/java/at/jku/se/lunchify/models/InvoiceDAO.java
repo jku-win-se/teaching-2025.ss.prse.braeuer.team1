@@ -53,39 +53,6 @@ public class InvoiceDAO {
      * <p>
      * @return ObservableList<Invoice> if successful, stacktrace if an Exception emerges
      */
-    public ObservableList<Invoice> getAllInvoices() {
-        ObservableList<Invoice> invoices = FXCollections.observableArrayList();
-
-        String sql = "SELECT * FROM \"Invoice\"";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
-
-            while (resultSet.next()) {
-                int invoiceid = resultSet.getInt("invoiceid");
-                int userid = resultSet.getInt("userid");
-                String invoicenumber = resultSet.getString("invoicenumber");
-                Date date = resultSet.getDate("date");
-                double amount = resultSet.getDouble("amount");
-                double reimbursementAmount = resultSet.getDouble("reimbursementAmount");
-                String type = resultSet.getString("type");
-                String status = resultSet.getString("status");
-                boolean isAnomalous = resultSet.getBoolean("isanomalous");
-                byte[] file = resultSet.getBytes("file");
-                int timesChanged = resultSet.getInt("timesChanged");
-                Date requestDate = resultSet.getDate("requestDate");
-
-                Invoice nextInvoice = new Invoice(invoiceid, userid, invoicenumber, date, amount, reimbursementAmount, type, isAnomalous, file, timesChanged, requestDate);
-                nextInvoice.setStatus(status);
-                invoices.add(nextInvoice);
-                connection.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return invoices;
-    }
-
     public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String invoiceType, Boolean onlyAnomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
         String selectedEmail = email;

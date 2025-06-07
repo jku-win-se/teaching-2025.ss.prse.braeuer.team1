@@ -74,7 +74,7 @@ public class InvoiceClearingController {
         invoiceTable.setRowFactory(tableView -> {
             TableRow<Invoice> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (!row.isEmpty()) {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
                     Invoice invoice = row.getItem();
                     Invoice selectedInvoice = invoiceDAO.getInvoiceById(invoice.getInvoiceid());
                     showInvoiceDetails(selectedInvoice);
