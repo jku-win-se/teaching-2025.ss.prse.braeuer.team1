@@ -19,14 +19,14 @@
             </VBox>
          </right>
          <center>
-            <TableView fx:id="invoiceTable" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="660.0" prefHeight="381.0" prefWidth="669.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
+            <TableView fx:id="invoiceTable" editable="true" fixedCellSize="25.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
                <columns>
-                  <TableColumn fx:id="invoiceDate" prefWidth="118.0" resizable="false" text="Rechnungsdatum" />
-                  <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="123.0" resizable="false" text="Rechnungsbetrag" />
-                  <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="126.0" resizable="false" text="Rückzahlungsbetrag" />
-                  <TableColumn fx:id="invType" minWidth="0.0" prefWidth="87.0" resizable="false" text="Typ" />
-                  <TableColumn fx:id="status" minWidth="0.0" prefWidth="94.0" resizable="false" text="Status" />
-                  <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="100.0" resizable="false" text="Einmeldedatum" />
+                  <TableColumn fx:id="invoiceDate" prefWidth="118.0" text="Rechnungsdatum" />
+                  <TableColumn fx:id="invoiceAmount" prefWidth="123.0" text="Rechnungsbetrag" />
+                  <TableColumn fx:id="reimbursementAmount" prefWidth="126.0" text="Rückzahlungsbetrag" />
+                  <TableColumn fx:id="invType" prefWidth="87.0" text="Typ" />
+                  <TableColumn fx:id="status" prefWidth="94.0" text="Status" />
+                  <TableColumn fx:id="invoiceRequestDate" prefWidth="100.0" text="Einmeldedatum" />
                </columns>
             </TableView>
          </center>

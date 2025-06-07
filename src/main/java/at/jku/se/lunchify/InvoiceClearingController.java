@@ -70,6 +70,7 @@ public class InvoiceClearingController {
     private File chosenDirectory;
 
     public void initialize() {
+        invoiceTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         invoiceDAO = new InvoiceDAO();
         userDAO = new UserDAO();
         allUsers.setValue("alle Benutzer");

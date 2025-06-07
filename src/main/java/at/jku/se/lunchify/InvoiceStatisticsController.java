@@ -69,6 +69,7 @@ public class InvoiceStatisticsController {
     }
 
     public void initialize () throws SQLException {
+        invoiceTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         invoiceDAO = new InvoiceDAO();
         if (selectedIsAnomalous) {
             isAnomalousSelected.setSelected(true);

@@ -2,7 +2,6 @@ package at.jku.se.lunchify;
 
 import at.jku.se.lunchify.models.Invoice;
 import at.jku.se.lunchify.models.InvoiceDAO;
-import at.jku.se.lunchify.models.InvoiceKpiService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,6 +49,7 @@ public class HistoryController {
     int supermarketCount;
 
     public void initialize() {
+        invoiceTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         showMyInvoices();
         loadPieChart();
     }
@@ -63,9 +63,8 @@ public class HistoryController {
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
         invoiceRequestDate.setCellValueFactory(new PropertyValueFactory<>("requestDate"));
 
-
         ObservableList<Invoice> invoiceList = invoiceDAO.getSelectedInvoicesToEdit();
-        invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
+        invoiceTable.setItems(invoiceList); // Setze die Rechnungen in die TableView
 
         //AI-assisted
         supermarketCount = (int) invoiceList.stream()
