@@ -9,8 +9,7 @@
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="217.0" spacing="10.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.UserEditingController">
    <Label fx:id="warningText" style="-fx-text-fill: red;" />
    <Label prefHeight="21.0" prefWidth="192.0" text="Benutzer auswählen" />
-   <ComboBox fx:id="allUsers" prefWidth="192.0" />
-   <Button mnemonicParsing="false" onAction="#onSelectUserButtonClick" prefWidth="192.0" text="Benutzer auswählen" />
+   <ComboBox fx:id="allUsers" onAction="#onSelectUser" prefWidth="192.0" />
    <Label prefHeight="21.0" prefWidth="192.0" text="E-Mail" />
    <TextField fx:id="email" promptText="Email" />
    <Label prefHeight="21.0" prefWidth="192.0" text="Passwort" />
@@ -23,8 +22,8 @@
    <ChoiceBox fx:id="userType" prefHeight="21.0" prefWidth="192.0">
       <items>
          <FXCollections fx:factory="observableArrayList">
-            <String fx:value="User" />
-            <String fx:value="Admin" />
+            <String fx:value="USER" />
+            <String fx:value="ADMIN" />
          </FXCollections>
       </items>
    </ChoiceBox>

@@ -37,7 +37,7 @@ public class UserEditingController {
         allUsers.setItems(userList);
     }
 
-    public void onSelectUserButtonClick() {
+    public void onSelectUser() {
         warningText.setText("");
         String selectedUserEmail = allUsers.getSelectionModel().getSelectedItem();
         if (selectedUserEmail != null) {

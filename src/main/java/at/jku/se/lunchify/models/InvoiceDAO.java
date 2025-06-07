@@ -101,7 +101,7 @@ public class InvoiceDAO {
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, selectedEmail);                    // IS NULL
+            ps.setString(1, selectedEmail);            // IS NULL
             ps.setString(2, selectedEmail);            // Vergleich
             ps.setDate(3, dateFrom);                   // Von
             ps.setDate(4, dateTo);                     // Bis
