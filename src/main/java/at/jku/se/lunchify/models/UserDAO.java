@@ -12,33 +12,6 @@ public class UserDAO {
     String dbPassword = "CaMaKe25!";
     PasswordService passwordService = new PasswordService();
 
-    // Methode zum Abrufen aller Benutzer
-    public ObservableList<User> getAllUsers() {
-        ObservableList<User> users = FXCollections.observableArrayList();
-
-        String sql = "SELECT * FROM \"User\"";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
-
-            while (resultSet.next()) {
-                int userid = resultSet.getInt("userid");
-                String emailToEdit = resultSet.getString("email");
-                String firstNameToEdit = resultSet.getString("firstname");
-                String surnameToEdit = resultSet.getString("surname");
-                String passwordToEdit = resultSet.getString("password");
-                String typeToEdit = resultSet.getString("type");
-                boolean isActive = resultSet.getBoolean("isactive");
-                boolean isAnomalous = resultSet.getBoolean("isanomalous");
-
-                users.add(new User(userid, emailToEdit, firstNameToEdit, surnameToEdit, typeToEdit, isActive, isAnomalous, passwordToEdit));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return users;
-    }
-
     public ObservableList<String> getAllUserMails() {
         ObservableList<String> users = FXCollections.observableArrayList();
 
@@ -83,36 +56,6 @@ public class UserDAO {
                     connection.close();
 
                     user = new User(userid, emailTo, firstNameTo, surnameTo, typeTo, isActive, isAnomalous, passwordTo);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-
-    public User getUserByUserid(int userid) {
-        User user = null;
-        String sql = "SELECT * FROM \"User\" WHERE userid = ?";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userid);
-
-            try (ResultSet resultSet = ps.executeQuery()) {
-                if (resultSet.next()) {
-                    int useridTo = resultSet.getInt("userid");
-                    String emailTo = resultSet.getString("email");
-                    String firstNameTo = resultSet.getString("firstname");
-                    String surnameTo = resultSet.getString("surname");
-                    String passwordTo = resultSet.getString("password");
-                    String typeTo = resultSet.getString("type");
-                    boolean isActive = resultSet.getBoolean("isactive");
-                    boolean isAnomalous = resultSet.getBoolean("isanomalous");
-                    connection.close();
-
-                    user = new User(useridTo, emailTo, firstNameTo, surnameTo, typeTo, isActive, isAnomalous, passwordTo);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

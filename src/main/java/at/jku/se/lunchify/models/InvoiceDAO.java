@@ -53,40 +53,7 @@ public class InvoiceDAO {
      * <p>
      * @return ObservableList<Invoice> if successful, stacktrace if an Exception emerges
      */
-    public ObservableList<Invoice> getAllInvoices() {
-        ObservableList<Invoice> invoices = FXCollections.observableArrayList();
-
-        String sql = "SELECT * FROM \"Invoice\"";
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet resultSet = ps.executeQuery()) {
-
-            while (resultSet.next()) {
-                int invoiceid = resultSet.getInt("invoiceid");
-                int userid = resultSet.getInt("userid");
-                String invoicenumber = resultSet.getString("invoicenumber");
-                Date date = resultSet.getDate("date");
-                double amount = resultSet.getDouble("amount");
-                double reimbursementAmount = resultSet.getDouble("reimbursementAmount");
-                String type = resultSet.getString("type");
-                String status = resultSet.getString("status");
-                boolean isAnomalous = resultSet.getBoolean("isanomalous");
-                byte[] file = resultSet.getBytes("file");
-                int timesChanged = resultSet.getInt("timesChanged");
-                Date requestDate = resultSet.getDate("requestDate");
-
-                Invoice nextInvoice = new Invoice(invoiceid, userid, invoicenumber, date, amount, reimbursementAmount, type, isAnomalous, file, timesChanged, requestDate);
-                nextInvoice.setStatus(status);
-                invoices.add(nextInvoice);
-                connection.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return invoices;
-    }
-
-    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String invoiceType) throws SQLException {
+    public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String invoiceType, Boolean onlyAnomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
         String selectedEmail = email;
         String selectedInvoiceType = invoiceType;
@@ -99,56 +66,11 @@ public class InvoiceDAO {
                 "AND \"Invoice\".date BETWEEN ? AND ? " +
                 "AND (? IS NULL OR \"Invoice\".type = ?)";
 
+        if (onlyAnomalous) sql+="AND \"Invoice\".isanomalous = TRUE";
+
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, selectedEmail);            // IS NULL
-            ps.setString(2, selectedEmail);            // Vergleich
-            ps.setDate(3, dateFrom);                   // Von
-            ps.setDate(4, dateTo);                     // Bis
-            ps.setString(5, selectedInvoiceType);      // IS NULL
-            ps.setString(6, selectedInvoiceType);      // Vergleich
-
-            ResultSet resultSet = ps.executeQuery();
-            while (resultSet.next()) {
-                int selectedInvoiceid = resultSet.getInt("invoiceid");
-                String selectedInvoicenumber = resultSet.getString("invoicenumber");
-                Date selectedDate = resultSet.getDate("date");
-                double selectedAmount = resultSet.getDouble("amount");
-                double selectedReimbursementAmount = resultSet.getDouble("reimbursementAmount");
-                String selectedType = resultSet.getString("type");
-                String selectedStatus = resultSet.getString("status");
-                boolean selectedIsAnomalous = resultSet.getBoolean("isanomalous");
-                int selectedUserid = resultSet.getInt("userid");
-                byte[] selectedFile = resultSet.getBytes("file");
-                int selectedTimesChanged = resultSet.getInt("timesChanged");
-                Date selectedRequestDate = resultSet.getDate("requestDate");
-                Invoice nextInvoice = new Invoice(selectedInvoiceid, selectedUserid, selectedInvoicenumber, selectedDate, selectedAmount, selectedReimbursementAmount, selectedType, selectedIsAnomalous, selectedFile, selectedTimesChanged, selectedRequestDate);
-                nextInvoice.setStatus(selectedStatus);
-                invoices.add(nextInvoice);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return invoices;
-    }
-
-    public ObservableList<Invoice> getAnomalousSelectedInvoices(String email, Date dateFrom, Date dateTo, String invoiceType) throws SQLException {
-        ObservableList<Invoice> invoices = FXCollections.observableArrayList();
-        String selectedEmail = email;
-        String selectedInvoiceType = invoiceType;
-        if (selectedEmail.equals("alle Benutzer")) selectedEmail = null;
-        if (selectedInvoiceType.equals("alle Rechnungstypen")) selectedInvoiceType = null;
-        String sql = "SELECT * "+
-                "FROM \"Invoice\" " +
-                "JOIN \"User\" ON \"Invoice\".userid = \"User\".userid " +
-                "WHERE (? IS NULL OR email = ?) " +
-                "AND \"Invoice\".date BETWEEN ? AND ? " +
-                "AND (? IS NULL OR \"Invoice\".type = ?)" +
-                "AND \"Invoice\".isanomalous = TRUE";
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, selectedEmail);                    // IS NULL
             ps.setString(2, selectedEmail);            // Vergleich
             ps.setDate(3, dateFrom);                   // Von
             ps.setDate(4, dateTo);                     // Bis

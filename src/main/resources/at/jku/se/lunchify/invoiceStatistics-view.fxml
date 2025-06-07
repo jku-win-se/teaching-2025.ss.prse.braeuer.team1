@@ -8,12 +8,12 @@
    <center>
       <TableView fx:id="invoiceTable" maxWidth="850.0" prefWidth="850.0" stylesheets="@lunchify-style.css" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn fx:id="invoiceDate" prefWidth="118.0" resizable="false" text="Rechnungsdatum" />
-            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="166.0" resizable="false" text="Rechnungsbetrag" />
-            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="160.0" resizable="false" text="Rückzahlungsbetrag" />
-            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="130.0" resizable="false" text="Typ" />
-            <TableColumn fx:id="invoiceStatus" minWidth="0.0" prefWidth="140.0" resizable="false" text="Status" />
-            <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="110.0" resizable="false" text="Einmeldedatum" />
+            <TableColumn fx:id="invoiceDate" prefWidth="118.0" text="Rechnungsdatum" />
+            <TableColumn fx:id="invoiceAmount" minWidth="0.0" prefWidth="166.0" text="Rechnungsbetrag" />
+            <TableColumn fx:id="reimbursementAmount" minWidth="0.0" prefWidth="160.0" text="Rückzahlungsbetrag" />
+            <TableColumn fx:id="invType" minWidth="0.0" prefWidth="130.0" text="Typ" />
+            <TableColumn fx:id="invoiceStatus" minWidth="0.0" prefWidth="140.0" text="Status" />
+            <TableColumn fx:id="invoiceRequestDate" minWidth="0.0" prefWidth="110.0" text="Einmeldedatum" />
          </columns>
       </TableView>
       </center>
