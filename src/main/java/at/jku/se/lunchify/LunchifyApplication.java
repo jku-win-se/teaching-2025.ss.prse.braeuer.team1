@@ -21,6 +21,8 @@ public class LunchifyApplication extends Application {
         Scene scene = new Scene(root, 1024, 768);
         stage.setTitle("Lunchify - hol dir dein Geld zurück, du Geizhals! :-D");
         stage.setScene(scene);
+        stage.setMinWidth(1024);
+        stage.setMinHeight(768);
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("Logo-Lunchify.jpeg"))));
         stage.show();
 
