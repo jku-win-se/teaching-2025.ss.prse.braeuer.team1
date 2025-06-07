@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import java.lang.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <VBox alignment="CENTER" maxHeight="629.0" maxWidth="1087.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceKpiController">
-   <children>
-      <HBox alignment="CENTER_LEFT" layoutX="8.0" layoutY="-4.0" spacing="10.0">
-         <children>
+   <HBox alignment="CENTER_LEFT" layoutX="8.0" layoutY="-4.0" spacing="10.0">
             <Label layoutX="8.0" layoutY="-4.0" text="Kennzahlen für erstattete Rechnungen">
                <font>
                   <Font name="System Bold" size="18.0" />
@@ -25,19 +22,13 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-         </children>
-      </HBox>
-      <HBox>
-         <children>
-         
-                              <!-- Beschriftungen und Werte -->
+         </HBox>
+      <HBox>                              <!-- Beschriftungen und Werte -->
             <GridPane hgap="12" vgap="8">
                <columnConstraints>
                   <ColumnConstraints halignment="RIGHT" minWidth="200" />
                   <ColumnConstraints halignment="LEFT" minWidth="300" />
                </columnConstraints>
-            <children>
-            
                                     <Label text="Ausgewählter Benutzer:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                   <Label fx:id="labelUser" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             
@@ -64,7 +55,6 @@
             
                                     <Label text="Eingereichte Rechnungen pro Benutzer, pro Monat:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
                   <Label fx:id="labelInvoicesPerUserPerMonth" text="-" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            </children>
                <rowConstraints>
                   <RowConstraints />
                   <RowConstraints />
@@ -78,13 +68,9 @@
                </rowConstraints>
             </GridPane>
             <PieChart fx:id="chartTypeDistribution" prefHeight="249.0" prefWidth="416.0" />
-         </children>
       </HBox>
       <VBox>
-         <children>
             <HBox alignment="CENTER_LEFT" layoutX="8.0" layoutY="271.0" spacing="10.0">
-               <children>
-               
                         <Label layoutX="8.0" layoutY="271.0" text="Rechnungen und Erstattungen pro Monat">
                      <font>
                         <Font name="System Bold" size="18.0" />
@@ -92,7 +78,6 @@
                   </Label>
                   <Label style="-fx-text-fill: #10e1c3;" text="■ Anzahl Rechnungen" />
                   <Label style="-fx-text-fill: #a0e196;" text="■ Erstattungsbetrag (€)" />
-               </children>
             </HBox>
             <BarChart fx:id="monthlyBarChart" prefHeight="298.0" prefWidth="1067.0">
                <xAxis>
@@ -102,9 +87,7 @@
                   <NumberAxis label="Anzahl / Betrag (€)" />
                </yAxis>
             </BarChart>
-         </children>
       </VBox>
-   </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
