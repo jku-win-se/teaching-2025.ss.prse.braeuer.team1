@@ -14,7 +14,7 @@
             <VBox alignment="CENTER">
                <children>
                   <Label text="Verhältnis Supermarkt &#10;zu Restaurant" textAlignment="CENTER" />
-                  <PieChart fx:id="chartTypeDistribution" labelsVisible="false" layoutX="584.0" layoutY="36.0" legendVisible="true" prefHeight="249.0" prefWidth="250.0" BorderPane.alignment="CENTER" />
+                  <PieChart fx:id="chartTypeDistribution" labelsVisible="false" layoutX="584.0" layoutY="36.0" prefHeight="249.0" prefWidth="250.0" BorderPane.alignment="CENTER" />
                </children>
             </VBox>
          </right>

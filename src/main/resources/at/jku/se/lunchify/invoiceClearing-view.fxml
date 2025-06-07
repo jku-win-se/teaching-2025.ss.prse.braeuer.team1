@@ -24,12 +24,10 @@
    </padding>
    <top>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
-         <children>
-            <Label text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
-            <ComboBox fx:id="allUsers" onAction="#userSelectionChanged" onShowing="#showAllUsers" prefWidth="150.0" promptText="alle" />
-            <Button fx:id="exportPayrollDataJSONButton" mnemonicParsing="false" onAction="#onExportPayrollDataJSONButtonClick" prefHeight="50.0" prefWidth="300.0" text="Daten für Lohnverrechnung exportieren (JSON)" textAlignment="CENTER" />
-            <Button fx:id="exportPayrollDataXMLButton" alignment="CENTER" mnemonicParsing="false" onAction="#onExportPayrollDataXMLButtonClick" prefHeight="50.0" prefWidth="300.0" text="Daten für Lohnverrechnung exportieren (XML)" textAlignment="CENTER" />
-         </children>
+         <Label text="Benutzer: " BorderPane.alignment="CENTER_LEFT" />
+         <ComboBox fx:id="allUsers" onAction="#userSelectionChanged" onShowing="#showAllUsers" prefWidth="150.0" promptText="alle" />
+         <Button fx:id="exportPayrollDataJSONButton" mnemonicParsing="false" onAction="#onExportPayrollDataJSONButtonClick" prefHeight="50.0" prefWidth="300.0" text="Daten für Lohnverrechnung exportieren (JSON)" textAlignment="CENTER" />
+         <Button fx:id="exportPayrollDataXMLButton" alignment="CENTER" mnemonicParsing="false" onAction="#onExportPayrollDataXMLButtonClick" prefHeight="50.0" prefWidth="300.0" text="Daten für Lohnverrechnung exportieren (XML)" textAlignment="CENTER" />
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>
