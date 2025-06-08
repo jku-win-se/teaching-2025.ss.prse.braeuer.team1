@@ -89,16 +89,16 @@ public class InvoiceSettingService {
 
     public ObservableList<String> getAllInvoiceTypes() {
         ObservableList<String> invoiceTypes = FXCollections.observableArrayList();
-        invoiceTypes.add(String.valueOf(Invoice.Invoicetype.SUPERMARKT));
-        invoiceTypes.add(String.valueOf(Invoice.Invoicetype.RESTAURANT));
+        invoiceTypes.add("Supermarkt");
+        invoiceTypes.add("Restaurant");
         return invoiceTypes;
     }
 
     public double getReimbursementValue(String invoiceType, double value) {
-        if (invoiceType.equals(String.valueOf(Invoice.Invoicetype.SUPERMARKT))) {
+        if (invoiceType.equals("Supermarkt")) {
             return Math.min(getCurrentSupermarketValue(), value);
         }
-        else if (invoiceType.equals(String.valueOf(Invoice.Invoicetype.RESTAURANT))) {
+        else if (invoiceType.equals("Restaurant")) {
             return Math.min(getCurrentRestaurantValue(), value);
         }
         else return 0;

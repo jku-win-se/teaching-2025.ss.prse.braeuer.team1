@@ -126,9 +126,9 @@ public class InvoiceKpiService {
                         invoiceCount += count;
                         sumReimbursements += total;
 
-                        if (type.equalsIgnoreCase((String.valueOf(Invoice.Invoicetype.SUPERMARKT)))) {
+                        if (type.equalsIgnoreCase(("Supermarkt"))) {
                             invoiceCountSupermarket = count;
-                        } else if (type.equalsIgnoreCase((String.valueOf(Invoice.Invoicetype.RESTAURANT)))) {
+                        } else if (type.equalsIgnoreCase(("Restaurant"))) {
                             invoiceCountRestaurant = count;
                         }
                     }
