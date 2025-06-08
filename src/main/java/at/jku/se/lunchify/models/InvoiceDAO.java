@@ -183,8 +183,8 @@ public class InvoiceDAO {
         int userid;
         double amount;
         Map<Integer, Double> reimbursementPerUser = new HashMap<>();
-        String sql = "select userid, sum(reimbursementamount) as \"risum\" from \"Invoice\" where date >= date_trunc('month', current_date)\n" +
-                "  AND date < date_trunc('month', current_date + interval '1 month') group by userid";
+        String sql = "select userid, sum(reimbursementamount) as \"risum\" from \"Invoice\" where date >= date_trunc('month', current_date - interval '1 month')\n" +
+                "  AND date < date_trunc('month', current_date) group by userid";
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword)) {
 
