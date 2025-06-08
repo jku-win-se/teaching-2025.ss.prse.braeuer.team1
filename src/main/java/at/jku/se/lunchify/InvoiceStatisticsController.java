@@ -7,6 +7,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -123,6 +124,8 @@ public class InvoiceStatisticsController {
         if (chosenDirectory != null) {
             lastUsedDirectory = chosenDirectory.getParentFile(); // Ordner speichern, falls nochmal geöffnet wird
             Document document = new Document(new PdfDocument(new PdfWriter(chosenDirectory.getAbsolutePath() + "/Lunchify-Rechnungs-Export-" + LocalDate.now().toString() + ".pdf")));
+            document.setFontSize(Float.valueOf("10.0"));
+            document.setLeftMargin(Float.valueOf("20"));
             if (isAnomalousSelected.isSelected()) {
                 document.add(new Paragraph("Lunchify-Export für anomalische Rechnungen vom " + LocalDate.now().toString()));
             }
