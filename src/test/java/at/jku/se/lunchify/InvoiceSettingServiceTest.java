@@ -76,7 +76,7 @@ class InvoiceSettingServiceTest {
         assertEquals(newSupermarket, service.getCurrentSupermarketValue(), 0.001);
         assertEquals(originalRestaurantValue, service.getCurrentRestaurantValue(), 0.001);
     }
-    
+
 
     @Test
     void testGetReimbursementValue() {
