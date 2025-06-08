@@ -4,12 +4,6 @@ import at.jku.se.lunchify.models.Invoice;
 import at.jku.se.lunchify.models.InvoiceDAO;
 import at.jku.se.lunchify.models.UserDAO;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.properties.UnitValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,6 +64,7 @@ public class InvoiceClearingController {
     private File chosenDirectory;
 
     public void initialize() {
+        invoiceTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         invoiceDAO = new InvoiceDAO();
         userDAO = new UserDAO();
         allUsers.setValue("alle Benutzer");
@@ -79,7 +74,7 @@ public class InvoiceClearingController {
         invoiceTable.setRowFactory(tableView -> {
             TableRow<Invoice> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (!row.isEmpty()) {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
                     Invoice invoice = row.getItem();
                     Invoice selectedInvoice = invoiceDAO.getInvoiceById(invoice.getInvoiceid());
                     showInvoiceDetails(selectedInvoice);

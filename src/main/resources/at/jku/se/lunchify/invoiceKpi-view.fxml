@@ -1,80 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="634.0" prefWidth="1024.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="at.jku.se.lunchify.InvoiceKpiController">
-   <Label layoutX="8.0" layoutY="-4.0" text="Kennzahlen für erstattete Rechnungen">
-      <font>
-         <Font name="System Bold" size="18.0"/>
-      </font>
-   </Label>
-
-   <!-- Beschriftungen und Werte -->
-   <GridPane layoutX="8.0" layoutY="28.0" hgap="12" vgap="8">
-      <columnConstraints>
-         <ColumnConstraints minWidth="200" halignment="RIGHT"/>
-         <ColumnConstraints minWidth="300" halignment="LEFT"/>
-      </columnConstraints>
-
-      <Label text="Ausgewählter Benutzer:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-      <Label fx:id="labelUser" text="-" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-      <Label text="Zeitraum:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-      <Label fx:id="labelSelectedDateRange" text="-" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-      <Label text="Rechnungstyp:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-      <Label fx:id="labelInvoiceType" text="-" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-      <Label text="Anzahl Monate:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-      <Label fx:id="labelMonths" text="-" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-      <Label text="Anzahl Benutzer:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-      <Label fx:id="labelUserCount" text="-" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-      <Label text="Anzahl erstattete Rechnungen:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-      <Label fx:id="labelInvoiceCount" text="-" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-
-      <Label text="Gesamter Erstattungsbetrag:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-      <Label fx:id="labelSumReimbursement" text="-" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-
-      <Label text="Eingereichte Rechnungen pro Benutzer:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-      <Label fx:id="labelInvoicesPerUser" text="-" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
-
-      <Label text="Eingereichte Rechnungen pro Benutzer, pro Monat:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-      <Label fx:id="labelInvoicesPerUserPerMonth" text="-" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
-   </GridPane>
-
-   <!-- Diagramme -->
-   <Label layoutX="636.0" layoutY="1.0" text="Verhältnis Supermarkt zu Restaurant">
-      <font>
-         <Font name="System Bold" size="18.0"/>
-      </font>
-   </Label>
-   <PieChart fx:id="chartTypeDistribution" layoutX="584.0" layoutY="36.0" prefHeight="249.0" prefWidth="416.0"/>
-
-   <Label layoutX="8.0" layoutY="271.0" text="Rechnungen und Erstattungen pro Monat">
-      <font>
-         <Font name="System Bold" size="18.0"/>
-      </font>
-   </Label>
-   <BarChart fx:id="monthlyBarChart" layoutX="2.0" layoutY="302.0" prefHeight="331.0" prefWidth="1017.0">
-      <xAxis>
-         <CategoryAxis label="Monat"/>
-      </xAxis>
-      <yAxis>
-         <NumberAxis label="Anzahl / Betrag (€)"/>
-      </yAxis>
-   </BarChart>
-   <HBox alignment="CENTER" layoutX="391.0" layoutY="271.0" spacing="20">
-      <Label style="-fx-text-fill: #10e1c3;" text="■ Anzahl Rechnungen"/>
-      <Label style="-fx-text-fill: #a0e196;" text="■ Erstattungsbetrag (€)"/>
-   </HBox>
-   <Button layoutX="369.0" mnemonicParsing="false" onAction="#onExportPdfButtonClick" prefHeight="27.0"
-           prefWidth="112.0" text="Export PDF"/>
-   <Button layoutX="481.0" mnemonicParsing="false" onAction="#onExportCsvButtonClick" prefHeight="27.0"
-           prefWidth="112.0" text="Export CSV"/>
-</AnchorPane>
+<VBox alignment="CENTER" maxHeight="629.0" maxWidth="1087.0" stylesheets="@lunchify-style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.jku.se.lunchify.InvoiceKpiController">
+   <HBox alignment="CENTER_LEFT" layoutX="8.0" layoutY="-4.0" spacing="10.0">
+            <Label layoutX="8.0" layoutY="-4.0" text="Kennzahlen für erstattete Rechnungen">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#onExportPdfButtonClick" prefHeight="27.0" prefWidth="112.0" text="Export PDF" />
+            <Button mnemonicParsing="false" onAction="#onExportCsvButtonClick" prefHeight="27.0" prefWidth="112.0" text="Export CSV" />
+         
+                  <!-- Diagramme -->
+            <Label text="Verhältnis Supermarkt zu Restaurant">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </HBox>
+      <HBox>                              <!-- Beschriftungen und Werte -->
+            <GridPane hgap="12" vgap="8">
+               <columnConstraints>
+                  <ColumnConstraints halignment="RIGHT" minWidth="200" />
+                  <ColumnConstraints halignment="LEFT" minWidth="300" />
+               </columnConstraints>
+                                    <Label text="Ausgewählter Benutzer:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                  <Label fx:id="labelUser" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            
+                                    <Label text="Zeitraum:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <Label fx:id="labelSelectedDateRange" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            
+                                    <Label text="Rechnungstyp:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                  <Label fx:id="labelInvoiceType" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            
+                                    <Label text="Anzahl Monate:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                  <Label fx:id="labelMonths" text="-" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            
+                                    <Label text="Anzahl Benutzer:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                  <Label fx:id="labelUserCount" text="-" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            
+                                    <Label text="Anzahl erstattete Rechnungen:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                  <Label fx:id="labelInvoiceCount" text="-" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            
+                                    <Label text="Gesamter Erstattungsbetrag:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                  <Label fx:id="labelSumReimbursement" text="-" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            
+                                    <Label text="Eingereichte Rechnungen pro Benutzer:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                  <Label fx:id="labelInvoicesPerUser" text="-" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            
+                                    <Label text="Eingereichte Rechnungen pro Benutzer, pro Monat:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                  <Label fx:id="labelInvoicesPerUserPerMonth" text="-" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+            </GridPane>
+            <PieChart fx:id="chartTypeDistribution" prefHeight="249.0" prefWidth="416.0" />
+      </HBox>
+      <VBox>
+            <HBox alignment="CENTER_LEFT" layoutX="8.0" layoutY="271.0" spacing="10.0">
+                        <Label layoutX="8.0" layoutY="271.0" text="Rechnungen und Erstattungen pro Monat">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label style="-fx-text-fill: #10e1c3;" text="■ Anzahl Rechnungen" />
+                  <Label style="-fx-text-fill: #a0e196;" text="■ Erstattungsbetrag (€)" />
+            </HBox>
+            <BarChart fx:id="monthlyBarChart" prefHeight="298.0" prefWidth="1067.0">
+               <xAxis>
+                  <CategoryAxis label="Monat" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis label="Anzahl / Betrag (€)" />
+               </yAxis>
+            </BarChart>
+      </VBox>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>
