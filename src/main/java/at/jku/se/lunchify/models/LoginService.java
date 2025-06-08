@@ -67,7 +67,7 @@ public class LoginService {
 
                         String userType = rs.getString("type");
                         userId = rs.getInt("userid");
-                        return "ADMIN".equals(userType) ? LoginResult.SUCCESS_ADMIN : LoginResult.SUCCESS_USER;
+                        return "Admin".equals(userType) ? LoginResult.SUCCESS_ADMIN : LoginResult.SUCCESS_USER;
                     } else {
                         return LoginResult.INVALID_USER;
                     }

@@ -219,8 +219,8 @@ public class InvoiceKpiController {
             table.addCell("Anzahl Benutzer").addCell(labelUserCount.getText());
             table.addCell("Anzahl erstattete Rechnungen").addCell(labelInvoiceCount.getText());
             table.addCell("Gesamter Erstattungsbetrag").addCell(labelSumReimbursement.getText());
-            table.addCell("Eingereichte Rechnungen pro Benutzer").addCell(labelInvoicesPerUser.getText());
-            table.addCell("Eingereichte Rechnungen pro Benutzer pro Monat").addCell(labelInvoicesPerUserPerMonth.getText());
+            table.addCell("Genehmigte Rechnungen pro Benutzer").addCell(labelInvoicesPerUser.getText());
+            table.addCell("Genehmigte Rechnungen pro Benutzer pro Monat").addCell(labelInvoicesPerUserPerMonth.getText());
 
             document.add(table);
             document.add(new Paragraph(""));//Zeilenumbruch

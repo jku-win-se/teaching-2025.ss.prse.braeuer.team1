@@ -50,10 +50,10 @@
                                     <Label text="Gesamter Erstattungsbetrag:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                   <Label fx:id="labelSumReimbursement" text="-" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             
-                                    <Label text="Eingereichte Rechnungen pro Benutzer:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                                    <Label text="Genehmigte Rechnungen pro Benutzer:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
                   <Label fx:id="labelInvoicesPerUser" text="-" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             
-                                    <Label text="Eingereichte Rechnungen pro Benutzer, pro Monat:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                                    <Label text="Genehmigte Rechnungen pro Benutzer, pro Monat:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
                   <Label fx:id="labelInvoicesPerUserPerMonth" text="-" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                <rowConstraints>
                   <RowConstraints />

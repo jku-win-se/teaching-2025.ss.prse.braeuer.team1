@@ -22,6 +22,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
 public class InvoiceStatisticsController {
@@ -127,10 +129,10 @@ public class InvoiceStatisticsController {
             document.setFontSize(Float.valueOf("10.0"));
             document.setLeftMargin(Float.valueOf("20"));
             if (isAnomalousSelected.isSelected()) {
-                document.add(new Paragraph("Lunchify-Export für anomalische Rechnungen vom " + LocalDate.now().toString()));
+                document.add(new Paragraph("Lunchify-Export für anomalische Rechnungen erstellt am " + LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)).toString()));
             }
             else{
-                document.add(new Paragraph("Lunchify-Export für Rechnungen vom " + LocalDate.now().toString()));
+                document.add(new Paragraph("Lunchify-Export für Rechnungen erstellt am " + LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)).toString()));
             }
             Table table = new Table(UnitValue.createPercentArray(8)).useAllAvailableWidth();
             table.addHeaderCell("Benutzer-ID/Personalnummer");

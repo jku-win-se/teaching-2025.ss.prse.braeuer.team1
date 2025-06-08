@@ -80,10 +80,10 @@ class InvoiceSettingServiceTest {
 
     @Test
     void testGetReimbursementValue() {
-        assertEquals(2, service.getReimbursementValue(String.valueOf(Invoice.Invoicetype.RESTAURANT), 2));
-        assertEquals(2, service.getReimbursementValue(String.valueOf(Invoice.Invoicetype.SUPERMARKT), 2));
-        assertEquals(service.getReimbursementValue(String.valueOf(Invoice.Invoicetype.RESTAURANT), 10), service.getCurrentRestaurantValue());
-        assertEquals(service.getReimbursementValue(String.valueOf(Invoice.Invoicetype.SUPERMARKT), 10), service.getCurrentSupermarketValue());
+        assertEquals(2, service.getReimbursementValue("Restaurant", 2));
+        assertEquals(2, service.getReimbursementValue("Supermarkt", 2));
+        assertEquals(service.getReimbursementValue("Restaurant", 10), service.getCurrentRestaurantValue());
+        assertEquals(service.getReimbursementValue("Supermarkt", 10), service.getCurrentSupermarketValue());
     }
 
     @AfterAll
