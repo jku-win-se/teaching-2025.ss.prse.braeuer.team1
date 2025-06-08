@@ -23,7 +23,7 @@ public class Invoice {
     private Date date;
     private double amount;
     private double reimbursementAmount;
-    enum Invoicetype {SUPERMARKT, RESTAURANT}
+    public enum Invoicetype {SUPERMARKT, RESTAURANT}
     private String type;
     public enum Invoicestatus {EINGEREICHT, GENEHMIGT, ABGELEHNT}
     private String status;
