@@ -84,15 +84,29 @@ public class InvoiceClearingController {
         });
     }
 
+    /**
+     * Method loading all possible Users into a Combobox
+     * <p>
+     * Method loading all possible Users into a Combobox (all users from database and "Alle Benutzer")
+     */
     public void showAllUsers() {
         allUsers.setItems(userDAO.getAllUserMailsWithAll());
 }
 
+    /**
+     * Method setting all the data for a new set of Invoices to display
+     * <p>
+     * After setting the data the chosen field go blank
+     */
     private void setSelectedData () {
         selectedMail = allUsers.getSelectionModel().getSelectedItem();
         if (selectedMail!=null && selectedMail.equals("alle Benutzer")) selectedMail = null;
     }
-
+    /**
+     * Method filling a table with a new set of Invoices to display
+     * <p>
+     * Method filling a table with a new set of Invoices to display. Invoices should be of status "EINGEREICHT"
+     */
     public void userSelectionChanged() {
         setSelectedData();
 
@@ -110,6 +124,12 @@ public class InvoiceClearingController {
         invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
     }
 
+    /**
+     * Method loads a detailed view of a chosen Invoice
+     * <p>
+     * This function loads a detailed view from a chosen Invoice that need to be cleared/accepted
+     * @param invoice Invoice to be loaded
+     */
     private void showInvoiceDetails(Invoice invoice) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceDetail-view.fxml"));
@@ -133,6 +153,11 @@ public class InvoiceClearingController {
         }
     }
 
+    /**
+     * Method exporting the current payroll data to a JSON file
+     * <p>
+     * Method exporting the current payroll data (last calendar month) to a JSON file into a chosen directory
+     */
     @FXML
     private void onExportPayrollDataJSONButtonClick() throws IOException {
         Map<Integer, Double> reimbursementPerUser = invoiceDAO.getReimbursementSumPerUser();
@@ -161,6 +186,11 @@ public class InvoiceClearingController {
         }
     }
 
+    /**
+     * Method exporting the current payroll data to a XML file
+     * <p>
+     * Method exporting the current payroll data (last calendar month) to a XML file into a chosen directory
+     */
     @FXML
     private void onExportPayrollDataXMLButtonClick() throws IOException {
         Map<Integer, Double> reimbursementPerUser = invoiceDAO.getReimbursementSumPerUser();

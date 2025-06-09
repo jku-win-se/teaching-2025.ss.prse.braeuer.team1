@@ -27,7 +27,7 @@ public class InvoiceDAO {
      * <p>
      * This function returns a booolean in regard to a comparison to the current date
      * <p>
-     * @param date  checks if date is in the past, comparing to current date
+     * @param date  date to check
      * @return true if date is in the past, false if the date is in the future
      */
     public boolean checkDateInPast(LocalDate date) {
@@ -39,7 +39,7 @@ public class InvoiceDAO {
      * <p>
      * This function returns a booolean in regard to if the value is positive
      * <p>
-     * @param value  checks if value is positive or negative
+     * @param value  value to check
      * @return true if value is positive, false if value is negative
      */
     public boolean checkInvoiceValueIsPositive(Double value) {
@@ -49,9 +49,9 @@ public class InvoiceDAO {
     /**
      * Returns a list of all invoices in the database
      * <p>
-     * This method return an ObservableList<Invoice> of all invoices in the database
+     * This method return an ObservableList of all invoices in the database
      * <p>
-     * @return ObservableList<Invoice> if successful, stacktrace if an Exception emerges
+     * @return ObservableList of Invoices if successful, stacktrace if an Exception emerges
      */
     public ObservableList<Invoice> getSelectedInvoices(String email, Date dateFrom, Date dateTo, String invoiceType, Boolean onlyAnomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
@@ -101,6 +101,13 @@ public class InvoiceDAO {
         return invoices;
     }
 
+    /**
+     * Returns the reimbursement sums from users of the last month
+     * <p>
+     * This function returns a Map of Integer and Double
+     * <p>
+     * @return Map of User-ID and reimbursement sum
+     */
     public Map<Integer, Double> getReimbursementSumPerUser() {
         int userid;
         double amount;
@@ -121,7 +128,16 @@ public class InvoiceDAO {
         }
         return reimbursementPerUser;
     }
-
+    /**
+     * Gets specific invoices that need to be cleared (accepted, declined)
+     * <p>
+     * This function returns a List of specific Invoices, filtered by user (email), status (of the invoice) and if the invoice is anomalous
+     * <p>
+     * @param email  filters to a specific user
+     * @param status  filters to a specific invoice
+     * @param anomalous  filters to a specific anomalous state
+     * @return returns an ObservableList of Invoices
+     */
     public ObservableList<Invoice> getSelectedInvoicesToClear(String email, String status, boolean anomalous) {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
 
@@ -160,7 +176,13 @@ public class InvoiceDAO {
         }
         return invoices;
     }
-
+    /**
+     * Gets all the invoices of the current user which can be edited
+     * <p>
+     * This function returns a List of specific Invoices, filtered by the current user (userid)
+     * <p>
+     * @return returns an ObservableList of Invoices
+     */
     public ObservableList<Invoice> getSelectedInvoicesToEdit() {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
         String sql = "SELECT \"Invoice\".invoiceid, \"Invoice\".date, \"Invoice\".amount, \"Invoice\".reimbursementamount, \"Invoice\".type, \"Invoice\".status, \"Invoice\".requestdate " +
@@ -189,7 +211,14 @@ public class InvoiceDAO {
         }
         return invoices;
     }
-
+    /**
+     * Gets a specific invoice by id
+     * <p>
+     * This function returns a Invoice Object by a specific id
+     * <p>
+     * @param id  wanted Invoice id
+     * @return returns an Invoice object
+     */
     public Invoice getInvoiceById (int id) {
         Invoice invoice = null;
         String sql = "SELECT * FROM \"Invoice\" WHERE \"Invoice\".invoiceid = ?";
@@ -223,7 +252,15 @@ public class InvoiceDAO {
         }
         return invoice;
     }
-
+    /**
+     * Sets an Invoice status and commits it to the databse
+     * <p>
+     * This function sets the Status of an Invoice and a boolean if successfull or not
+     * <p>
+     * @param id  wanted Invoice id
+     * @param newStatus status that needs to be set
+     * @return return true if successfull, false if not successfull
+     */
     public boolean setInvoiceStatus(int id, String newStatus) {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement("update \"Invoice\" SET status = ? where invoiceid = ?;")) {
@@ -239,7 +276,15 @@ public class InvoiceDAO {
             return false;
         }
     }
-
+    /**
+     * Checks whether an Invoices exists for a user on a specific date
+     * <p>
+     * This function checks if a user already uploaded an Invoice on the chosen date
+     * <p>
+     * @param userid  current user id
+     * @param date chosen date
+     * @return return true if no Invoice exists from that user on that date, false if not
+     */
     public boolean checkInvoicesByDateAndUser(int userid, LocalDate date) {
         String sql = "SELECT userid, date FROM public.\"Invoice\" WHERE userid = ? AND date = ?";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
@@ -258,7 +303,14 @@ public class InvoiceDAO {
             return false;
         }
     }
-
+    /**
+     * Inserts an Invoice into the database
+     * <p>
+     * This function inserts an Invoice into the database and a boolean if successfull or not
+     * <p>
+     * @param invoice Invoice to insert
+     * @return return true if new Invoice was created, false if not
+     */
     public boolean insertInvoice(Invoice invoice) {
         String sql = "insert into \"Invoice\" (userid, invoicenumber, date, amount, reimbursementamount, type, status, isanomalous, file,timeschanged, requestdate) values(?,?,?,?,?,?,?,?,?,?,?);";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
@@ -292,6 +344,14 @@ public class InvoiceDAO {
         }
     }
 
+    /**
+     * Deletes an Invoice from the database
+     * <p>
+     * This function deletes an Invoice from the database and a boolean if successfull or not
+     * <p>
+     * @param id Invoice to delete
+     * @return return true if no Invoice was deleted, false if not
+     */
     public boolean deleteInvoice(int id) {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement("delete FROM \"Invoice\" where invoiceid = ?;")) {
@@ -307,6 +367,14 @@ public class InvoiceDAO {
         }
     }
 
+    /**
+     * Updates an Invoice from the database
+     * <p>
+     * This function updates an Invoice from the database and a boolean if successfull or not
+     * <p>
+     * @param invoice Invoice to update
+     * @return return true if no Invoice was update, false if not
+     */
     public boolean updateInvoice(Invoice invoice) {
         //wenn aktueller User -> timesChanged wird erhöht (nicht, wenn Admin ändert)
         if(LoginController.currentUserId == invoice.getUserid()) invoice.setTimesChanged(invoice.getTimesChanged()+1);

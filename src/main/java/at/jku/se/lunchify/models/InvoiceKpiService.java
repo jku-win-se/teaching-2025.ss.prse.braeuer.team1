@@ -30,7 +30,11 @@ public class InvoiceKpiService {
     private int invoiceCountSupermarket; //Anzahl der "GENEHMIGT" Rechnungen des/der ausgewählten Benutzer vom Typ Supermarkt
     private int invoiceCountRestaurant; //Anzahl der "GENEHMIGT" Rechnungen des/der ausgewählten Benutzer vom Typ Restaurant
 
-
+    /**
+     * Constructor for new InvoiceKpiService
+     * <p>
+     * Constructor for a new data access service calculating kpi´s
+     */
     public InvoiceKpiService(String userEmail, String invoiceType, Date fromDate, Date toDate) {
         this.userEmail = userEmail;
         this.invoiceType = invoiceType;
@@ -42,7 +46,11 @@ public class InvoiceKpiService {
 
         calculateKpis();
     }
-
+    /**
+     * Method calculating all the necessary kpi´s
+     * <p>
+     * Method calculating how many users are in the database, how many invoices, how much was reimbursed and what kind of invoices have been submitted (relation supermarket-restaurant)
+     */
     private void calculateKpis() {
         try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
 
@@ -149,6 +157,13 @@ public class InvoiceKpiService {
     public int getInvoiceCountSupermarket() { return invoiceCountSupermarket; }
     public int getInvoiceCountRestaurant() { return invoiceCountRestaurant; }
 
+    /**
+     * Returns a list of all invoice stats by month
+     * <p>
+     * This method return a Map of the month and its stats (special Class)
+     * <p>
+     * @return Map of the month to its stats if successful, stacktrace if an Exception emerges
+     */
     public Map<YearMonth, InvoiceMonthlyStats> getMonthlyInvoiceStats() {
         Map<YearMonth, InvoiceMonthlyStats> stats = new LinkedHashMap<>();
 

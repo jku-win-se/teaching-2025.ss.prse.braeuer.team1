@@ -42,6 +42,9 @@ public class MenuController {
         }
     }
 
+    /**
+     * Logs out the current user
+     */
     public void onLogoutButtonClick() throws IOException {
         // Aktuelle Stage holen
         Stage stage = (Stage) logout.getScene().getWindow();
@@ -59,36 +62,56 @@ public class MenuController {
         stage.show();
     }
 
+    /**
+     * Switches to the upload view in the main display area
+     */
     public void onUploadButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("upload-view.fxml");
         setActiveMenuButton(uploadButton);
     }
-
+    /**
+     * Switches to the history view in the main display area
+     */
     public void onHistoryButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("history-view.fxml");
         setActiveMenuButton(historyButton);
     }
 
+    /**
+     * Switches to the user management view in the main display area
+     */
     public void onUserManagementButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("user-management-view.fxml");
         setActiveMenuButton(userManagementButton);
     }
 
+    /**
+     * Switches to the invoice setting view in the main display area
+     */
     public void onInvoiceSettingButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("invoice-setting-view.fxml");
         setActiveMenuButton(invoiceSettingButton);
     }
 
+    /**
+     * Switches to the report view in the main display area
+     */
     public void onReportButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("report-view.fxml");
         setActiveMenuButton(reportButton);
     }
 
+    /**
+     * Switches to the clearence view in the main display area
+     */
     public void onInvoiceClearanceButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("invoiceClearing-view.fxml");
         setActiveMenuButton(invoiceClearanceButton);
     }
 
+    /**
+     * Loads all the view buttons into the menu bar
+     */
     //AI-generated
     private void setActiveMenuButton(Button activeButton) {
         List<Button> allButtons = List.of(uploadButton, historyButton, userManagementButton, invoiceClearanceButton, invoiceSettingButton, reportButton);

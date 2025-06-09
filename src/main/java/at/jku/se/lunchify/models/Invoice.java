@@ -71,6 +71,11 @@ public class Invoice {
         this.requestDate = Date.valueOf(LocalDate.now());
     }
 
+    /**
+     * Constructor for new Invoices
+     * <p>
+     * Full constructor for new Invoices
+     */
     public Invoice(int invoiceid, int userid, String invoicenumber, Date date, double amount, double reimbursementAmount, String type, String status, boolean isanomalous, byte[] file, int timesChanged,Date requestDate){
         this.invoiceid = invoiceid;
         this.userid = userid;
@@ -86,6 +91,11 @@ public class Invoice {
         this.requestDate = requestDate;
     }
 
+    /**
+     * Constructor for new Invoices
+     * <p>
+     * For editing/displaying Invoices in the application (displaying which can be edited/displayed)
+     */
     public Invoice(int userid, Date date, double amount, double reimbursementAmount,Date requestDate){
         this.userid = userid;
         this.date = date;
@@ -94,6 +104,11 @@ public class Invoice {
         this.requestDate = requestDate;
     }
 
+    /**
+     * Constructor for new Invoices
+     * <p>
+     * For Objects exporting Invoice data
+     */
     public Invoice(int invoiceid, Date date, double amount, double reimbursementAmount, String type, String status,Date requestDate){
         this.invoiceid = invoiceid;
         this.date = date;
@@ -201,6 +216,9 @@ public class Invoice {
     }
 
     //AI-generated
+    /**
+     * Method opening PDF files from the current selected invoice
+     */
     public void openPDF() throws IOException {
         File tempFile = File.createTempFile("invoice_", ".pdf");
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {

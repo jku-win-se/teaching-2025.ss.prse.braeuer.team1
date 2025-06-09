@@ -12,6 +12,13 @@ public class UserDAO {
     String dbPassword = "CaMaKe25!";
     PasswordService passwordService = new PasswordService();
 
+    /**
+     * Returns a list of all user e-mails in the database
+     * <p>
+     * This method return an ObservableList of all emails (String) in the database
+     * <p>
+     * @return ObservableList of Strings if successful, stacktrace if an Exception emerges
+     */
     public ObservableList<String> getAllUserMails() {
         ObservableList<String> users = FXCollections.observableArrayList();
 
@@ -29,13 +36,27 @@ public class UserDAO {
         }
         return users;
     }
-
+    /**
+     * Returns a list of all user e-mails in the database + a standard value
+     * <p>
+     * This method return an ObservableList of all emails (String) in the database and a standard value
+     * <p>
+     * @return ObservableList of Strings if successful, stacktrace if an Exception emerges
+     */
     public ObservableList<String> getAllUserMailsWithAll() {
         ObservableList<String> usersWithAll = this.getAllUserMails();
         usersWithAll.addFirst("alle Benutzer");
         return usersWithAll;
     }
 
+    /**
+     * Returns a User object
+     * <p>
+     * Returns a User object by email value
+     * <p>
+     * @param email email of the user to search for
+     * @return User Object if successful, stacktrace if an Exception emerges
+     */
     public User getUserByEmail(String email) {
         User user = null;
         String sql = "SELECT * FROM \"User\" WHERE email = ?";
@@ -65,7 +86,13 @@ public class UserDAO {
         }
         return user;
     }
-
+    /**
+     * Returns a list of all anomalous users in the database
+     * <p>
+     * Returns a list of all anomalous users in the database for reports
+     * <p>
+     * @return ObservableList of Users if successful, stacktrace if an Exception emerges
+     */
     public ObservableList<User> getAnomalousUsers() {
         ObservableList<User> users = FXCollections.observableArrayList();
 
@@ -92,6 +119,14 @@ public class UserDAO {
         return users;
     }
 
+    /**
+     * Updates an User from the database
+     * <p>
+     * This function updates an User from the database and a boolean if successfull or not
+     * <p>
+     * @param user User to update
+     * @return return true if User was updated, false if not
+     */
     public boolean updateUser(User user) throws SQLException {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement("update \"User\" SET email = ?, firstname = ?, surname = ?, type = ?, isactive = ?, password = ? where userid = ?;")) {
@@ -113,6 +148,14 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Inserts an User into the database
+     * <p>
+     * This function inserts an User into the database and a boolean if successfull or not
+     * <p>
+     * @param user User to insert
+     * @return return true if new User was created, false if not
+     */
     public boolean insertUser(User user) throws SQLException {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, dbPassword);
              PreparedStatement ps = connection.prepareStatement("insert into \"User\" (email, firstname, surname, type, isactive, password, isanomalous) values (?,?,?,?,?,?,?);")){
@@ -134,6 +177,14 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Checks whether an User already exists
+     * <p>
+     * This function checks if the given User already exists
+     * <p>
+     * @param user User to check for
+     * @return return true if User was found, false if not
+     */
     public boolean checkUserAlreadyExists(User user) {
         if (user==null) return false;
         else return getUserByEmail(user.getEmail()) != null;

@@ -70,6 +70,12 @@ public class MyInvoiceDetailController {
         });
     }
 
+    /**
+     * Method setting the chosen Invoice into a detailed view with a display of the picture/file in the database
+     * <p>
+     * Method setting the chosen Invoice into a detailed view with a display of the picture/file in the database (in the applocation or in the standard PDF reader)
+     * @param invoice Invoice to be loaded
+     */
     public void setInvoice(Invoice invoice) throws IOException {
         this.invoice = invoice;
         showAllInvoiceTypes();
@@ -90,10 +96,16 @@ public class MyInvoiceDetailController {
         }
     }
 
+    /**
+     * Sets the current possible Invoice types into the view
+     */
     public void showAllInvoiceTypes() {
         invoiceType.setItems(invoiceSettingService.getAllInvoiceTypes());
     }
 
+    /**
+     * Saves changes made to the current Invoice
+     */
     public void onSaveChangesButtonClick() {
         warningText.setText("");
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
@@ -145,6 +157,9 @@ public class MyInvoiceDetailController {
         }
     }
 
+    /**
+     * Deletes the current Invoice
+     */
     public void onDeleteButtonClick() {
         if (invoiceDAO.deleteInvoice(invoice.getInvoiceid())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -165,6 +180,14 @@ public class MyInvoiceDetailController {
         }
     }
 
+    /**
+     * Converts a Date Object into a LocalDate Object
+     * <p>
+     * Converts a Date Object into a LocalDate Object that is needed for JavaFx and PostgreSQL database
+     * <p>
+     * @param date date to be converted
+     * @return LocalDate Object of the given date
+     */
     private LocalDate convertDateToLocalDate(java.util.Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -173,6 +196,11 @@ public class MyInvoiceDetailController {
                 .toLocalDate();
     }
 
+    /**
+     * Checks if the Invoice type has been changed
+     * <p>
+     * If the Invoice type has been changed it checks all the necessary data and displays a warning text and changes the reimbursement amount if necessary
+     */
     public void invoiceTypeChanged() {
         selectedType = invoiceType.getSelectionModel().getSelectedItem();
         warningText.setText("");

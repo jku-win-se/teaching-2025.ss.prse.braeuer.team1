@@ -72,10 +72,20 @@ public class ReportController {
         invoiceType.setValue("alle Rechnungstypen");
     }
 
+    /**
+     * Method loading all possible Users into a Combobox
+     * <p>
+     * Method loading all possible Users into a Combobox (all users from database and "Alle Benutzer")
+     */
     public void showAllUsers() {
         allUsers.setItems(userDAO.getAllUserMailsWithAll());
     }
 
+    /**
+     * Method setting all the data for a new set of Invoices to display
+     * <p>
+     * After setting the data the chosen field go blank
+     */
     private void setSelectedData() {
         if (dateFrom.getValue()==null || dateTo.getValue()==null) {
             warningText.setText("Alle Filter setzen!");
@@ -90,6 +100,9 @@ public class ReportController {
         }
     }
 
+    /**
+     * Method checking all the chosen data for a new set of Invoices to display
+     */
     private void checkSelectedData() {
          if (selectedDateTo.before(selectedDateFrom)) {
             warningText.setText("Bis-Datum darf nicht vor dem Von-Datum liegen!");
@@ -102,6 +115,9 @@ public class ReportController {
         }
     }
 
+    /**
+     * Method loading the KPIs with the filters chosen by the user
+     */
     public void onInvoiceIndicatorsButtonClick() throws IOException {
         setSelectedData();
         checkSelectedData();
@@ -119,6 +135,9 @@ public class ReportController {
         }
     }
 
+    /**
+     * Method loading the Invoices with the filters chosen by the user
+     */
     public void onInvoiceStatisticsButtonClick() throws IOException {
         setSelectedData();
         checkSelectedData();

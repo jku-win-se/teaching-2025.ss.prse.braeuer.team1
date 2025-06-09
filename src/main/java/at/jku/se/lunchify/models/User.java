@@ -13,6 +13,11 @@ public class User {
     private boolean isanomalous;
     private String password;
 
+    /**
+     * Constructor for a User object
+     * <p>
+     * Constructor for a new User Object with all attributes
+     */
     public User(int userid, String email, String firstname, String surname, String type, boolean isactive, boolean isanomalous, String password) throws Exception {
         this.userid = userid;
         this.email = email;

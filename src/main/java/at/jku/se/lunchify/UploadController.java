@@ -92,10 +92,16 @@ public class UploadController {
         });
     }
 
+    /**
+     * Sets the current possible Invoice types into the view
+     */
     public void showAllInvoiceTypes() {
         invoiceType.setItems(invoiceSettingService.getAllInvoiceTypes());
     }
 
+    /**
+     * Checks the whether the input data is valid or not. If valid, it is uploaded and if not a warning will be displayed
+     */
     public void onInvoiceUploadButtonClick() throws IOException {
         if (invoiceValue.getText().isEmpty() || invoiceType.getValue().isEmpty() || invoiceDate.getValue() == null
                 || invoiceNumber.getText().isEmpty() || selectedFile == null) {
@@ -153,6 +159,9 @@ public class UploadController {
         }
     }
 
+    /**
+     * Checks the uploaded file with OCR and fills out as much fields as possible
+     */
     //AI-Assisted
     public void onInvoiceAttachmentButtonClick() throws IOException {
         Stage stage = (Stage) invoiceAttachmentButton.getScene().getWindow();
@@ -389,6 +398,11 @@ public class UploadController {
         }
     }
 
+    /**
+     * Checks if the Invoice type has been changed
+     * <p>
+     * If the Invoice type has been changed it checks all the necessary data and displays a warning text and changes the reimbursement amount if necessary
+     */
     public void invoiceTypeChanged() {
         selectedType = invoiceType.getSelectionModel().getSelectedItem();
         warningText.setText("");

@@ -26,6 +26,9 @@ public class LoginController {
     public static LoginService.LoginResult currentUserType;
 
     //AI-Assisted
+    /**
+     * Depending on the result of a login attempt, the user gets an error message or gets logged in for his role / user type
+     */
     public void onLoginButtonClick() {
         String userEmail = email.getText().trim();
         String userPassword = password.getText().trim();
