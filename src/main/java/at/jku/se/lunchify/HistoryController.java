@@ -54,6 +54,11 @@ public class HistoryController {
         loadPieChart();
     }
 
+    /**
+     * Method loading Invoices into the view "History"
+     * <p>
+     * This function loads all the Invoices of the current logged in User
+     */
     public void showMyInvoices() {
         invoiceDAO = new InvoiceDAO();
         invoiceDate.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -103,6 +108,11 @@ public class HistoryController {
         });
     }
 
+    /**
+     * Method loading a pie chart into the view "History"
+     * <p>
+     * This function loads all the Invoices of the current logged in User into a pie chart
+     */
     public void loadPieChart() {
         int total = supermarketCount + restaurantCount;
         // PieChart.Data mit Anzahl und Prozent
@@ -134,6 +144,12 @@ public class HistoryController {
         }
     }
 
+    /**
+     * Method loads a detailed view of a chosen Invoice
+     * <p>
+     * This function loads a detailed view from a chosen Invoice of the current logged in User
+     * @param invoice Invoice to be loaded
+     */
     private void showInvoiceDetails (Invoice invoice){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("myInvoiceDetail-view.fxml"));

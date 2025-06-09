@@ -13,6 +13,11 @@ public class LoginService {
     private final PasswordService passwordService;
     private int userId;
 
+    /**
+     * Constructor for a specific login attempt
+     * <p>
+     * Constructor for a specific login attempt with special database credentials
+     */
     public LoginService(String jdbcUrl, String dbUsername, String dbPassword, PasswordService passwordService) {
         this.jdbcUrl = jdbcUrl;
         this.dbUsername = dbUsername;
@@ -20,6 +25,11 @@ public class LoginService {
         this.passwordService = passwordService;
     }
 
+    /**
+     * Constructor for the standard login attempt
+     * <p>
+     * Constructor for a standard login attempt with standard database credentials
+     */
     public LoginService() {
         this.jdbcUrl = "jdbc:postgresql://aws-0-eu-central-1.pooler.supabase.com:6543/postgres";
         this.dbUsername = "postgres.yxshntkgvmksefegyfhz";
@@ -41,6 +51,21 @@ public class LoginService {
         ERROR
     }
 
+    /**
+     * Returns the result of a login attempt
+     * <p>
+     * This function returns an ENUM value describing the result of a login attempt with an email and password combination
+     * <p>
+     * @param email email for login
+     * @param password password in combination with the email
+     * @return
+     * LoginResult.EMPTY_FIELDS if one of the values is "empty" <br>
+     * LoginResult.USER_INACTIVE if user is inactive<br>
+     * LoginResult.INVALID_USER if email could not be found<br>
+     * LoginResult.INVALID_PW if the password is invalid <br>
+     * LoginResult.SUCCESS_ADMIN if the successfull login was for an user of the type "Admin" <br>
+     * LoginResult.SUCCESS_USER if the successfull login was for an user of the type "User"
+     */
     public LoginResult login(String email, String password) {
         if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             return LoginResult.EMPTY_FIELDS;

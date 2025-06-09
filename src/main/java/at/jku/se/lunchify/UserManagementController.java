@@ -26,15 +26,23 @@ public class UserManagementController {
 
     private UserDAO userDAO = new UserDAO();
 
+    /**
+     * Loads the view for creating a new user (User Object)
+     */
     public void onNewUserButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("user-creation-view.fxml");
     }
 
+    /**
+     * Loads the view for editing an existing user
+     */
     public void onEditUserButtonClick() throws IOException {
         LunchifyApplication.baseController.showCenterView("user-editing-view.fxml");
     }
 
-
+    /**
+     * Exports all the users with an anomalous flag
+     */
     public void onAnomalousUserButtonClick() throws IOException {
         Stage stage = (Stage) exportCSVButton.getScene().getWindow();
         DirectoryChooser directoryChooser = new DirectoryChooser();

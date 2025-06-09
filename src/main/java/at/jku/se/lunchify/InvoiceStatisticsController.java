@@ -95,6 +95,9 @@ public class InvoiceStatisticsController {
         invoiceTable.setItems(invoiceList);// Setze die Rechnungen in die TableView
     }
 
+    /**
+     * Method exporting the statistical data to a CSV file
+     */
     public void onReportCSVExportButtonClick() throws IOException {
         Stage stage = (Stage) exportCSVButton.getScene().getWindow();
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -118,6 +121,9 @@ public class InvoiceStatisticsController {
         }
     }
 
+    /**
+     * Method exporting the statistical data to a PDF file
+     */
     public void onReportPDFExportButtonClick() throws IOException {
         Stage stage = (Stage) exportPDFButton.getScene().getWindow();
         DirectoryChooser directoryChooser = new DirectoryChooser();

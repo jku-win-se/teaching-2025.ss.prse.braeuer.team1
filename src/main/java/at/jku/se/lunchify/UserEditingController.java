@@ -37,6 +37,9 @@ public class UserEditingController {
         allUsers.setItems(userList);
     }
 
+    /**
+     * If a user gets selected, its data gets loaded into the view
+     */
     public void onSelectUser() {
         warningText.setText("");
         String selectedUserEmail = allUsers.getSelectionModel().getSelectedItem();
@@ -51,10 +54,20 @@ public class UserEditingController {
         }
     }
 
+    /**
+     * Checks if the inputs of the fields are valid
+     * <p>
+     * Checks if all the inputs are valid. If a single input is invalid, it returns false - otherwise true
+     * <p>
+     * @return true if all inputs are valid, false if only one is invalid
+     */
     public boolean checkValidInput () {
         return !email.getText().isEmpty() && !firstname.getText().isEmpty() && !surname.getText().isEmpty() && !password.getText().isEmpty() && userType.getValue() != null;
     }
 
+    /**
+     * Saves the changes to the user and updates the database
+     */
     public void onSaveChangesButtonClick() throws Exception {
         if(!checkValidInput()) {
             warningText.setText("Alle Felder ausfüllen!");

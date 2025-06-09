@@ -32,6 +32,9 @@ public class InvoiceSettingController {
         valueInvoiceRestaurant.setPromptText("Restaurant aktuell: " + valueRestaurant + "€");
     }
 
+        /**
+         * Method changing the reimbursement values to the chosen values
+         */
         public void onChangeInvoiceValueButtonClick() throws IOException {
             String valueSupermarket = valueInvoiceSupermarket.getText().trim();
             String valueRestaurant = valueInvoiceRestaurant.getText().trim();

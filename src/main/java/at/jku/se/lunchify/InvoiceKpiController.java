@@ -137,6 +137,11 @@ public class InvoiceKpiController {
         invoiceKpiService = service;
     }
 
+    /**
+     * Adding data to the KPI chart
+     * <p>
+     * @param invoiceKpi InvoiceKPIService to be used
+     */
     private void populateMonthlyStatsChart(InvoiceKpiService invoiceKpi) {
         Map<YearMonth, InvoiceKpiService.InvoiceMonthlyStats> stats = invoiceKpi.getMonthlyInvoiceStats();
 
@@ -190,6 +195,10 @@ public class InvoiceKpiController {
         //});
     }
 
+
+    /**
+     * Method exporting the KPI data to a PDF file
+     */
     public void onExportPdfButtonClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("PDF speichern");
@@ -246,11 +255,20 @@ public class InvoiceKpiController {
         }
     }
 
+    /**
+     * Creates a picture of the currently displayed chart
+     * <p>
+     * @param chartNode Node with the pie chart
+     * @return BufferedImage of the pie chart
+     */
     private BufferedImage chartToImage(Node chartNode) {
         WritableImage fxImage = chartNode.snapshot(new SnapshotParameters(), null);
         return SwingFXUtils.fromFXImage(fxImage, null);
     }
 
+    /**
+     * Method exporting the KPI data to a CSV file
+     */
     public void onExportCsvButtonClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("CSV speichern");
