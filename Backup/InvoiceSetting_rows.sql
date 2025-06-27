@@ -1,0 +1,1 @@
+INSERT INTO "public"."InvoiceSetting" ("settingid", "valueinvoicesupermarket", "valueinvoicerestaurant") VALUES ('1', '2.5', '3.5');
